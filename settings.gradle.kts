@@ -1,3 +1,3 @@
-rootProject.name = "gradle-plugin-in-kotlin"
+rootProject.name = "linguine"
 
 include("localisation-plugin")

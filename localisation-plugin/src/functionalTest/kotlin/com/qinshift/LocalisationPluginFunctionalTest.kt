@@ -1,4 +1,4 @@
-package com.example.plugin
+package com.qinshift
 
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.gradle.testkit.runner.GradleRunner
@@ -20,7 +20,7 @@ class LocalisationPluginFunctionalTest {
             writeText(
                 """
                 plugins {
-                    id("com.example.plugin.localisation")
+                    id("com.qinshift.linguine")
                 }
                 
                 localisation {
@@ -58,10 +58,10 @@ class LocalisationPluginFunctionalTest {
             writeText(
                 """
             plugins {
-                id("com.example.plugin.localisation")
+                id("com.qinshift.linguine")
             }
                 
-            configure<com.example.plugin.LocalisationExtension> {
+            configure<com.qinshift.LocalisationExtension> {
                 jsonFilePath = "/src/main/resources/strings.json"
                 outputDirPath = "$testProjectDir/presentation"
                 stringsFileName = "Strings.kt"

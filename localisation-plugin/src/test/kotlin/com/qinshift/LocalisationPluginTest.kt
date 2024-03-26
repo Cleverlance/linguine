@@ -1,4 +1,4 @@
-package com.example.plugin
+package com.qinshift
 
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
@@ -12,7 +12,7 @@ class LocalisationPluginTest {
     fun pluginRegistersATask() {
         // Create a test project and apply the plugin
         val project: Project = ProjectBuilder.builder().build()
-        project.plugins.apply("com.example.plugin.localisation")
+        project.plugins.apply("com.qinshift.linguine")
 
         // Verify the result
         assertNotNull(project.tasks.findByName("loc"))
@@ -22,7 +22,7 @@ class LocalisationPluginTest {
     fun pluginShouldBeConfigured() {
         val project: Project = ProjectBuilder.builder().build()
 
-        project.pluginManager.apply("com.example.plugin.localisation")
+        project.pluginManager.apply("com.qinshift.linguine")
         val extension = project.extensions.getByType(LocalisationExtension::class.java)
         extension.jsonFilePath = "src/commonMain/resources/string.json"
         extension.outputDirPath = "presentation"

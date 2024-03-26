@@ -1,4 +1,4 @@
-package com.example.plugin
+package com.qinshift
 
 open class LocalisationExtension {
     var jsonFilePath: String = ""

@@ -23,8 +23,8 @@ dependencies {
 gradlePlugin {
     // Define the plugin
     val localisation by plugins.creating {
-        id = "com.example.plugin.localisation"
-        implementationClass = "com.example.plugin.LocalisationPlugin"
+        id = "com.qinshift.linguine"
+        implementationClass = "com.qinshift.LocalisationPlugin"
         version = "1.0"
     }
 }
