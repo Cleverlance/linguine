@@ -65,6 +65,8 @@ class LocalisationPluginFunctionalTest {
                 jsonFilePath = "/src/main/resources/strings.json"
                 outputDirPath = "$testProjectDir/presentation"
                 stringsFileName = "Strings.kt"
+                majorDelimiter = "__"
+                minorDelimiter = "_"
             }
             """.trimIndent()
             )
@@ -73,7 +75,11 @@ class LocalisationPluginFunctionalTest {
         // Create a sample JSON file
         val jsonFile = testProjectDir.resolve("src/main/resources/strings.json").apply {
             parentFile.mkdirs()
-            writeText("""{"hello_world": "Hello, World!"}""")
+            writeText("""{
+"activation__forgotten_password__birthdate__log_in": "Přihlásit se",
+"activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+}
+""")
         }
 
         // Run the plugin task
@@ -89,11 +95,21 @@ class LocalisationPluginFunctionalTest {
         val generatedFile = File(testProjectDir, "presentation/Strings.kt")
         assertTrue(generatedFile.exists(), "Generated file should exist")
         val actualContent = generatedFile.readText()
-        val expectedContent = """public object Strings {
-	 public val helloWorld: String = localise("hello_world")
+        val expectedContent = """
+public object Strings {
+	 public object Activation {
+		 public object ForgottenPassword {
+			 public object Birthdate {
+				 public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")
+				 public fun logOut(param0: String, param1: Int, param2: Float, param3: String, param4: Int, param5: Float): String {
+					 return localise("activation__forgotten_password__birthdate__log_out", param0, param1, param2, param3, param4, param5)
+				 }
+			}
+		}
+	}
 }
 
-        """.trimIndent()
+""".trimIndent()
         kotlin.test.assertEquals(
             actualContent,
             expectedContent,
