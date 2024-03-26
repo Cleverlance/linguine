@@ -1,0 +1,33 @@
+# Gradle
+.gradle
+.build
+build
+out
+captures
+projectFilesBackup
+
+# Android
+local.properties
+
+# IntelliJ Idea / Android Studio
+*.iml
+.idea/*
+!.idea/codeStyles
+!.idea/dictionaries
+!.idea/fileTemplates
+!.idea/file.template.settings.xml
+!.idea/inspectionProfiles
+!.idea/codeInsightSettings.xml
+!.idea/encodings.xml
+
+# macOS
+.DS_Store
+
+# XCode
+xcuserdata
+*.xcuserstate
+Gemfile.lock
+ios/app/fastlane
+
+# Ignore Generated folder in ios/app
+ios/app/Generated/
