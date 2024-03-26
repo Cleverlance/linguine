@@ -1,4 +1,4 @@
-package com.example.plugin
+package com.qinshift
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
