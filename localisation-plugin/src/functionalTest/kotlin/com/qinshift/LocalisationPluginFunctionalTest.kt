@@ -23,9 +23,9 @@ class LocalisationPluginFunctionalTest {
                     id("com.qinshift.linguine")
                 }
                 
-                localisation {
+                linguineConfig {
                     jsonFilePath = "src/main/resources/string.json"
-                 outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
+                    outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
                     stringsFileName = "Strings.kt"
                 }
             """.trimIndent()
@@ -61,7 +61,7 @@ class LocalisationPluginFunctionalTest {
                 id("com.qinshift.linguine")
             }
                 
-            configure<com.qinshift.LocalisationExtension> {
+            linguineConfig {
                 jsonFilePath = "/src/main/resources/strings.json"
                 outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
                 stringsFileName = "Strings.kt"
@@ -111,8 +111,8 @@ public object Strings {
 
 """.trimIndent()
         kotlin.test.assertEquals(
-            actualContent,
             expectedContent,
+            actualContent,
             "The generated file content does not match the expected content."
         )
     }
