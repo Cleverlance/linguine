@@ -1,3 +1,3 @@
 rootProject.name = "linguine"
 
-include("localisation-plugin")
+include("linguine-core")

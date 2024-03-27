@@ -24,7 +24,7 @@ gradlePlugin {
     // Define the plugin
     val localisation by plugins.creating {
         id = "com.qinshift.linguine"
-        implementationClass = "com.qinshift.LocalisationPlugin"
+        implementationClass = "com.qinshift.LinguineCore"
         version = "1.0"
     }
 }
