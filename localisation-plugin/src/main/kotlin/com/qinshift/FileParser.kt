@@ -1,18 +1,26 @@
 package com.qinshift
 
-class FileParser(private val fileContent: Map<String, String>) {
+class FileParser(
+    private val fileContent: Map<String, String>,
+    private val minorDelimiter: String,
+    private val majorDelimiter: String
+) {
     fun generateNestedMapStructureFromJSON(): MutableMap<String, Any> {
         val root = mutableMapOf<String, Any>()
         fileContent.keys.forEach { key ->
-            val parts = transformKeyToCamelCaseSegments(key)
+            val parts = transformKeyToCamelCaseSegments(key, minorDelimiter, majorDelimiter)
             updateNestedMapStructure(root, parts, key)
         }
         return root
     }
 
-    private fun transformKeyToCamelCaseSegments(key: String): List<String> {
-        return key.split("__").map { hierarchicalSegment ->
-            hierarchicalSegment.split("_").joinToString("") { word ->
+    private fun transformKeyToCamelCaseSegments(
+        key: String,
+        minorDelimiter: String,
+        majorDelimiter: String
+    ): List<String> {
+        return key.split(majorDelimiter).map { hierarchicalSegment ->
+            hierarchicalSegment.split(minorDelimiter).joinToString("") { word ->
                 word.replaceFirstChar { it.uppercaseChar() }
             }
         }

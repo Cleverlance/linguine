@@ -1,9 +1,7 @@
 package com.qinshift
 
 class FileContentGenerator(private val fileContent: Map<String, String>) {
-    fun generateFileContent(): StringBuilder {
-        val fileParser = FileParser(fileContent)
-        val root = fileParser.generateNestedMapStructureFromJSON()
+    fun generateFileContent(root: MutableMap<String, Any>): StringBuilder {
         val stringBuilder = StringBuilder("public object Strings {\n")
         generateKotlinCode(stringBuilder, root, 1)
         stringBuilder.append("}\n")
@@ -69,7 +67,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
 
     // %s - valid parameter, can be without $
     private fun determineDataTypes(formatString: String): List<String> {
-        val formatSpecifiers = Regex("%[0-9]*\\\$[sdf]").findAll(formatString)
+        val formatSpecifiers = Regex("%[0-9]*\\\$[sdf]|%[sdf]").findAll(formatString)
         return formatSpecifiers.map { determineDataType(it.value) }.toList()
     }
 
@@ -78,6 +76,9 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
             formatSpecifier.contains("\$s") -> "String"
             formatSpecifier.contains("\$d") -> "Int"
             formatSpecifier.contains("\$f") -> "Float"
+            formatSpecifier.contains("s") -> "String"
+            formatSpecifier.contains("d") -> "Int"
+            formatSpecifier.contains("f") -> "Float"
             else -> "Any"
         }
     }

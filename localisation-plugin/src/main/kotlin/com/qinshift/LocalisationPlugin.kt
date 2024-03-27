@@ -22,9 +22,17 @@ class LocalisationPlugin : Plugin<Project> {
                     fileType = extension.fileType
                 )
 
+                // Parse JSON into internal nested object structure
+                val fileParser = FileParser(
+                    fileContent = fileContent,
+                    minorDelimiter = extension.minorDelimiter,
+                    majorDelimiter = extension.majorDelimiter
+                )
+                val root = fileParser.generateNestedMapStructureFromJSON()
+
                 // Generate content for the Kotlin Localization File
                 val fileContentGenerator = FileContentGenerator(fileContent)
-                val outputFileContent = fileContentGenerator.generateFileContent()
+                val outputFileContent = fileContentGenerator.generateFileContent(root = root)
 
                 // Write built kotlin class and its nested structure into Kotlin File
                 val fileWriter = FileWriter()

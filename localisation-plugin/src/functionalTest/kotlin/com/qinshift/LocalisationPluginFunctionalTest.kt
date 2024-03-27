@@ -1,8 +1,6 @@
 package com.qinshift
 
-import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
@@ -52,7 +50,7 @@ class LocalisationPluginFunctionalTest {
     }
 
     @Test
-    fun `plugin generates correct Kotlin file from JSON`() {
+    fun pluginGeneratesCorrectKotlinFileFromJSON() {
         // Setup the build file
         val buildFile = testProjectDir.resolve("build.gradle.kts").apply {
             writeText(
@@ -75,11 +73,13 @@ class LocalisationPluginFunctionalTest {
         // Create a sample JSON file
         val jsonFile = testProjectDir.resolve("src/main/resources/strings.json").apply {
             parentFile.mkdirs()
-            writeText("""{
+            writeText(
+                """{
 "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
 "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
 }
-""")
+"""
+            )
         }
 
         // Run the plugin task

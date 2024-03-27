@@ -5,6 +5,6 @@ open class LinguineConfig {
     var fileType: FileType = FileType.JSON
     var outputDirPath: String = ""
     var stringsFileName: String = ""
-    var majorDelimiter: String = ""
-    var minorDelimiter: String = ""
+    var majorDelimiter: String = "__"
+    var minorDelimiter: String = "_"
 }
