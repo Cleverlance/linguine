@@ -63,7 +63,7 @@ class LocalisationPluginFunctionalTest {
                 
             configure<com.qinshift.LocalisationExtension> {
                 jsonFilePath = "/src/main/resources/strings.json"
-                outputDirPath = "$testProjectDir/presentation"
+                outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
                 stringsFileName = "Strings.kt"
                 majorDelimiter = "__"
                 minorDelimiter = "_"
