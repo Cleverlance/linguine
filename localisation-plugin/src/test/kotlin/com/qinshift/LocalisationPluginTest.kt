@@ -23,7 +23,7 @@ class LocalisationPluginTest {
         val project: Project = ProjectBuilder.builder().build()
 
         project.pluginManager.apply("com.qinshift.linguine")
-        val extension = project.extensions.getByType(LocalisationExtension::class.java)
+        val extension = project.extensions.getByType(LinguineConfig::class.java)
         extension.jsonFilePath = "src/commonMain/resources/string.json"
         extension.outputDirPath = "presentation"
         extension.stringsFileName = "Strings.kt"
