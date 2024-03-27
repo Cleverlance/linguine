@@ -21,7 +21,7 @@ class LocalisationPlugin : Plugin<Project> {
                 readJSON(project, extension)
 
                 // Generate content for the Kotlin Localization File
-                val outputFileContent = generateFileContent()
+                val outputFileContent = generateFileContent(extension)
 
                 // Write built kotlin class and its nested structure into Kotlin File
                 File("${extension.outputDirPath}/${extension.stringsFileName}").apply {
@@ -39,27 +39,27 @@ class LocalisationPlugin : Plugin<Project> {
         jsonContent = json
     }
 
-    private fun generateFileContent(): StringBuilder {
-        val root = generateNestedMapStructureFromJSON()
+    private fun generateFileContent(extension: LocalisationExtension): StringBuilder {
+        val root = generateNestedMapStructureFromJSON(extension)
         val stringBuilder = StringBuilder("public object Strings {\n")
         generateKotlinCode(stringBuilder, root, 1)
         stringBuilder.append("}\n")
         return stringBuilder
     }
 
-    private fun generateNestedMapStructureFromJSON(): MutableMap<String, Any> {
+    private fun generateNestedMapStructureFromJSON(extension: LocalisationExtension): MutableMap<String, Any> {
         val root = mutableMapOf<String, Any>()
         jsonContent.keys.forEach { key ->
-            val parts = transformKeyToCamelCaseSegments(key)
+            val parts = transformKeyToCamelCaseSegments(key, extension)
             updateNestedMapStructure(root, parts, key)
         }
         return root
     }
 
 
-    private fun transformKeyToCamelCaseSegments(key: String): List<String> {
-        return key.split("__").map { hierarchicalSegment ->
-            hierarchicalSegment.split("_").joinToString("") { word ->
+    private fun transformKeyToCamelCaseSegments(key: String, extension: LocalisationExtension): List<String> {
+        return key.split(extension.majorDelimiter).map { hierarchicalSegment ->
+            hierarchicalSegment.split(extension.minorDelimiter).joinToString("") { word ->
                 word.replaceFirstChar { it.uppercaseChar() }
             }
         }
@@ -148,7 +148,7 @@ class LocalisationPlugin : Plugin<Project> {
 
     // %s - valid parameter, can be without $
     private fun determineDataTypes(formatString: String): List<String> {
-        val formatSpecifiers = Regex("%[0-9]*\\\$[sdf]").findAll(formatString)
+        val formatSpecifiers = Regex("%[0-9]*\\\$[sdf]|%[sdf]").findAll(formatString)
         return formatSpecifiers.map { determineDataType(it.value) }.toList()
     }
 
@@ -157,6 +157,9 @@ class LocalisationPlugin : Plugin<Project> {
             formatSpecifier.contains("\$s") -> "String"
             formatSpecifier.contains("\$d") -> "Int"
             formatSpecifier.contains("\$f") -> "Float"
+            formatSpecifier.contains("s") -> "String"
+            formatSpecifier.contains("d") -> "Int"
+            formatSpecifier.contains("f") -> "Float"
             else -> "Any"
         }
     }
