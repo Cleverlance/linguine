@@ -9,7 +9,7 @@ class FileContentGeneratorTest {
     private val mockFileContent = mockk<Map<String, String>>()
 
     @Test
-    fun `test generateFileContent with simple map`() {
+    fun `generateFileContent with simple map produces expected Kotlin object structure`() {
         val fileContent: Map<String, String> = mapOf(
             "activation__forgotten_password__birthdate__cancel_button" to "Cancel",
             "activation__forgotten_password__email_input" to "Enter your email",

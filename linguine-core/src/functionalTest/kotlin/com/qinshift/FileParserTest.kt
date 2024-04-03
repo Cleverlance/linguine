@@ -6,7 +6,7 @@ import io.mockk.mockk
 
 class FileParserTest {
     @Test
-    fun generateNestedMapStructureFromJSONGeneratesValidStructureFromValidInput() {
+    fun `generateNestedMapStructureFromJSON with valid input creates correct nested structure`() {
         val mapContent: Map<String, String> = mapOf(
             "activation__forgotten_password__birthdate__cancel_button" to "Cancel",
             "activation__forgotten_password__email_input" to "Enter your email",
