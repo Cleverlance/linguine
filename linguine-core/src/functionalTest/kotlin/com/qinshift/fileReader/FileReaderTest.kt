@@ -1,8 +1,9 @@
-package com.qinshift.filereader
+package com.qinshift.fileReader
 
 import io.mockk.every
 import io.mockk.mockk
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
+import com.qinshift.fileReader.FileContentReaderImpl
 import org.junit.jupiter.api.Test
 
 class FileReaderTest {

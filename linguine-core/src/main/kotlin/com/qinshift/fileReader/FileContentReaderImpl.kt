@@ -1,4 +1,4 @@
-package com.qinshift.filereader
+package com.qinshift.fileReader
 
 import java.io.File
 
