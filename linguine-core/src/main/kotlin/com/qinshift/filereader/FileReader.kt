@@ -1,4 +1,4 @@
-package com.qinshift.fileReader
+package com.qinshift.filereader
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

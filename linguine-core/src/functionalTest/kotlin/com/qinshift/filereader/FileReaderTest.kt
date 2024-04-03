@@ -1,4 +1,4 @@
-package com.qinshift.fileReader
+package com.qinshift.filereader
 
 import io.mockk.every
 import io.mockk.mockk
@@ -9,7 +9,7 @@ class FileReaderTest {
 
 		@Test
 		fun `read should return a correct map when given a JSON file pat`() {
-			val fileContentReader = mockk<FileContentReader>()
+			val fileContentReader = mockk<FileContentReaderImpl>()
 
 			val filePath = "path/to/test.json"
 			val fileContent = """

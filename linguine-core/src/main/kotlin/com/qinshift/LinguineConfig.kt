@@ -1,6 +1,6 @@
 package com.qinshift
 
-import com.qinshift.fileReader.FileType
+import com.qinshift.filereader.FileType
 
 open class LinguineConfig {
     var jsonFilePath: String = ""
