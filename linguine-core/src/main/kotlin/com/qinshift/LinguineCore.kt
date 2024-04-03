@@ -4,7 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.io.File
 
-class LocalisationPlugin : Plugin<Project> {
+class LinguineCore : Plugin<Project> {
 
     private var fileContent: Map<String, String> = emptyMap()
 
@@ -14,15 +14,14 @@ class LocalisationPlugin : Plugin<Project> {
 
         project.task("loc") {
             doLast {
-
-                // Read JSON File
+                // Read Input File
                 val fileReader = FileReader()
                 fileContent = fileReader.read(
                     filePath = "${project.projectDir}${File.separator}${extension.jsonFilePath}",
                     fileType = extension.fileType
                 )
 
-                // Parse JSON into internal nested object structure
+                // Parse File into internal nested object structure
                 val fileParser = FileParser(
                     fileContent = fileContent,
                     minorDelimiter = extension.minorDelimiter,
