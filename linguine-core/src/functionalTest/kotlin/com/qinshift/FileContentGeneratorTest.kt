@@ -6,7 +6,6 @@ import io.mockk.mockk
 import kotlin.test.Test
 
 class FileContentGeneratorTest {
-    private val mockFileContent = mockk<Map<String, String>>()
 
     @Test
     fun `generateFileContent with simple map produces expected Kotlin object structure`() {

@@ -1,7 +1,7 @@
 package com.qinshift
 
-import com.qinshift.filereader.FileContentReaderImpl
-import com.qinshift.filereader.FileReader
+import com.qinshift.fileReader.FileContentReaderImpl
+import com.qinshift.fileReader.FileReader
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.io.File
