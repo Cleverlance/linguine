@@ -1,5 +1,7 @@
 package com.qinshift
 
+import com.qinshift.fileReader.FileContentReaderImpl
+import com.qinshift.fileReader.FileReader
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.io.File
@@ -15,7 +17,7 @@ class LinguineCore : Plugin<Project> {
         project.task("loc") {
             doLast {
                 // Read Input File
-                val fileReader = FileReader()
+                val fileReader = FileReader(FileContentReaderImpl())
                 fileContent = fileReader.read(
                     filePath = "${project.projectDir}${File.separator}${extension.jsonFilePath}",
                     fileType = extension.fileType

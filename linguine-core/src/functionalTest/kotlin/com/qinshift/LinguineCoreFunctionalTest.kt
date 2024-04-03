@@ -12,9 +12,8 @@ class LinguineCoreFunctionalTest {
     lateinit var testProjectDir: File
 
     @Test
-    fun canRunTask() {
-        // Setup the test build
-        val buildFile = File(testProjectDir, "build.gradle.kts").apply {
+    fun `plugin task executes successfully`() {
+        File(testProjectDir, "build.gradle.kts").apply {
             writeText(
                 """
                 plugins {
@@ -30,7 +29,6 @@ class LinguineCoreFunctionalTest {
             )
         }
 
-        // Create a sample JSON file to satisfy the plugin's expectations
         File(testProjectDir, "src/main/resources").mkdirs()
         File(testProjectDir, "src/main/resources/string.json").writeText(
             """
@@ -38,21 +36,18 @@ class LinguineCoreFunctionalTest {
         """.trimIndent()
         )
 
-        // Run the build
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
             .withArguments("loc")
             .build()
 
-        // Assertions to ensure task executed successfully
         assert(result.output.contains("BUILD SUCCESSFUL"))
     }
 
     @Test
-    fun pluginGeneratesCorrectKotlinFileFromJSON() {
-        // Setup the build file
-        val buildFile = testProjectDir.resolve("build.gradle.kts").apply {
+    fun `plugin generates expected Kotlin file from JSON configuration`() {
+        testProjectDir.resolve("build.gradle.kts").apply {
             writeText(
                 """
             plugins {
@@ -70,8 +65,7 @@ class LinguineCoreFunctionalTest {
             )
         }
 
-        // Create a sample JSON file
-        val jsonFile = testProjectDir.resolve("src/main/resources/strings.json").apply {
+        testProjectDir.resolve("src/main/resources/strings.json").apply {
             parentFile.mkdirs()
             writeText(
                 """{
@@ -82,14 +76,12 @@ class LinguineCoreFunctionalTest {
             )
         }
 
-        // Run the plugin task
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withArguments("loc")
             .withPluginClasspath()
             .build()
 
-        // Check the results
         assertTrue(result.output.contains("BUILD SUCCESSFUL"), "Build should be successful")
 
         val generatedFile = File(testProjectDir, "presentation/Strings.kt")

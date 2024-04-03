@@ -17,7 +17,8 @@ dependencies {
     testImplementation(gradleTestKit())
     testImplementation(kotlin("test-junit5"))
     implementation(kotlin("stdlib"))
-
+    testImplementation("io.kotest:kotest-assertions-core-jvm:5.6.2")
+    testImplementation("io.mockk:mockk:1.12.0")
 }
 
 gradlePlugin {
@@ -36,6 +37,12 @@ sourceSets {
     val test by getting {
         kotlin.srcDir("src/test/kotlin")
     }
+    val functionalTest by creating {
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+        kotlin.srcDir("src/functionalTest/kotlin")
+        resources.srcDir("src/functionalTest/resources")
+    }
 }
 
 tasks.test {
@@ -43,16 +50,16 @@ tasks.test {
 }
 
 // Add a source set and a task for a functional test suite
-val functionalTest by sourceSets.creating
-gradlePlugin.testSourceSets(functionalTest)
+gradlePlugin.testSourceSets(sourceSets["functionalTest"])
 
-configurations[functionalTest.implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[sourceSets["functionalTest"].implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
 
 val functionalTestTask = tasks.register<Test>("functionalTest") {
     useJUnitPlatform()
-    testClassesDirs = functionalTest.output.classesDirs
-    classpath = configurations[functionalTest.runtimeClasspathConfigurationName] + functionalTest.output
+    testClassesDirs = sourceSets["functionalTest"].output.classesDirs
+    classpath = sourceSets["functionalTest"].runtimeClasspath + sourceSets["main"].output
 }
+
 
 tasks.check {
     // Run the functional tests as part of `check`
