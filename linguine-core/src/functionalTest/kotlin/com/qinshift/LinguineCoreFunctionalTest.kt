@@ -6,7 +6,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import kotlin.test.assertTrue
 
-class LinguinePluginFunctionalTest {
+class LinguineCoreFunctionalTest {
 
     @TempDir
     lateinit var testProjectDir: File

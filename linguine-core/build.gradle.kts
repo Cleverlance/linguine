@@ -22,7 +22,7 @@ dependencies {
 
 gradlePlugin {
     // Define the plugin
-    val localisation by plugins.creating {
+    val linguine by plugins.creating {
         id = "com.qinshift.linguine"
         implementationClass = "com.qinshift.LinguineCore"
         version = "1.0"
