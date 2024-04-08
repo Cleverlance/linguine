@@ -17,6 +17,8 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.internal.execution.history.changes.IncrementalInputChanges
 import org.gradle.work.Incremental
 import java.io.File
+import com.qinshift.fileReader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 
 class LinguineCore : Plugin<Project> {
 
