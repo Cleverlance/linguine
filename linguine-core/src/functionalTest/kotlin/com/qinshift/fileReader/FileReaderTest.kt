@@ -1,29 +1,30 @@
 package com.qinshift.fileReader
 
-import io.mockk.every
-import io.mockk.mockk
+import java.io.File
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
-import com.qinshift.fileReader.FileContentReaderImpl
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class FileReaderTest {
 
+	@TempDir
+    lateinit var testProjectDir: File
+
 		@Test
 		fun `read should return a correct map when given a JSON file pat`() {
-			val fileContentReader = mockk<FileContentReaderImpl>()
-
-			val filePath = "path/to/test.json"
-			val fileContent = """
+			val file = File(testProjectDir, "test.json").apply {
+            writeText(
+					"""
             {
                 "test__file__input_value": "Input Value",
                 "another__file__description_value": "Description"
             }
         """.trimIndent()
+            )
+        }
 
-			every { fileContentReader.readText(filePath) } returns fileContent
-
-			val fileReader = FileReader(fileContentReader)
-			val result = fileReader.read(filePath, FileType.JSON)
+			val fileReader = FileReader()
+			val result = fileReader.read(file, FileType.JSON)
 			val expectedResult = mapOf(
 				"test__file__input_value" to "Input Value",
 				"another__file__description_value" to "Description"
