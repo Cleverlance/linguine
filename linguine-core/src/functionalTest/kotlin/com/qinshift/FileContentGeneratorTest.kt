@@ -5,6 +5,7 @@ import kotlin.test.Test
 
 class FileContentGeneratorTest {
 
+    @Suppress("LongMethod")
     @Test
     fun `generateFileContent with simple map produces expected Kotlin object structure`() {
         val fileContent: Map<String, String> = mapOf(

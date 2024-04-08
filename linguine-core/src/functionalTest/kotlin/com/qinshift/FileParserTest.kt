@@ -1,8 +1,8 @@
 package com.qinshift
 
-import org.junit.jupiter.api.Test
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
+import org.junit.jupiter.api.Test
 
 class FileParserTest {
     @Test

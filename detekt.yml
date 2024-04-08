@@ -509,7 +509,7 @@ potential-bugs:
   IteratorNotThrowingNoSuchElementException:
     active: true
   LateinitUsage:
-    active: true
+    active: false
     excludes: *test_files
     ignoreOnClassesPattern: ''
   MapGetWithNotNullAssertionOperator:

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class LinguineCoreTest {
 
     @Test
-    fun pluginRegistersATask() {
+    fun `plugin registers a task`() {
         // Create a test project and apply the plugin
         val project: Project = ProjectBuilder.builder().build()
         project.plugins.apply("com.qinshift.linguine")
@@ -23,7 +23,7 @@ class LinguineCoreTest {
     }
 
     @Test
-    fun pluginShouldBeConfigured() {
+    fun `given configuration plugin should be configured`() {
         val project: Project = ProjectBuilder.builder().build()
 
         project.pluginManager.apply("com.qinshift.linguine")

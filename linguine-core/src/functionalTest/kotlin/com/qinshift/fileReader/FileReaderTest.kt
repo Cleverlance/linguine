@@ -14,12 +14,12 @@ class FileReaderTest {
     fun `read should return a correct map when given a JSON file pat`() {
         val file = File(testProjectDir, "test.json").apply {
             writeText(
-                """
+"""
             {
                 "test__file__input_value": "Input Value",
                 "another__file__description_value": "Description"
             }
-        """.trimIndent()
+""".trimIndent()
             )
         }
 
