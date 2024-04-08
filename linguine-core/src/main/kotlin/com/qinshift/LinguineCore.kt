@@ -53,7 +53,7 @@ class LinguineCore : Plugin<Project> {
                     outputFilePath = "${extension.outputDirPath}/${extension.stringsFileName}",
                     outputFileContent = outputFileContent
                 )
-                println("File ${extension.stringsFileName} was successfully generated to directory ${extension.outputDirPath}")
+                println("Linguine: File ${extension.stringsFileName} has been successfully created in the directory ${project.projectDir}/${extension.outputDirPath}")
             }
         }
     }

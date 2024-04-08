@@ -109,15 +109,15 @@ public object Strings {
             "The generated file content does not match the expected content."
         )
     }
-    
+
     @Test
     fun `plugin generates file at specified location with correct content`() {
         val testProjectDir = createTempDirectory().toFile()
-        
+
         File(testProjectDir, "settings.gradle.kts").writeText("")
-        
+
         val projectDirPath = testProjectDir.absolutePath.replace('\\', '/')
-        
+
         val buildScript = """
         plugins {
             id("com.qinshift.linguine")
@@ -155,6 +155,13 @@ public object Strings {
 
         val outputFile = File(testProjectDir, "presentation/Strings.kt")
         assertTrue(outputFile.exists(), "Output file should exist")
-        assertTrue(result.output.contains("File Strings.kt was successfully generated to directory $projectDirPath/presentation"), "Success message was not printed")
+        assertTrue(
+            result.output.contains("File Strings.kt has been successfully created in the directory"),
+            "Success message was not printed"
+        )
+        assertTrue(
+            result.output.contains("$projectDirPath/presentation"),
+            "Wrong directory"
+        )
     }
 }
