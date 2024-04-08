@@ -4,6 +4,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
+import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
 
 class LinguineCoreFunctionalTest {
@@ -107,5 +108,53 @@ public object Strings {
             actualContent,
             "The generated file content does not match the expected content."
         )
+    }
+    
+    @Test
+    fun `plugin generates file at specified location with correct content`() {
+        val testProjectDir = createTempDirectory().toFile()
+        
+        File(testProjectDir, "settings.gradle.kts").writeText("")
+        
+        val projectDirPath = testProjectDir.absolutePath.replace('\\', '/')
+        
+        val buildScript = """
+        plugins {
+            id("com.qinshift.linguine")
+        }
+
+        linguineConfig {
+            jsonFilePath = "src/main/resources/strings.json"
+            outputDirPath = "$projectDirPath/presentation"
+            stringsFileName = "Strings.kt"
+        }
+    """.trimIndent()
+
+        File(testProjectDir, "build.gradle.kts").writeText(buildScript)
+
+        File(testProjectDir, "src/main/resources/strings.json").apply {
+            parentFile.mkdirs()
+            writeText(
+                """
+            {
+                "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
+                "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+            }
+            """.trimIndent()
+            )
+        }
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir)
+            .withPluginClasspath()
+            .withArguments("loc")
+            .forwardOutput()
+            .build()
+
+        assertTrue(result.output.contains("BUILD SUCCESSFUL"), "Build should be successful")
+
+        val outputFile = File(testProjectDir, "presentation/Strings.kt")
+        assertTrue(outputFile.exists(), "Output file should exist")
+        assertTrue(result.output.contains("File Strings.kt was successfully generated to directory $projectDirPath/presentation"), "Success message was not printed")
     }
 }
