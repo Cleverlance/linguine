@@ -20,8 +20,6 @@ import java.io.File
 
 class LinguineCore : Plugin<Project> {
 
-    private var fileContent: Map<String, String> = emptyMap()
-
     override fun apply(project: Project) {
 
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
