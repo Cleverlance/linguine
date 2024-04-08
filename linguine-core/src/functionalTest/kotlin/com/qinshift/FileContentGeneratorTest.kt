@@ -1,8 +1,6 @@
 package com.qinshift
 
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 import kotlin.test.Test
 
 class FileContentGeneratorTest {

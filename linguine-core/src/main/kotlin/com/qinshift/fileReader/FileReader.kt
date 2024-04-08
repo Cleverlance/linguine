@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 
-class FileReader() {
+class FileReader {
     fun read(file: File, fileType: FileType): Map<String, String> {
         return when (fileType) {
             FileType.JSON -> parseJSON(file.readText())

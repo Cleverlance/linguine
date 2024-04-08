@@ -7,14 +7,14 @@ import org.junit.jupiter.api.io.TempDir
 
 class FileReaderTest {
 
-	@TempDir
+    @TempDir
     lateinit var testProjectDir: File
 
-		@Test
-		fun `read should return a correct map when given a JSON file pat`() {
-			val file = File(testProjectDir, "test.json").apply {
+    @Test
+    fun `read should return a correct map when given a JSON file pat`() {
+        val file = File(testProjectDir, "test.json").apply {
             writeText(
-					"""
+                """
             {
                 "test__file__input_value": "Input Value",
                 "another__file__description_value": "Description"
@@ -23,13 +23,13 @@ class FileReaderTest {
             )
         }
 
-			val fileReader = FileReader()
-			val result = fileReader.read(file, FileType.JSON)
-			val expectedResult = mapOf(
-				"test__file__input_value" to "Input Value",
-				"another__file__description_value" to "Description"
-			)
+        val fileReader = FileReader()
+        val result = fileReader.read(file, FileType.JSON)
+        val expectedResult = mapOf(
+            "test__file__input_value" to "Input Value",
+            "another__file__description_value" to "Description"
+        )
 
-			assertEquals(expectedResult, result)
-		}
+        assertEquals(expectedResult, result)
+    }
 }

@@ -19,7 +19,7 @@ import org.gradle.api.provider.Property as GradleProperty
 
 class LinguineCore : Plugin<Project> {
 
-	override fun apply(project: Project) {
+    override fun apply(project: Project) {
 
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
 
