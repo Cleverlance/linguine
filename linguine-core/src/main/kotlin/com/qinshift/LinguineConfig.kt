@@ -9,4 +9,5 @@ open class LinguineConfig {
     var stringsFileName: String = ""
     var majorDelimiter: String = "__"
     var minorDelimiter: String = "_"
+    var buildTaskName: String? = null
 }

@@ -14,6 +14,18 @@ class LinguineCore : Plugin<Project> {
 
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
 
+        val isAndroid =
+            project.plugins.hasPlugin("com.android.application") || project.plugins.hasPlugin("com.android.library")
+        val isKMP = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
+        val isJvm =
+            project.plugins.hasPlugin("org.jetbrains.kotlin.jvm") || project.plugins.hasPlugin("java")
+
+        when {
+            isAndroid -> configureForAndroid(project, extension)
+            isKMP -> configureForKMP(project, extension)
+            isJvm -> configureForJvm(project, extension)
+        }
+
         project.task("loc") {
             doLast {
                 // Read Input File
@@ -41,7 +53,22 @@ class LinguineCore : Plugin<Project> {
                     outputFilePath = "${extension.outputDirPath}/${extension.stringsFileName}",
                     outputFileContent = outputFileContent
                 )
+                println("Linguine: File ${extension.stringsFileName} has been successfully created in the directory ${project.projectDir}/${extension.outputDirPath}")
             }
         }
+    }
+
+    private fun configureForAndroid(project: Project, extension: LinguineConfig) {
+        // TODO
+    }
+
+    private fun configureForKMP(project: Project, extension: LinguineConfig) {
+        project.tasks.named(extension.buildTaskName ?: "build") {
+            dependsOn("loc")
+        }
+    }
+
+    private fun configureForJvm(project: Project, extension: LinguineConfig) {
+        // TODO
     }
 }
