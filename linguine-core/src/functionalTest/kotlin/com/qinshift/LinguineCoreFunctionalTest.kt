@@ -1,6 +1,7 @@
 package com.qinshift
 
 import java.io.File
+import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
 import org.gradle.testkit.runner.GradleRunner
@@ -19,7 +20,7 @@ class LinguineCoreFunctionalTest {
     fun `plugin task executes successfully`() {
         File(testProjectDir, gradleBuildFileName).apply {
             writeText(
-"""
+                """
                 plugins {
                     id("com.qinshift.linguine")
                 }
@@ -34,15 +35,15 @@ class LinguineCoreFunctionalTest {
                 }/presentation"
                     outputFileName = "Strings.kt"
                 }
-""".trimIndent(),
+                """.trimIndent(),
             )
         }
 
         File(testProjectDir, "src/main/resources").mkdirs()
         File(testProjectDir, "src/main/resources/string.json").writeText(
-"""
+            """
             {"hello_world": "Hello, World!"}
-""".trimIndent(),
+            """.trimIndent(),
         )
 
         val result = GradleRunner.create()
@@ -58,7 +59,7 @@ class LinguineCoreFunctionalTest {
     fun `plugin generates expected Kotlin file from JSON configuration`() {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
-"""
+                """
             plugins {
                 id("com.qinshift.linguine")
             }
@@ -70,7 +71,7 @@ class LinguineCoreFunctionalTest {
                 majorDelimiter = "__"
                 minorDelimiter = "_"
             }
-""".trimIndent(),
+                """.trimIndent(),
             )
         }
 
@@ -81,7 +82,7 @@ class LinguineCoreFunctionalTest {
 "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
 "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
 }
-""",
+                    """,
             )
         }
 
@@ -97,7 +98,7 @@ class LinguineCoreFunctionalTest {
         assertTrue(generatedFile.exists(), "Generated file should exist")
         val actualContent = generatedFile.readText()
         val expectedContent =
-"""
+            """
 public object Strings {
 	 public object Activation {
 		 public object ForgottenPassword {
@@ -111,7 +112,7 @@ public object Strings {
 	}
 }
 
-""".trimIndent()
+            """.trimIndent()
         kotlin.test.assertEquals(
             expectedContent,
             actualContent,
@@ -128,7 +129,7 @@ public object Strings {
         val projectDirPath = testProjectDir.absolutePath.replace('\\', '/')
 
         val buildScript =
-"""
+            """
         plugins {
             id("com.qinshift.linguine")
         }
@@ -138,19 +139,19 @@ public object Strings {
             outputFilePath = "$projectDirPath/presentation"
             outputFileName = "Strings.kt"
         }
-""".trimIndent()
+            """.trimIndent()
 
         File(testProjectDir, gradleBuildFileName).writeText(buildScript)
 
         File(testProjectDir, "src/main/resources/strings.json").apply {
             parentFile.mkdirs()
             writeText(
-"""
+                """
             {
                 "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
                 "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
             }
-""".trimIndent(),
+                """.trimIndent(),
             )
         }
 
@@ -163,15 +164,17 @@ public object Strings {
 
         assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
-        val outputFile = File(testProjectDir, "presentation/Strings.kt")
-        assertTrue(outputFile.exists(), "Output file should exist")
         assertTrue(
             result.output.contains("File Strings.kt has been successfully created in the directory"),
             "Success message was not printed",
         )
+
+        val expectedOutputPath =
+            Paths.get(testProjectDir.path, "presentation", "Strings.kt").toString()
+        assertTrue(File(expectedOutputPath).exists(), "Output file should exist")
         assertTrue(
-            result.output.contains("presentation"),
-            "Wrong directory",
+            result.output.contains(expectedOutputPath),
+            "Expected output file path '$expectedOutputPath' was not found in the build output.",
         )
     }
 }
