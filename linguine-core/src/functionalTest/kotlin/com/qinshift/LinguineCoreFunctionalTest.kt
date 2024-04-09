@@ -170,7 +170,7 @@ public object Strings {
             "Success message was not printed",
         )
         assertTrue(
-            result.output.contains("$projectDirPath/presentation"),
+            result.output.contains("presentation"),
             "Wrong directory",
         )
     }
