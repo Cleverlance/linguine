@@ -47,7 +47,6 @@ class LinguineCore : Plugin<Project> {
         }
     }
 
-
     private fun configureForAndroid(project: Project, extension: LinguineConfig) {
         // TODO
     }
@@ -110,6 +109,9 @@ abstract class LocalizeTask : DefaultTask() {
             outputFile = outputFile.asFile.get(),
             outputFileContent = outputFileContent,
         )
-        println("Linguine: File ${outputFile.asFile.get().name} has been successfully created in the directory ${outputFile.asFile.get().path}")
+        println(
+            "Linguine: File ${outputFile.asFile.get().name} " +
+                "has been successfully created in the directory ${outputFile.asFile.get().path}",
+        )
     }
 }
