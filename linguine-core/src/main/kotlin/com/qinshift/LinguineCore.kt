@@ -1,14 +1,22 @@
 package com.qinshift
 
-import com.qinshift.fileReader.FileContentReaderImpl
+import com.qinshift.fileReader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 import com.qinshift.fileReader.FileReader
+import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import java.io.File
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
+import org.gradle.work.Incremental
 
 class LinguineCore : Plugin<Project> {
-
-    private var fileContent: Map<String, String> = emptyMap()
 
     override fun apply(project: Project) {
 
@@ -26,35 +34,16 @@ class LinguineCore : Plugin<Project> {
             isJvm -> configureForJvm(project, extension)
         }
 
-        project.task("loc") {
-            doLast {
-                // Read Input File
-                val fileReader = FileReader(FileContentReaderImpl())
-                fileContent = fileReader.read(
-                    filePath = "${project.projectDir}${File.separator}${extension.jsonFilePath}",
-                    fileType = extension.fileType
-                )
-
-                // Parse File into internal nested object structure
-                val fileParser = FileParser(
-                    fileContent = fileContent,
-                    minorDelimiter = extension.minorDelimiter,
-                    majorDelimiter = extension.majorDelimiter
-                )
-                val root = fileParser.generateNestedMapStructureFromJSON()
-
-                // Generate content for the Kotlin Localization File
-                val fileContentGenerator = FileContentGenerator(fileContent)
-                val outputFileContent = fileContentGenerator.generateFileContent(root = root)
-
-                // Write built kotlin class and its nested structure into Kotlin File
-                val fileWriter = FileWriter()
-                fileWriter.writeToFile(
-                    outputFilePath = "${extension.outputDirPath}/${extension.stringsFileName}",
-                    outputFileContent = outputFileContent
-                )
-                println("Linguine: File ${extension.stringsFileName} has been successfully created in the directory ${project.projectDir}/${extension.outputDirPath}")
-            }
+        project.tasks.register("loc", LocalizeTask::class.java) {
+            inputFile.set(project.layout.projectDirectory.file(extension.inputFilePath))
+            fileType.set(extension.inputFileType)
+            minorDelimiter.set(extension.minorDelimiter)
+            majorDelimiter.set(extension.majorDelimiter)
+            outputFile.set(
+                project.layout.projectDirectory.file(
+                    "${extension.outputFilePath}/${extension.outputFileName}",
+                ),
+            )
         }
     }
 
@@ -70,5 +59,59 @@ class LinguineCore : Plugin<Project> {
 
     private fun configureForJvm(project: Project, extension: LinguineConfig) {
         // TODO
+    }
+}
+
+@CacheableTask
+abstract class LocalizeTask : DefaultTask() {
+    @get:Incremental
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val inputFile: RegularFileProperty
+
+    @get:Input
+    abstract val fileType: GradleProperty<LinguineFileType>
+
+    @get:Input
+    abstract val minorDelimiter: GradleProperty<String>
+
+    @get:Input
+    abstract val majorDelimiter: GradleProperty<String>
+
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
+
+    @TaskAction
+    fun generate() {
+        var fileContent: Map<String, String> = emptyMap()
+        // Read Input File
+        val fileReader = FileReader()
+        fileContent = fileReader.read(
+            file = inputFile.asFile.get(),
+            fileType = fileType.get(),
+        )
+
+        // Parse File into internal nested object structure
+        val fileParser = FileParser(
+            fileContent = fileContent,
+            minorDelimiter = minorDelimiter.get(),
+            majorDelimiter = majorDelimiter.get(),
+        )
+        val root = fileParser.generateNestedMapStructureFromJSON()
+
+        // Generate content for the Kotlin Localization File
+        val fileContentGenerator = FileContentGenerator(fileContent)
+        val outputFileContent = fileContentGenerator.generateFileContent(root = root)
+
+        // Write built kotlin class and its nested structure into Kotlin File
+        val fileWriter = FileWriter()
+        fileWriter.writeToFile(
+            outputFile = outputFile.asFile.get(),
+            outputFileContent = outputFileContent,
+        )
+        println(
+            "Linguine: File ${outputFile.asFile.get().name} " +
+                "has been successfully created in the directory ${outputFile.asFile.get().path}",
+        )
     }
 }

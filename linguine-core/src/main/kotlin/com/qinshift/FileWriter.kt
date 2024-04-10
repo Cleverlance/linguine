@@ -3,10 +3,11 @@ package com.qinshift
 import java.io.File
 
 class FileWriter {
-    fun writeToFile(outputFilePath: String, outputFileContent: StringBuilder) {
-        File(outputFilePath).apply {
-            parentFile.mkdirs()
-            writeText(outputFileContent.toString())
+    fun writeToFile(outputFile: File, outputFileContent: StringBuilder) {
+        if (!outputFile.exists()) {
+            outputFile.parentFile?.mkdirs()
+            outputFile.createNewFile()
         }
+        outputFile.writeText(outputFileContent.toString())
     }
 }

@@ -1,20 +1,24 @@
 package com.qinshift
 
+import java.io.File
+import java.nio.file.Paths
+import kotlin.io.path.createTempDirectory
+import kotlin.test.assertTrue
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
-import kotlin.io.path.createTempDirectory
-import kotlin.test.assertTrue
 
 class LinguineCoreFunctionalTest {
 
     @TempDir
     lateinit var testProjectDir: File
 
+    private var buildSuccessOutput: String = "BUILD SUCCESSFUL"
+    private var gradleBuildFileName = "build.gradle.kts"
+
     @Test
     fun `plugin task executes successfully`() {
-        File(testProjectDir, "build.gradle.kts").apply {
+        File(testProjectDir, gradleBuildFileName).apply {
             writeText(
                 """
                 plugins {
@@ -22,11 +26,16 @@ class LinguineCoreFunctionalTest {
                 }
                 
                 linguineConfig {
-                    jsonFilePath = "src/main/resources/string.json"
-                    outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
-                    stringsFileName = "Strings.kt"
+                    inputFilePath = "src/main/resources/string.json"
+                    outputFilePath = "${
+                    testProjectDir.absolutePath.replace(
+                        '\\',
+                        '/',
+                    )
+                }/presentation"
+                    outputFileName = "Strings.kt"
                 }
-            """.trimIndent()
+                """.trimIndent(),
             )
         }
 
@@ -34,7 +43,7 @@ class LinguineCoreFunctionalTest {
         File(testProjectDir, "src/main/resources/string.json").writeText(
             """
             {"hello_world": "Hello, World!"}
-        """.trimIndent()
+            """.trimIndent(),
         )
 
         val result = GradleRunner.create()
@@ -43,12 +52,12 @@ class LinguineCoreFunctionalTest {
             .withArguments("loc")
             .build()
 
-        assert(result.output.contains("BUILD SUCCESSFUL"))
+        assert(result.output.contains(buildSuccessOutput))
     }
 
     @Test
     fun `plugin generates expected Kotlin file from JSON configuration`() {
-        testProjectDir.resolve("build.gradle.kts").apply {
+        testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
             plugins {
@@ -56,13 +65,13 @@ class LinguineCoreFunctionalTest {
             }
                 
             linguineConfig {
-                jsonFilePath = "/src/main/resources/strings.json"
-                outputDirPath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
-                stringsFileName = "Strings.kt"
+                inputFilePath = "src/main/resources/strings.json"
+                outputFilePath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
+                outputFileName = "Strings.kt"
                 majorDelimiter = "__"
                 minorDelimiter = "_"
             }
-            """.trimIndent()
+                """.trimIndent(),
             )
         }
 
@@ -73,7 +82,7 @@ class LinguineCoreFunctionalTest {
 "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
 "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
 }
-"""
+                    """,
             )
         }
 
@@ -83,12 +92,13 @@ class LinguineCoreFunctionalTest {
             .withPluginClasspath()
             .build()
 
-        assertTrue(result.output.contains("BUILD SUCCESSFUL"), "Build should be successful")
+        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
         val generatedFile = File(testProjectDir, "presentation/Strings.kt")
         assertTrue(generatedFile.exists(), "Generated file should exist")
         val actualContent = generatedFile.readText()
-        val expectedContent = """
+        val expectedContent =
+            """
 public object Strings {
 	 public object Activation {
 		 public object ForgottenPassword {
@@ -102,11 +112,11 @@ public object Strings {
 	}
 }
 
-""".trimIndent()
+            """.trimIndent()
         kotlin.test.assertEquals(
             expectedContent,
             actualContent,
-            "The generated file content does not match the expected content."
+            "The generated file content does not match the expected content.",
         )
     }
 
@@ -118,19 +128,20 @@ public object Strings {
 
         val projectDirPath = testProjectDir.absolutePath.replace('\\', '/')
 
-        val buildScript = """
+        val buildScript =
+            """
         plugins {
             id("com.qinshift.linguine")
         }
 
         linguineConfig {
-            jsonFilePath = "src/main/resources/strings.json"
-            outputDirPath = "$projectDirPath/presentation"
-            stringsFileName = "Strings.kt"
+            inputFilePath = "src/main/resources/strings.json"
+            outputFilePath = "$projectDirPath/presentation"
+            outputFileName = "Strings.kt"
         }
-    """.trimIndent()
+            """.trimIndent()
 
-        File(testProjectDir, "build.gradle.kts").writeText(buildScript)
+        File(testProjectDir, gradleBuildFileName).writeText(buildScript)
 
         File(testProjectDir, "src/main/resources/strings.json").apply {
             parentFile.mkdirs()
@@ -140,7 +151,7 @@ public object Strings {
                 "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
                 "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
             }
-            """.trimIndent()
+                """.trimIndent(),
             )
         }
 
@@ -151,17 +162,19 @@ public object Strings {
             .forwardOutput()
             .build()
 
-        assertTrue(result.output.contains("BUILD SUCCESSFUL"), "Build should be successful")
+        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
-        val outputFile = File(testProjectDir, "presentation/Strings.kt")
-        assertTrue(outputFile.exists(), "Output file should exist")
         assertTrue(
             result.output.contains("File Strings.kt has been successfully created in the directory"),
-            "Success message was not printed"
+            "Success message was not printed",
         )
+
+        val expectedOutputPath =
+            Paths.get(testProjectDir.path, "presentation", "Strings.kt").toString()
+        assertTrue(File(expectedOutputPath).exists(), "Output file should exist")
         assertTrue(
-            result.output.contains("$projectDirPath/presentation"),
-            "Wrong directory"
+            result.output.contains(expectedOutputPath),
+            "Expected output file path '$expectedOutputPath' was not found in the build output.",
         )
     }
 }

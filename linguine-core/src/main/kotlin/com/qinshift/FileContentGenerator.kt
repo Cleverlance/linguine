@@ -23,7 +23,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         builder: StringBuilder,
         key: String,
         value: Map<String, Any>,
-        depth: Int
+        depth: Int,
     ) {
         val indent = "\t".repeat(depth)
         builder.append("$indent public object $key {\n")
@@ -35,7 +35,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         builder: StringBuilder,
         key: String,
         value: String,
-        depth: Int
+        depth: Int,
     ) {
         val indent = "\t".repeat(depth)
         val translation = fileContent.filter { it.key == value }.toString()
@@ -48,12 +48,13 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         }
     }
 
+    @Suppress("MaximumLineLength", "MaxLineLength")
     private fun appendFunctionDeclaration(
         builder: StringBuilder,
         key: String,
         value: String,
         dataTypes: List<String>,
-        indent: String
+        indent: String,
     ) {
         var funcString = "$indent public fun $key("
         dataTypes.forEachIndexed { index, type ->
@@ -63,7 +64,6 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         funcString += "): String {\n$indent\t return localise(\"$value\", ${dataTypes.indices.joinToString { "param$it" }})\n$indent }\n"
         builder.append(funcString)
     }
-
 
     // %s - valid parameter, can be without $
     private fun determineDataTypes(formatString: String): List<String> {

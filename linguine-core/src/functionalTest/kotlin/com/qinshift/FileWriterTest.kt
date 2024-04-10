@@ -1,25 +1,49 @@
 package com.qinshift
 
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.io.TempDir
+import java.io.File
 import java.nio.file.Path
-import kotlin.test.Test
+import kotlin.test.BeforeTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class FileWriterTest {
-	@Test
-	fun `writeToFile creates directories and writes content correctly`(@TempDir tempDir: Path) {
-		val fileWriter = FileWriter()
-		val testContent = StringBuilder("This is a test.")
-		val nestedFilePath = tempDir.resolve("nested/dir/testOutput.txt").toFile()
 
-		nestedFilePath.parentFile.exists() shouldBe false
+    private lateinit var fileWriter: FileWriter
 
-		fileWriter.writeToFile(nestedFilePath.absolutePath, testContent)
+    @TempDir
+    lateinit var tempDir: Path
 
-		nestedFilePath.parentFile.exists() shouldBe true
+    @BeforeTest
+    fun setUp() {
+        fileWriter = FileWriter()
+    }
 
-		val writtenContent = nestedFilePath.readText()
+    private fun assertFileContentMatches(file: File, expectedContent: String) {
+        file.exists() shouldBe true
+        val readContent = file.readText()
+        readContent shouldBe expectedContent
+    }
 
-		testContent.toString() shouldBe writtenContent
-	}
+    @Test
+    fun `writeToFile writes correct text to the file`() {
+        val testFile = File(tempDir.toFile(), "testFileWriter.kt")
+        val testContent = StringBuilder("This is a test string to be written\n.")
+
+        fileWriter.writeToFile(testFile, testContent)
+
+        assertFileContentMatches(testFile, testContent.toString())
+    }
+
+    @Test
+    fun `writeToFile should create file if it does not exist`() {
+        val nonExistentFile = File(tempDir.toFile(), "nonexistent/subdirectory/testFile.txt")
+        val contentToWrite = StringBuilder("Test content")
+
+        nonExistentFile.exists() shouldBe false
+
+        fileWriter.writeToFile(nonExistentFile, contentToWrite)
+
+        assertFileContentMatches(nonExistentFile, contentToWrite.toString())
+    }
 }

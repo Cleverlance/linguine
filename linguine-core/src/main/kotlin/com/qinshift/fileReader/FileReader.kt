@@ -2,12 +2,12 @@ package com.qinshift.fileReader
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
 
-class FileReader(private val fileContentReader: FileContentReader) {
-    fun read(filePath: String, fileType: FileType): Map<String, String> {
-        val fileContent = fileContentReader.readText(filePath)
+class FileReader {
+    fun read(file: File, fileType: FileType): Map<String, String> {
         return when (fileType) {
-            FileType.JSON -> parseJSON(fileContent)
+            FileType.JSON -> parseJSON(file.readText())
         }
     }
 
