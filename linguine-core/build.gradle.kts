@@ -2,7 +2,6 @@ plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `kotlin-dsl`
     `maven-publish`
-    id("org.jetbrains.kotlin.jvm") version "1.5.21"
 }
 
 repositories {
@@ -13,13 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.gson)
+    implementation(kotlin("stdlib"))
     testImplementation(gradleTestKit())
     testImplementation(kotlin("test-junit5"))
-    implementation(kotlin("stdlib"))
-    testImplementation("io.kotest:kotest-assertions-core-jvm:5.6.2")
-    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation(libs.kotest.assertions.core.jvm)
+    testImplementation(libs.mockk)
 }
+
 
 gradlePlugin {
     // Define the plugin

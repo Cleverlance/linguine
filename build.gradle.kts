@@ -5,12 +5,12 @@ repositories {
 }
 
 plugins {
-    id("io.gitlab.arturbosch.detekt") version "1.23.3"
+    alias(libs.plugins.detekt)
 }
 
 //region Detekt
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3")
+    detektPlugins(libs.detekt)
 }
 
 detekt {
