@@ -25,7 +25,7 @@ gradlePlugin {
     // Define the plugin
     val linguine by plugins.creating {
         id = "com.qinshift.linguine"
-        implementationClass = "com.qinshift.linguine.plugin.LinguineCore"
+        implementationClass = "com.qinshift.linguine.plugin.LinguinePlugin"
         version = "1.0"
     }
 }

@@ -16,7 +16,8 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.work.Incremental
 
-class LinguineCore : Plugin<Project> {
+@Suppress("unused")
+class LinguinePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
 
