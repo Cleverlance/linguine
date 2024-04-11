@@ -11,6 +11,18 @@ repositories {
     gradlePluginPortal()
 }
 
+publishing {
+    repositories {
+        maven {
+            url = uri("https://nexus.cleverlance.com/nexus/repository/maven-snapshots/")
+            credentials {
+                username = "paw"
+                password = "sPoOk30Conge"
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(libs.gson)
     implementation(kotlin("stdlib"))
@@ -20,13 +32,14 @@ dependencies {
     testImplementation(libs.mockk)
 }
 
+group = "com.qinshift.linguine"
+version = "0.1.0-SNAPSHOT"
 
 gradlePlugin {
     // Define the plugin
     val linguine by plugins.creating {
         id = "com.qinshift.linguine"
         implementationClass = "com.qinshift.linguine.plugin.LinguinePlugin"
-        version = "1.0"
     }
 }
 
