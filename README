@@ -48,6 +48,6 @@ For a simple example, if your JSON file contains:
 After the build, Strings.kt will contain:
 ```kotlin
     object Strings {
-        val helloWorld = "Hello, World!"
+        val helloWorld: String = localise("hello_world")
     }
 ```
