@@ -1,11 +1,20 @@
 package com.qinshift.linguine.linguinegenerator
 
 class FileContentGenerator(private val fileContent: Map<String, String>) {
+    private companion object {
+        const val DEFAULT_INDENT = "    "
+        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
+    }
+
     fun generateFileContent(root: MutableMap<String, Any>): StringBuilder {
-        val stringBuilder = StringBuilder("import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise\n\n")
-        stringBuilder.append("public object Strings {\n")
-        generateKotlinCode(stringBuilder, root, 1)
-        stringBuilder.append("}\n")
+        val stringBuilder = StringBuilder()
+
+        stringBuilder.apply {
+            append("import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise\n\n")
+            append("public object Strings {\n")
+            generateKotlinCode(stringBuilder, root, 1)
+            append("}\n")
+        }
         return stringBuilder
     }
 
@@ -26,10 +35,12 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         value: Map<String, Any>,
         depth: Int,
     ) {
-        val indent = "\t".repeat(depth)
-        builder.append("$indent public object $key {\n")
-        generateKotlinCode(builder, value, depth + 1)
-        builder.append("$indent}\n")
+        val indent = DEFAULT_INDENT.repeat(depth)
+        builder.apply {
+            append("${indent}public object $key {\n")
+            generateKotlinCode(this, value, depth + 1)
+            append("$indent}\n")
+        }
     }
 
     private fun appendFunctionOrValue(
@@ -38,7 +49,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         value: String,
         depth: Int,
     ) {
-        val indent = "\t".repeat(depth)
+        val indent = DEFAULT_INDENT.repeat(depth)
         val translation = fileContent.filter { it.key == value }.toString()
         val dataTypes = determineDataTypes(translation)
 
@@ -46,7 +57,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
             appendFunctionDeclaration(builder, key, value, dataTypes, indent)
         } else {
             val validName = returnValidValName(key)
-            builder.append("$indent public val $validName: String = localise(\"$value\")\n")
+            builder.append("${indent}public val $validName: String = localise(\"$value\")\n")
         }
     }
 
@@ -56,7 +67,6 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         } else return key
     }
 
-    @Suppress("MaximumLineLength", "MaxLineLength")
     private fun appendFunctionDeclaration(
         builder: StringBuilder,
         key: String,
@@ -64,18 +74,22 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         dataTypes: List<String>,
         indent: String,
     ) {
-        var funcString = "$indent public fun $key("
-        dataTypes.forEachIndexed { index, type ->
-            funcString += if (index > 0) ", " else ""
-            funcString += "param$index: $type"
+        builder.apply {
+            append("${indent}public fun $key(")
+            dataTypes.forEachIndexed { index, type ->
+                if (index > 0) append(", ")
+                append("param$index: $type")
+            }
+            append("): String {\n")
+            append("${indent}${DEFAULT_INDENT}return localise(\"$value\", ")
+            append(dataTypes.indices.joinToString { "param$it" })
+            append(")\n$indent}\n")
         }
-        funcString += "): String {\n$indent\t return localise(\"$value\", ${dataTypes.indices.joinToString { "param$it" }})\n$indent }\n"
-        builder.append(funcString)
     }
 
     // %s - valid parameter, can be without $
     private fun determineDataTypes(formatString: String): List<String> {
-        val formatSpecifiers = Regex("%[0-9]*\\\$[sdf]|%[sdf]").findAll(formatString)
+        val formatSpecifiers = FORMAT_SPECIFIER_REGEX.findAll(formatString)
         return formatSpecifiers.map { determineDataType(it.value) }.toList()
     }
 

@@ -136,9 +136,9 @@ abstract class GenerateStringsTask : DefaultTask() {
             outputFile = outputFile.asFile.get(),
             outputFileContent = outputFileContent,
         )
-        println(
+        logger.lifecycle(
             "Linguine: File ${outputFile.asFile.get().name} " +
-                "has been successfully created in the directory ${outputFile.asFile.get().path}",
+                "has been successfully created in the directory ${outputFile.asFile.get().path}"
         )
     }
 }
