@@ -19,7 +19,7 @@ Linguine is a Gradle plugin written in Kotlin designed to simplify the localizat
 
 To use the Linguine plugin, add the following to your `build.gradle.kts` file:
 
-```kotlin
+```
 plugins {
     id("com.qinshift.linguine") version "1.0"
 }
@@ -46,7 +46,7 @@ For a simple example, if your JSON file contains:
 ```
 
 After the build, Strings.kt will contain:
-```kotlin
+```
     object Strings {
         val helloWorld: String = localise("hello_world")
     }
