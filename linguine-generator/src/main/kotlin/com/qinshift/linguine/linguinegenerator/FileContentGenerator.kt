@@ -1,10 +1,6 @@
 package com.qinshift.linguine.linguinegenerator
 
 class FileContentGenerator(private val fileContent: Map<String, String>) {
-    private companion object {
-        const val DEFAULT_INDENT = "    "
-        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
-    }
 
     fun generateFileContent(root: MutableMap<String, Any>): StringBuilder {
         val stringBuilder = StringBuilder()
@@ -103,5 +99,10 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
             formatSpecifier.contains("f") -> "Float"
             else -> "Any"
         }
+    }
+
+    private companion object {
+        const val DEFAULT_INDENT = "    "
+        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
     }
 }

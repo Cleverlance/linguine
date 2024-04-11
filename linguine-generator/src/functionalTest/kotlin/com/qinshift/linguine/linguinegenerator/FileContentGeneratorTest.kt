@@ -3,6 +3,7 @@ package com.qinshift.linguine.linguinegenerator
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
+@Suppress("StringLiteralDuplication")
 class FileContentGeneratorTest {
 
     @Suppress("LongMethod")
