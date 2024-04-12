@@ -8,19 +8,19 @@ import org.junit.jupiter.api.Test
 class FileParserTest {
 
     @Test
-    fun `generateNestedMapStructureFromJSON with empty input returns empty map`() {
+    fun `generateNestedMapStructure with empty input returns empty map`() {
         val mapContent: Map<String, String> = emptyMap()
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mutableMapOf<String, Any>()
 
-        val result = fileParser.generateNestedMapStructureFromJSON()
+        val result = fileParser.generateNestedMapStructure()
 
         result shouldBe expectedOutput
     }
 
     @Test
-    fun `generateNestedMapStructureFromJSON with no delimiters in keys creates correct flat structure`() {
+    fun `generateNestedMapStructure with no delimiters in keys creates correct flat structure`() {
         val mapContent = mapOf(
             "singleKey" to "Single Value"
         )
@@ -30,13 +30,13 @@ class FileParserTest {
             "singleKey" to "singleKey"
         )
 
-        val result = fileParser.generateNestedMapStructureFromJSON()
+        val result = fileParser.generateNestedMapStructure()
 
         result shouldBe expectedOutput
     }
 
     @Test
-    fun `generateNestedMapStructureFromJSON with mixed case keys creates consistent camelCase output`() {
+    fun `generateNestedMapStructure with mixed case keys creates consistent camelCase output`() {
         val mapContent = mapOf(
             "activation__ForgottenPassword__emailInput" to "Enter your email"
         )
@@ -50,13 +50,13 @@ class FileParserTest {
             )
         )
 
-        val result = fileParser.generateNestedMapStructureFromJSON()
+        val result = fileParser.generateNestedMapStructure()
 
         result shouldBe expectedOutput
     }
 
     @Test
-    fun `generateNestedMapStructureFromJSON with extra delimiters creates deeply nested structure`() {
+    fun `generateNestedMapStructure with extra delimiters creates deeply nested structure`() {
         val mapContent = mapOf(
             "activation____forgotten_password__email__input" to "Email Input"
         )
@@ -74,13 +74,13 @@ class FileParserTest {
             )
         )
 
-        val result = fileParser.generateNestedMapStructureFromJSON()
+        val result = fileParser.generateNestedMapStructure()
 
         result shouldBe expectedOutput
     }
 
     @Test
-    fun `generateNestedMapStructureFromJSON with valid input creates correct nested structure`() {
+    fun `generateNestedMapStructure with valid input creates correct nested structure`() {
         val mapContent: Map<String, String> = mapOf(
             "activation__forgotten_password__birthdate__cancel_button" to "Cancel",
             "activation__forgotten_password__email_input" to "Enter your email",
@@ -124,7 +124,81 @@ class FileParserTest {
             )
         )
 
-        val result = fileParser.generateNestedMapStructureFromJSON()
+        val result = fileParser.generateNestedMapStructure()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructure with repetitive key elements creates valid nested map`() {
+        val mapContent: Map<String, String> = mapOf(
+            "profile__settings__privacy__privacy_policy" to "Privacy Policy",
+            "profile__settings__privacy__privacy_policy__details" to "Detailed description"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "Profile" to mutableMapOf(
+                "Settings" to mutableMapOf(
+                    "Privacy" to mutableMapOf(
+                        "PrivacyPolicy" to mutableMapOf(
+                            "details" to "profile__settings__privacy__privacy_policy__details"
+                        ),
+                        "privacyPolicy" to "profile__settings__privacy__privacy_policy"
+                    )
+                )
+            )
+        )
+
+        val result = fileParser.generateNestedMapStructure()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructure with deeply nested structures creates expected map`() {
+        val mapContent: Map<String, String> = mapOf(
+            "system__config__database__settings__max_connections" to "100",
+            "system__config__database__settings__timeout" to "30"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "System" to mutableMapOf(
+                "Config" to mutableMapOf(
+                    "Database" to mutableMapOf(
+                        "Settings" to mutableMapOf(
+                            "maxConnections" to "system__config__database__settings__max_connections",
+                            "timeout" to "system__config__database__settings__timeout"
+                        )
+                    )
+                )
+            )
+        )
+
+        val result = fileParser.generateNestedMapStructure()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructure with non-standard characters in keys handles correctly`() {
+        val mapContent: Map<String, String> = mapOf(
+            "user__name__first name" to "John",
+            "user__name__last-name" to "Doe"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "User" to mutableMapOf(
+                "Name" to mutableMapOf(
+                    "first name" to "user__name__first name",
+                    "last-name" to "user__name__last-name"
+                )
+            )
+        )
+
+        val result = fileParser.generateNestedMapStructure()
 
         result shouldBe expectedOutput
     }

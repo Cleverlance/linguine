@@ -5,7 +5,7 @@ class FileParser(
     private val minorDelimiter: String,
     private val majorDelimiter: String
 ) {
-    fun generateNestedMapStructureFromJSON(): MutableMap<String, Any> {
+    fun generateNestedMapStructure(): MutableMap<String, Any> {
         val root = mutableMapOf<String, Any>()
         fileContent.keys.forEach { key ->
             val parts = transformKeyToCamelCaseSegments(key)

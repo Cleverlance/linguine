@@ -124,7 +124,7 @@ abstract class GenerateStringsTask : DefaultTask() {
             minorDelimiter = minorDelimiter.get(),
             majorDelimiter = majorDelimiter.get(),
         )
-        val root = fileParser.generateNestedMapStructureFromJSON()
+        val root = fileParser.generateNestedMapStructure()
 
         // Generate content for the Kotlin Localization File
         val fileContentGenerator = FileContentGenerator(fileContent)
