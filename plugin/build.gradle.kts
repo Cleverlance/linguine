@@ -16,8 +16,8 @@ publishing {
         maven {
             url = uri("https://nexus.cleverlance.com/nexus/repository/maven-snapshots/")
             credentials {
-                username = "paw"
-                password = "sPoOk30Conge"
+                username = System.getenv("NEXUS_USERNAME")
+                password = System.getenv("NEXUS_PASSWORD")
             }
         }
     }
