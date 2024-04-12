@@ -4,7 +4,81 @@ import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
+@Suppress("StringLiteralDuplication")
 class FileParserTest {
+
+    @Test
+    fun `generateNestedMapStructureFromJSON with empty input returns empty map`() {
+        val mapContent: Map<String, String> = emptyMap()
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf<String, Any>()
+
+        val result = fileParser.generateNestedMapStructureFromJSON()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructureFromJSON with no delimiters in keys creates correct flat structure`() {
+        val mapContent = mapOf(
+            "singleKey" to "Single Value"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "singleKey" to "singleKey"
+        )
+
+        val result = fileParser.generateNestedMapStructureFromJSON()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructureFromJSON with mixed case keys creates consistent camelCase output`() {
+        val mapContent = mapOf(
+            "activation__ForgottenPassword__emailInput" to "Enter your email"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "Activation" to mutableMapOf(
+                "ForgottenPassword" to mutableMapOf(
+                    "emailInput" to "activation__ForgottenPassword__emailInput"
+                )
+            )
+        )
+
+        val result = fileParser.generateNestedMapStructureFromJSON()
+
+        result shouldBe expectedOutput
+    }
+
+    @Test
+    fun `generateNestedMapStructureFromJSON with extra delimiters creates deeply nested structure`() {
+        val mapContent = mapOf(
+            "activation____forgotten_password__email__input" to "Email Input"
+        )
+        val fileParser = fileParser(fileContent = mapContent)
+
+        val expectedOutput = mutableMapOf(
+            "Activation" to mutableMapOf(
+                "" to mutableMapOf(
+                    "ForgottenPassword" to mutableMapOf(
+                        "Email" to mutableMapOf(
+                            "input" to "activation____forgotten_password__email__input"
+                        )
+                    )
+                )
+            )
+        )
+
+        val result = fileParser.generateNestedMapStructureFromJSON()
+
+        result shouldBe expectedOutput
+    }
+
     @Test
     fun `generateNestedMapStructureFromJSON with valid input creates correct nested structure`() {
         val mapContent: Map<String, String> = mapOf(

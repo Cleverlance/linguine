@@ -16,11 +16,12 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
 
     private fun generateKotlinCode(builder: StringBuilder, map: Map<String, Any>, depth: Int) {
         map.forEach { (key, value) ->
+            val indent = DEFAULT_INDENT.repeat(depth)
             if (value is Map<*, *>) {
                 @Suppress("UNCHECKED_CAST")
-                appendKotlinObject(builder, key, value as Map<String, Any>, depth)
+                appendKotlinObject(builder, key, value as Map<String, Any>, depth, indent)
             } else {
-                appendFunctionOrValue(builder, key, value.toString(), depth)
+                appendFunctionOrValue(builder, key, value.toString(), indent)
             }
         }
     }
@@ -30,8 +31,8 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         key: String,
         value: Map<String, Any>,
         depth: Int,
+        indent: String
     ) {
-        val indent = DEFAULT_INDENT.repeat(depth)
         builder.apply {
             append("${indent}public object $key {\n")
             generateKotlinCode(this, value, depth + 1)
@@ -43,9 +44,8 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         builder: StringBuilder,
         key: String,
         value: String,
-        depth: Int,
+        indent: String
     ) {
-        val indent = DEFAULT_INDENT.repeat(depth)
         val translation = fileContent.filter { it.key == value }.toString()
         val dataTypes = determineDataTypes(translation)
 
