@@ -4,11 +4,16 @@ plugins {
     `maven-publish`
 }
 
-repositories {
-    // Use Maven Central for resolving dependencies
-    mavenLocal()
-    mavenCentral()
-    gradlePluginPortal()
+group = "com.qinshift.linguine"
+version = "0.1.0-SNAPSHOT"
+
+dependencies {
+    implementation(libs.gson)
+    implementation(kotlin("stdlib"))
+    testImplementation(gradleTestKit())
+    testImplementation(kotlin("test-junit5"))
+    testImplementation(libs.kotest.assertions.core.jvm)
+    testImplementation(libs.mockk)
 }
 
 publishing {
@@ -22,18 +27,6 @@ publishing {
         }
     }
 }
-
-dependencies {
-    implementation(libs.gson)
-    implementation(kotlin("stdlib"))
-    testImplementation(gradleTestKit())
-    testImplementation(kotlin("test-junit5"))
-    testImplementation(libs.kotest.assertions.core.jvm)
-    testImplementation(libs.mockk)
-}
-
-group = "com.qinshift.linguine"
-version = "0.1.0-SNAPSHOT"
 
 gradlePlugin {
     // Define the plugin
@@ -65,14 +58,14 @@ tasks.test {
 // Add a source set and a task for a functional test suite
 gradlePlugin.testSourceSets(sourceSets["functionalTest"])
 
-configurations[sourceSets["functionalTest"].implementationConfigurationName].extendsFrom(configurations.testImplementation.get())
+configurations[sourceSets["functionalTest"].implementationConfigurationName]
+    .extendsFrom(configurations.testImplementation.get())
 
 val functionalTestTask = tasks.register<Test>("functionalTest") {
     useJUnitPlatform()
     testClassesDirs = sourceSets["functionalTest"].output.classesDirs
     classpath = sourceSets["functionalTest"].runtimeClasspath + sourceSets["main"].output
 }
-
 
 tasks.check {
     // Run the functional tests as part of `check`
