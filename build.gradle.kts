@@ -6,6 +6,7 @@ repositories {
 
 plugins {
     alias(libs.plugins.detekt)
+    kotlin("multiplatform") version "1.9.20"
 }
 
 //region Detekt
@@ -26,6 +27,10 @@ tasks.withType<Detekt> {
 }
 //endregion
 
-tasks.register<Delete>("clean") {
+//tasks.register<Delete>("clean") {
+//    delete(rootProject.layout.buildDirectory)
+//}
+
+tasks.clean {
     delete(rootProject.layout.buildDirectory)
 }
