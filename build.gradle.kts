@@ -1,9 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
 
-repositories {
-    mavenCentral()
-}
-
 plugins {
     alias(libs.plugins.detekt)
 }
