@@ -26,4 +26,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "linguine"
 
-include(":plugin")
+include(":linguine-generator")
