@@ -49,7 +49,7 @@ class LinguinePluginFunctionalTest {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("loc")
+            .withArguments("generateStringsObject")
             .build()
 
         assert(result.output.contains(buildSuccessOutput))
@@ -88,7 +88,7 @@ class LinguinePluginFunctionalTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
-            .withArguments("loc")
+            .withArguments("generateStringsObject")
             .withPluginClasspath()
             .build()
 
@@ -158,7 +158,7 @@ public object Strings {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("loc")
+            .withArguments("generateStringsObject")
             .forwardOutput()
             .build()
 

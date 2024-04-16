@@ -19,6 +19,10 @@ import org.gradle.work.Incremental
 @Suppress("unused")
 class LinguinePlugin : Plugin<Project> {
 
+    private companion object {
+        const val TASK_NAME = "generateStringsObject"
+    }
+
     override fun apply(project: Project) {
 
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
@@ -35,7 +39,7 @@ class LinguinePlugin : Plugin<Project> {
             isJvm -> configureForJvm(project, extension)
         }
 
-        project.tasks.register("loc", LocalizeTask::class.java) {
+        project.tasks.register(TASK_NAME, LocalizeTask::class.java) {
             inputFile.set(project.layout.projectDirectory.file(extension.inputFilePath))
             fileType.set(extension.inputFileType)
             minorDelimiter.set(extension.minorDelimiter)
@@ -53,8 +57,11 @@ class LinguinePlugin : Plugin<Project> {
     }
 
     private fun configureForKMP(project: Project, extension: LinguineConfig) {
-        project.tasks.named(extension.buildTaskName ?: "build") {
-            dependsOn("loc")
+        project.afterEvaluate {
+            val buildTasks = extension.buildTaskName?.let { name -> listOf(task(name)) }
+                ?: tasks.filter { task -> task.name.startsWith("compile") }
+
+            buildTasks.forEach { task -> task.dependsOn(TASK_NAME) }
         }
     }
 
