@@ -1,7 +1,6 @@
 package com.qinshift.linguine.linguinegenerator
 
-import com.qinshift.linguine.linguinegenerator.fileReader.FileType as LinguineFileType
-import org.gradle.api.provider.Property as GradleProperty
+import com.qinshift.linguine.linguine_generator.BuildConfig
 import com.qinshift.linguine.linguinegenerator.fileReader.FileReader
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
@@ -14,7 +13,11 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.work.Incremental
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import com.qinshift.linguine.linguinegenerator.fileReader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 
 @Suppress("unused")
 class LinguinePlugin : Plugin<Project> {
@@ -57,6 +60,11 @@ class LinguinePlugin : Plugin<Project> {
     }
 
     private fun configureForKMP(project: Project, extension: LinguineConfig) {
+        with(project.extensions.getByType<KotlinMultiplatformExtension>()) {
+            sourceSets.commonMain.dependencies {
+                implementation("${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}")
+            }
+        }
         project.afterEvaluate {
             val buildTasks = extension.buildTaskName?.let { name -> listOf(task(name)) }
                 ?: tasks.filter { task -> task.name.startsWith("compile") }

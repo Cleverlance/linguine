@@ -2,6 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.gradle.buildconfig) apply false
     alias(libs.plugins.detekt) apply true
     `maven-publish`
 }

@@ -1,14 +1,21 @@
 plugins {
+    alias(libs.plugins.gradle.buildconfig)
     `kotlin-dsl`
 }
 
 dependencies {
     implementation(libs.gson)
+    implementation(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib"))
     testImplementation(gradleTestKit())
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.kotest.assertions.core.jvm)
     testImplementation(libs.mockk)
+}
+
+buildConfig {
+    buildConfigField("GROUP", project.group as String)
+    buildConfigField("VERSION", project.version as String)
 }
 
 gradlePlugin {
