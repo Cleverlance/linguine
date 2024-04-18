@@ -10,16 +10,20 @@ plugins {
 subprojects {
     apply<MavenPublishPlugin>()
 
+    val majorVersion = System.getenv("MAJOR_VERSION") ?: "0"
+    val minorVersion = System.getenv("MINOR_VERSION") ?: "1"
+    val patchVersion = System.getenv("PATCH_VERSION") ?: "0"
+
     group = "com.qinshift.linguine"
-    version = "0.1.0-SNAPSHOT"
+    version = "$majorVersion.$minorVersion.$patchVersion-SNAPSHOT"
 
     publishing {
         repositories {
             maven {
                 url = uri("https://nexus.cleverlance.com/nexus/repository/maven-snapshots/")
                 credentials {
-                    username = System.getenv("NEXUS_USERNAME")
-                    password = System.getenv("NEXUS_PASSWORD")
+                    username = System.getenv("CLEVERLANCE_NEXUS_USERNAME")
+                    password = System.getenv("CLEVERLANCE_NEXUS_PASSWORD")
                 }
             }
         }

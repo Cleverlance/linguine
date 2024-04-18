@@ -1,0 +1,39 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      major_version:
+        description: 'Major version'
+        required: true
+        type: number
+      minor_version:
+        description: 'Minor version'
+        required: true
+        type: number
+      patch_version:
+        description: 'Patch version'
+        required: true
+        type: number
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Publish to Maven
+        env:
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+          MINOR_VERSION: ${{ github.event.inputs.minor_version }}
+          PATCH_VERSION: ${{ github.event.inputs.patch_version }}
+          CLEVERLANCE_NEXUS_USERNAME: ${{ secrets.CLEVERLANCE_NEXUS_USERNAME }}
+          CLEVERLANCE_NEXUS_PASSWORD: ${{ secrets.CLEVERLANCE_NEXUS_PASSWORD }}
+        run: ./gradlew publish
