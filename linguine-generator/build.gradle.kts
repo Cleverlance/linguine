@@ -1,13 +1,11 @@
 plugins {
+    alias(libs.plugins.gradle.buildconfig)
     `kotlin-dsl`
-    `maven-publish`
 }
-
-group = "com.qinshift.linguine"
-version = "0.1.0-SNAPSHOT"
 
 dependencies {
     implementation(libs.gson)
+    implementation(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib"))
     testImplementation(gradleTestKit())
     testImplementation(kotlin("test-junit5"))
@@ -15,16 +13,9 @@ dependencies {
     testImplementation(libs.mockk)
 }
 
-publishing {
-    repositories {
-        maven {
-            url = uri("https://nexus.cleverlance.com/nexus/repository/maven-snapshots/")
-            credentials {
-                username = System.getenv("NEXUS_USERNAME")
-                password = System.getenv("NEXUS_PASSWORD")
-            }
-        }
-    }
+buildConfig {
+    buildConfigField("GROUP", project.group as String)
+    buildConfigField("VERSION", project.version as String)
 }
 
 gradlePlugin {
