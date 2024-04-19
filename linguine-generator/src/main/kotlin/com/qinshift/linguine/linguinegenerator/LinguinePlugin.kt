@@ -13,6 +13,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.work.Incremental
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -23,30 +24,28 @@ import org.gradle.api.provider.Property as GradleProperty
 class LinguinePlugin : Plugin<Project> {
 
     private companion object {
-        const val TASK_NAME = "generateStringsObject"
+        const val GENERATE_STRINGS_TASK_NAME = "generateStrings"
+        const val RUNTIME_DEPENDENCY = "${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}"
     }
 
     override fun apply(project: Project) {
-
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
 
-        val isAndroid =
-            project.plugins.hasPlugin("com.android.application") || project.plugins.hasPlugin("com.android.library")
-        val isKMP = project.plugins.hasPlugin("org.jetbrains.kotlin.multiplatform")
-        val isJvm =
-            project.plugins.hasPlugin("org.jetbrains.kotlin.jvm") || project.plugins.hasPlugin("java")
+        val isKmp = project.hasAnyPlugin("org.jetbrains.kotlin.multiplatform")
+        val isAndroid = project.hasAnyPlugin("com.android.application", "com.android.library")
+        val isJava = project.hasAnyPlugin("org.jetbrains.kotlin.jvm", "java")
 
         when {
+            isKmp -> configureForKmp(project, extension)
             isAndroid -> configureForAndroid(project, extension)
-            isKMP -> configureForKMP(project, extension)
-            isJvm -> configureForJvm(project, extension)
+            isJava -> configureForJvm(project, extension)
         }
 
-        project.tasks.register(TASK_NAME, LocalizeTask::class.java) {
+        project.tasks.register(GENERATE_STRINGS_TASK_NAME, GenerateStringsTask::class.java) {
             inputFile.set(project.layout.projectDirectory.file(extension.inputFilePath))
             fileType.set(extension.inputFileType)
-            minorDelimiter.set(extension.minorDelimiter)
             majorDelimiter.set(extension.majorDelimiter)
+            minorDelimiter.set(extension.minorDelimiter)
             outputFile.set(
                 project.layout.projectDirectory.file(
                     "${extension.outputFilePath}/${extension.outputFileName}",
@@ -55,31 +54,45 @@ class LinguinePlugin : Plugin<Project> {
         }
     }
 
-    private fun configureForAndroid(project: Project, extension: LinguineConfig) {
-        // TODO
-    }
+    private fun Project.hasAnyPlugin(vararg plugins: String): Boolean =
+        plugins.any(this.plugins::hasPlugin)
 
-    private fun configureForKMP(project: Project, extension: LinguineConfig) {
+    private fun configureForKmp(project: Project, extension: LinguineConfig) {
         with(project.extensions.getByType<KotlinMultiplatformExtension>()) {
             sourceSets.commonMain.dependencies {
-                implementation("${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}")
+                implementation(RUNTIME_DEPENDENCY)
             }
         }
+        configureGenerateStringsTask(project, extension)
+    }
+
+    private fun configureForAndroid(project: Project, extension: LinguineConfig) {
+        project.dependencies {
+            add("implementation", RUNTIME_DEPENDENCY)
+        }
+        configureGenerateStringsTask(project, extension)
+    }
+
+
+    private fun configureForJvm(project: Project, extension: LinguineConfig) {
+        project.dependencies {
+            add("implementation", RUNTIME_DEPENDENCY)
+        }
+        configureGenerateStringsTask(project, extension)
+    }
+
+    private fun configureGenerateStringsTask(project: Project, extension: LinguineConfig) {
         project.afterEvaluate {
             val buildTasks = extension.buildTaskName?.let { name -> listOf(task(name)) }
                 ?: tasks.filter { task -> task.name.startsWith("compile") }
 
-            buildTasks.forEach { task -> task.dependsOn(TASK_NAME) }
+            buildTasks.forEach { task -> task.dependsOn(GENERATE_STRINGS_TASK_NAME) }
         }
-    }
-
-    private fun configureForJvm(project: Project, extension: LinguineConfig) {
-        // TODO
     }
 }
 
 @CacheableTask
-abstract class LocalizeTask : DefaultTask() {
+abstract class GenerateStringsTask : DefaultTask() {
     @get:Incremental
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -99,10 +112,8 @@ abstract class LocalizeTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        var fileContent: Map<String, String> = emptyMap()
         // Read Input File
-        val fileReader = FileReader()
-        fileContent = fileReader.read(
+        val fileContent = FileReader().read(
             file = inputFile.asFile.get(),
             fileType = fileType.get(),
         )
