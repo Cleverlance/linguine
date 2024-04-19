@@ -19,7 +19,7 @@ class LinguinePluginTest {
         extension.outputFileName = "Strings.kt"
 
         // Verify the result
-        assertNotNull(project.tasks.findByName("generateStringsObject"))
+        assertNotNull(project.tasks.findByName("generateStrings"))
     }
 
     @Test

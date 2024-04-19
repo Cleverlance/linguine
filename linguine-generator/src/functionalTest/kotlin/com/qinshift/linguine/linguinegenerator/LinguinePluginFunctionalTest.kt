@@ -1,12 +1,12 @@
 package com.qinshift.linguine.linguinegenerator
 
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 class LinguinePluginFunctionalTest {
 
@@ -49,7 +49,7 @@ class LinguinePluginFunctionalTest {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("generateStringsObject")
+            .withArguments("generateStrings")
             .build()
 
         assert(result.output.contains(buildSuccessOutput))
@@ -88,7 +88,7 @@ class LinguinePluginFunctionalTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
-            .withArguments("generateStringsObject")
+            .withArguments("generateStrings")
             .withPluginClasspath()
             .build()
 
@@ -158,7 +158,7 @@ public object Strings {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("generateStringsObject")
+            .withArguments("generateStrings")
             .forwardOutput()
             .build()
 
