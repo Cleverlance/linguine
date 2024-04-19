@@ -45,8 +45,15 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         if (dataTypes.isNotEmpty()) {
             appendFunctionDeclaration(builder, key, value, dataTypes, indent)
         } else {
-            builder.append("$indent public val $key: String = localise(\"$value\")\n")
+            val validName = returnValidValName(key)
+            builder.append("$indent public val $validName: String = localise(\"$value\")\n")
         }
+    }
+
+    private fun returnValidValName(key: String): String {
+        if (key == "continue") {
+            return "`continue`"
+        } else return key
     }
 
     @Suppress("MaximumLineLength", "MaxLineLength")
