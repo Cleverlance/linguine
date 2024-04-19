@@ -99,6 +99,8 @@ class LinguinePluginFunctionalTest {
         val actualContent = generatedFile.readText()
         val expectedContent =
             """
+import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise
+
 public object Strings {
 	 public object Activation {
 		 public object ForgottenPassword {

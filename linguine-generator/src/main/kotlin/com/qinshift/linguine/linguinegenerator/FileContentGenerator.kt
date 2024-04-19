@@ -2,7 +2,8 @@ package com.qinshift.linguine.linguinegenerator
 
 class FileContentGenerator(private val fileContent: Map<String, String>) {
     fun generateFileContent(root: MutableMap<String, Any>): StringBuilder {
-        val stringBuilder = StringBuilder("public object Strings {\n")
+        val stringBuilder = StringBuilder("import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise\n\n")
+        stringBuilder.append("public object Strings {\n")
         generateKotlinCode(stringBuilder, root, 1)
         stringBuilder.append("}\n")
         return stringBuilder

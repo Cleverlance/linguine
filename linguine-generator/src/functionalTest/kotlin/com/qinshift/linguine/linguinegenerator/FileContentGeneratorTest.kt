@@ -54,6 +54,8 @@ class FileContentGeneratorTest {
         val result = generator.generateFileContent(root).toString()
 
         val expected = """
+import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise
+
 public object Strings {
 	 public object Activation {
 		 public object ForgottenPassword {
