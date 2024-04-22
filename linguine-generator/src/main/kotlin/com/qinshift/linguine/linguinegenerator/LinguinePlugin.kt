@@ -128,7 +128,7 @@ abstract class GenerateStringsTask : DefaultTask() {
 
         // Generate content for the Kotlin Localization File
         val fileContentGenerator = FileContentGenerator(fileContent)
-        val outputFileContent = fileContentGenerator.generateFileContent(root = root)
+        val outputFileContent = fileContentGenerator.generateFileContent(root)
 
         // Write built kotlin class and its nested structure into Kotlin File
         val fileWriter = FileWriter()
@@ -138,7 +138,7 @@ abstract class GenerateStringsTask : DefaultTask() {
         )
         logger.lifecycle(
             "Linguine: File ${outputFile.asFile.get().name} " +
-                "has been successfully created in the directory ${outputFile.asFile.get().path}"
+                "has been successfully created in the directory ${outputFile.asFile.get().path}",
         )
     }
 }

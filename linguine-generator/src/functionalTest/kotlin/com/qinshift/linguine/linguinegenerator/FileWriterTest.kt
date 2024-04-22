@@ -1,11 +1,11 @@
 package com.qinshift.linguine.linguinegenerator
 
 import io.kotest.matchers.shouldBe
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Path
 import kotlin.test.BeforeTest
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 class FileWriterTest {
 
@@ -28,22 +28,22 @@ class FileWriterTest {
     @Test
     fun `writeToFile writes correct text to the file`() {
         val testFile = File(tempDir.toFile(), "testFileWriter.kt")
-        val testContent = StringBuilder("This is a test string to be written\n.")
+        val testContent = "This is a test string to be written\n."
 
         fileWriter.writeToFile(testFile, testContent)
 
-        assertFileContentMatches(testFile, testContent.toString())
+        assertFileContentMatches(testFile, testContent)
     }
 
     @Test
     fun `writeToFile should create file if it does not exist`() {
         val nonExistentFile = File(tempDir.toFile(), "nonexistent/subdirectory/testFile.txt")
-        val contentToWrite = StringBuilder("Test content")
+        val contentToWrite = "Test content"
 
         nonExistentFile.exists() shouldBe false
 
         fileWriter.writeToFile(nonExistentFile, contentToWrite)
 
-        assertFileContentMatches(nonExistentFile, contentToWrite.toString())
+        assertFileContentMatches(nonExistentFile, contentToWrite)
     }
 }

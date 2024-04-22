@@ -100,20 +100,31 @@ class LinguinePluginFunctionalTest {
         val actualContent = generatedFile.readText()
         val expectedContent = """
             import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise
+            import kotlin.Float
+            import kotlin.Int
+            import kotlin.String
             
             public object Strings {
                 public object Activation {
                     public object ForgottenPassword {
                         public object Birthdate {
-                            public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")
-                            public fun logOut(param0: String, param1: Int, param2: Float, param3: String, param4: Int, param5: Float): String {
-                                return localise("activation__forgotten_password__birthdate__log_out", param0, param1, param2, param3, param4, param5)
-                            }
+                            public val logIn: String =
+                                    localise("activation__forgotten_password__birthdate__log_in")
+            
+                            public fun logOut(
+                                param1: String,
+                                param2: Int,
+                                param3: Float,
+                                param4: String,
+                                param5: Int,
+                                param6: Float,
+                            ): String = localise("activation__forgotten_password__birthdate__log_out", param1,
+                                    param2, param3, param4, param5, param6)
                         }
                     }
                 }
             }
-            
+        
         """.trimIndent()
         kotlin.test.assertEquals(
             expectedContent,
