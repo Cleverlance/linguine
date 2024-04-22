@@ -1,0 +1,22 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Build & Tests
+        run: ./gradlew build :linguine-generator:test :linguine-generator:functionalTest :linguine-runtime:allTests
