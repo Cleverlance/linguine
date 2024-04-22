@@ -2,7 +2,7 @@ package com.qinshift.linguine.linguinegenerator
 
 class FileContentGenerator(private val fileContent: Map<String, String>) {
 
-    fun generateFileContent(root: MutableMap<String, Any>): StringBuilder {
+    fun generateFileContent(root: Map<String, Any>): StringBuilder {
         val stringBuilder = StringBuilder()
 
         stringBuilder.apply {
@@ -31,7 +31,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         key: String,
         value: Map<String, Any>,
         depth: Int,
-        indent: String
+        indent: String,
     ) {
         builder.apply {
             append("${indent}public object $key {\n")
@@ -44,7 +44,7 @@ class FileContentGenerator(private val fileContent: Map<String, String>) {
         builder: StringBuilder,
         key: String,
         value: String,
-        indent: String
+        indent: String,
     ) {
         val translation = fileContent.filter { it.key == value }.toString()
         val dataTypes = determineDataTypes(translation)

@@ -11,17 +11,17 @@ class FileContentGeneratorTest {
         val fileContent: Map<String, String> = mapOf(
             "settings__privacy__title" to "Title for Privacy Settings",
             "settings__privacy" to "Privacy Settings",
-            "settings__title" to "Title for Settings"
+            "settings__title" to "Title for Settings",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Settings" to mutableMapOf(
+        val root: Map<String, Any> = mapOf(
+            "Settings" to mapOf(
                 "privacy" to "settings__privacy",
                 "title" to "settings__title",
-                "Privacy" to mutableMapOf(
-                    "title" to "settings__privacy__title"
-                )
-            )
+                "Privacy" to mapOf(
+                    "title" to "settings__privacy__title",
+                ),
+            ),
         )
         val generator = FileContentGenerator(fileContent)
 
@@ -44,13 +44,13 @@ public object Strings {
     @Test
     fun `generateFileContent with empty values produces valid Kotlin object structures`() {
         val fileContent: Map<String, String> = mapOf(
-            "section__empty_value" to ""
+            "section__empty_value" to "",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Section" to mutableMapOf(
-                "emptyValue" to "section__empty_value"
-            )
+        val root: Map<String, Any> = mapOf(
+            "Section" to mapOf(
+                "emptyValue" to "section__empty_value",
+            ),
         )
         val generator = FileContentGenerator(fileContent)
 
@@ -69,19 +69,19 @@ public object Strings {
     @Test
     fun `generateFileContent with deeply nested structures produces expected Kotlin object structure`() {
         val fileContent: Map<String, String> = mapOf(
-            "deep__level_one__level_two__level_three__final" to "Deeply Nested Value"
+            "deep__level_one__level_two__level_three__final" to "Deeply Nested Value",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Deep" to mutableMapOf(
-                "LevelOne" to mutableMapOf(
-                    "LevelTwo" to mutableMapOf(
-                        "LevelThree" to mutableMapOf(
-                            "final" to "deep__level_one__level_two__level_three__final"
-                        )
-                    )
-                )
-            )
+        val root: Map<String, Any> = mapOf(
+            "Deep" to mapOf(
+                "LevelOne" to mapOf(
+                    "LevelTwo" to mapOf(
+                        "LevelThree" to mapOf(
+                            "final" to "deep__level_one__level_two__level_three__final",
+                        ),
+                    ),
+                ),
+            ),
         )
         val generator = FileContentGenerator(fileContent)
 
@@ -110,7 +110,7 @@ public object Strings {
             "another__simple__key" to "Another Simple Value",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
+        val root: Map<String, Any> = mapOf(
             "Simple" to "simple__key",
             "AnotherSimple" to "another__simple__key",
         )
@@ -130,13 +130,13 @@ public object Strings {
     @Test
     fun `generateFileContent with complex function parameterization generates correct function signatures`() {
         val fileContent: Map<String, String> = mapOf(
-            "error__message__with_parameters" to "Error %1\$s occurred at %2\$d:%3\$d on %4\$s"
+            "error__message__with_parameters" to "Error %1\$s occurred at %2\$d:%3\$d on %4\$s",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Error" to mutableMapOf(
-                "messageWithParameters" to "error__message__with_parameters"
-            )
+        val root: Map<String, Any> = mapOf(
+            "Error" to mapOf(
+                "messageWithParameters" to "error__message__with_parameters",
+            ),
         )
         val generator = FileContentGenerator(fileContent)
 
@@ -161,14 +161,14 @@ public object Strings {
             "another__special__key__with_numbers123" to "Numbered Value",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Special" to mutableMapOf(
-                "Characters" to mutableMapOf(
-                    "Key" to mutableMapOf(
+        val root: Map<String, Any> = mapOf(
+            "Special" to mapOf(
+                "Characters" to mapOf(
+                    "Key" to mapOf(
                         "value" to "special__char@cters__key!__value",
                     ),
                 ),
-                "AnotherSpecial" to mutableMapOf(
+                "AnotherSpecial" to mapOf(
                     "keyWithNumbers123" to "another__special__key__with_numbers123",
                 ),
             ),
@@ -208,29 +208,29 @@ public object Strings {
             "checkout__payment__credit_card__cvv" to "CVV",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Activation" to mutableMapOf(
-                "ForgottenPassword" to mutableMapOf(
-                    "Birthdate" to mutableMapOf(
+        val root: Map<String, Any> = mapOf(
+            "Activation" to mapOf(
+                "ForgottenPassword" to mapOf(
+                    "Birthdate" to mapOf(
                         "cancelButton" to "activation__forgotten_password__birthdate__cancel_button",
                     ),
                     "emailInput" to "activation__forgotten_password__email_input",
                 ),
             ),
-            "Home" to mutableMapOf(
+            "Home" to mapOf(
                 "welcomeMessage" to "home__welcome_message",
             ),
-            "Profile" to mutableMapOf(
-                "Settings" to mutableMapOf(
-                    "Privacy" to mutableMapOf(
+            "Profile" to mapOf(
+                "Settings" to mapOf(
+                    "Privacy" to mapOf(
                         "title" to "profile__settings__privacy__title",
                         "description" to "profile__settings__privacy__description",
                     ),
                 ),
             ),
-            "Checkout" to mutableMapOf(
-                "Payment" to mutableMapOf(
-                    "CreditCard" to mutableMapOf(
+            "Checkout" to mapOf(
+                "Payment" to mapOf(
+                    "CreditCard" to mapOf(
                         "numberInput" to "checkout__payment__credit_card__number_input",
                         "expiryDate" to "checkout__payment__credit_card__expiry_date",
                         "cvv" to "checkout__payment__credit_card__cvv",
@@ -285,10 +285,10 @@ public object Strings {
             "activation__forgotten_password__birthdate__cancel_button" to "\"%s %d %f %${'$'}s %${'$'}d %${'$'}f\"",
         )
 
-        val root: MutableMap<String, Any> = mutableMapOf(
-            "Activation" to mutableMapOf(
-                "ForgottenPassword" to mutableMapOf(
-                    "Birthdate" to mutableMapOf(
+        val root: Map<String, Any> = mapOf(
+            "Activation" to mapOf(
+                "ForgottenPassword" to mapOf(
+                    "Birthdate" to mapOf(
                         "cancelButton" to "activation__forgotten_password__birthdate__cancel_button",
                     ),
                 ),

@@ -3,9 +3,9 @@ package com.qinshift.linguine.linguinegenerator
 class FileParser(
     private val fileContent: Map<String, String>,
     private val minorDelimiter: String,
-    private val majorDelimiter: String
+    private val majorDelimiter: String,
 ) {
-    fun generateNestedMapStructure(): MutableMap<String, Any> {
+    fun generateNestedMapStructure(): Map<String, Any> {
         val root = mutableMapOf<String, Any>()
         fileContent.keys.forEach { key ->
             val parts = transformKeyToCamelCaseSegments(key)
@@ -25,7 +25,7 @@ class FileParser(
     private fun updateNestedMapStructure(
         root: MutableMap<String, Any>,
         parts: List<String>,
-        fullKey: String
+        fullKey: String,
     ) {
         var current = root
         @Suppress("UNCHECKED_CAST")

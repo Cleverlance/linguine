@@ -12,7 +12,7 @@ class FileParserTest {
         val mapContent: Map<String, String> = emptyMap()
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf<String, Any>()
+        val expectedOutput = mapOf<String, Any>()
 
         val result = fileParser.generateNestedMapStructure()
 
@@ -22,12 +22,12 @@ class FileParserTest {
     @Test
     fun `generateNestedMapStructure with no delimiters in keys creates correct flat structure`() {
         val mapContent = mapOf(
-            "singleKey" to "Single Value"
+            "singleKey" to "Single Value",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "singleKey" to "singleKey"
+        val expectedOutput = mapOf(
+            "singleKey" to "singleKey",
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -38,16 +38,16 @@ class FileParserTest {
     @Test
     fun `generateNestedMapStructure with mixed case keys creates consistent camelCase output`() {
         val mapContent = mapOf(
-            "activation__ForgottenPassword__emailInput" to "Enter your email"
+            "activation__ForgottenPassword__emailInput" to "Enter your email",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "Activation" to mutableMapOf(
-                "ForgottenPassword" to mutableMapOf(
-                    "emailInput" to "activation__ForgottenPassword__emailInput"
-                )
-            )
+        val expectedOutput = mapOf(
+            "Activation" to mapOf(
+                "ForgottenPassword" to mapOf(
+                    "emailInput" to "activation__ForgottenPassword__emailInput",
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -58,20 +58,20 @@ class FileParserTest {
     @Test
     fun `generateNestedMapStructure with extra delimiters creates deeply nested structure`() {
         val mapContent = mapOf(
-            "activation____forgotten_password__email__input" to "Email Input"
+            "activation____forgotten_password__email__input" to "Email Input",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "Activation" to mutableMapOf(
-                "" to mutableMapOf(
-                    "ForgottenPassword" to mutableMapOf(
-                        "Email" to mutableMapOf(
-                            "input" to "activation____forgotten_password__email__input"
-                        )
-                    )
-                )
-            )
+        val expectedOutput = mapOf(
+            "Activation" to mapOf(
+                "" to mapOf(
+                    "ForgottenPassword" to mapOf(
+                        "Email" to mapOf(
+                            "input" to "activation____forgotten_password__email__input",
+                        ),
+                    ),
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -89,39 +89,39 @@ class FileParserTest {
             "profile__settings__privacy__description" to "Manage your privacy settings here.",
             "checkout__payment__credit_card__number_input" to "Credit Card Number",
             "checkout__payment__credit_card__expiry_date" to "Expiry Date",
-            "checkout__payment__credit_card__cvv" to "CVV"
+            "checkout__payment__credit_card__cvv" to "CVV",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "Activation" to mutableMapOf(
-                "ForgottenPassword" to mutableMapOf(
-                    "Birthdate" to mutableMapOf(
-                        "cancelButton" to "activation__forgotten_password__birthdate__cancel_button"
+        val expectedOutput = mapOf(
+            "Activation" to mapOf(
+                "ForgottenPassword" to mapOf(
+                    "Birthdate" to mapOf(
+                        "cancelButton" to "activation__forgotten_password__birthdate__cancel_button",
                     ),
-                    "emailInput" to "activation__forgotten_password__email_input"
-                )
+                    "emailInput" to "activation__forgotten_password__email_input",
+                ),
             ),
-            "Home" to mutableMapOf(
-                "welcomeMessage" to "home__welcome_message"
+            "Home" to mapOf(
+                "welcomeMessage" to "home__welcome_message",
             ),
-            "Profile" to mutableMapOf(
-                "Settings" to mutableMapOf(
-                    "Privacy" to mutableMapOf(
+            "Profile" to mapOf(
+                "Settings" to mapOf(
+                    "Privacy" to mapOf(
                         "title" to "profile__settings__privacy__title",
-                        "description" to "profile__settings__privacy__description"
-                    )
-                )
+                        "description" to "profile__settings__privacy__description",
+                    ),
+                ),
             ),
-            "Checkout" to mutableMapOf(
-                "Payment" to mutableMapOf(
-                    "CreditCard" to mutableMapOf(
+            "Checkout" to mapOf(
+                "Payment" to mapOf(
+                    "CreditCard" to mapOf(
                         "numberInput" to "checkout__payment__credit_card__number_input",
                         "expiryDate" to "checkout__payment__credit_card__expiry_date",
-                        "cvv" to "checkout__payment__credit_card__cvv"
-                    )
-                )
-            )
+                        "cvv" to "checkout__payment__credit_card__cvv",
+                    ),
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -133,21 +133,21 @@ class FileParserTest {
     fun `generateNestedMapStructure with repetitive key elements creates valid nested map`() {
         val mapContent: Map<String, String> = mapOf(
             "profile__settings__privacy__privacy_policy" to "Privacy Policy",
-            "profile__settings__privacy__privacy_policy__details" to "Detailed description"
+            "profile__settings__privacy__privacy_policy__details" to "Detailed description",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "Profile" to mutableMapOf(
-                "Settings" to mutableMapOf(
-                    "Privacy" to mutableMapOf(
-                        "PrivacyPolicy" to mutableMapOf(
-                            "details" to "profile__settings__privacy__privacy_policy__details"
+        val expectedOutput = mapOf(
+            "Profile" to mapOf(
+                "Settings" to mapOf(
+                    "Privacy" to mapOf(
+                        "PrivacyPolicy" to mapOf(
+                            "details" to "profile__settings__privacy__privacy_policy__details",
                         ),
-                        "privacyPolicy" to "profile__settings__privacy__privacy_policy"
-                    )
-                )
-            )
+                        "privacyPolicy" to "profile__settings__privacy__privacy_policy",
+                    ),
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -159,21 +159,21 @@ class FileParserTest {
     fun `generateNestedMapStructure with deeply nested structures creates expected map`() {
         val mapContent: Map<String, String> = mapOf(
             "system__config__database__settings__max_connections" to "100",
-            "system__config__database__settings__timeout" to "30"
+            "system__config__database__settings__timeout" to "30",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "System" to mutableMapOf(
-                "Config" to mutableMapOf(
-                    "Database" to mutableMapOf(
-                        "Settings" to mutableMapOf(
+        val expectedOutput = mapOf(
+            "System" to mapOf(
+                "Config" to mapOf(
+                    "Database" to mapOf(
+                        "Settings" to mapOf(
                             "maxConnections" to "system__config__database__settings__max_connections",
-                            "timeout" to "system__config__database__settings__timeout"
-                        )
-                    )
-                )
-            )
+                            "timeout" to "system__config__database__settings__timeout",
+                        ),
+                    ),
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -185,17 +185,17 @@ class FileParserTest {
     fun `generateNestedMapStructure with non-standard characters in keys handles correctly`() {
         val mapContent: Map<String, String> = mapOf(
             "user__name__first name" to "John",
-            "user__name__last-name" to "Doe"
+            "user__name__last-name" to "Doe",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mutableMapOf(
-            "User" to mutableMapOf(
-                "Name" to mutableMapOf(
+        val expectedOutput = mapOf(
+            "User" to mapOf(
+                "Name" to mapOf(
                     "first name" to "user__name__first name",
-                    "last-name" to "user__name__last-name"
-                )
-            )
+                    "last-name" to "user__name__last-name",
+                ),
+            ),
         )
 
         val result = fileParser.generateNestedMapStructure()
@@ -206,10 +206,10 @@ class FileParserTest {
     private fun fileParser(
         fileContent: Map<String, String> = mockk(),
         minorDelimiter: String = "_",
-        majorDelimiter: String = "__"
+        majorDelimiter: String = "__",
     ) = FileParser(
         fileContent = fileContent,
         minorDelimiter = minorDelimiter,
-        majorDelimiter = majorDelimiter
+        majorDelimiter = majorDelimiter,
     )
 }
