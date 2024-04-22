@@ -124,7 +124,7 @@ abstract class GenerateStringsTask : DefaultTask() {
             minorDelimiter = minorDelimiter.get(),
             majorDelimiter = majorDelimiter.get(),
         )
-        val root = fileParser.generateNestedMapStructureFromJSON()
+        val root = fileParser.generateNestedMapStructure()
 
         // Generate content for the Kotlin Localization File
         val fileContentGenerator = FileContentGenerator(fileContent)
@@ -136,9 +136,9 @@ abstract class GenerateStringsTask : DefaultTask() {
             outputFile = outputFile.asFile.get(),
             outputFileContent = outputFileContent,
         )
-        println(
+        logger.lifecycle(
             "Linguine: File ${outputFile.asFile.get().name} " +
-                "has been successfully created in the directory ${outputFile.asFile.get().path}",
+                "has been successfully created in the directory ${outputFile.asFile.get().path}"
         )
     }
 }
