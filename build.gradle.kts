@@ -10,7 +10,7 @@ plugins {
 subprojects {
     apply<MavenPublishPlugin>()
 
-    group = "com.qinshift.linguine"
+    group = "io.github.cleverlance.linguine"
     version = "0.1.0-SNAPSHOT"
 
     publishing {
