@@ -1,6 +1,7 @@
 [versions]
 kotlin = "1.9.20"
 kotlinx-serialization = "1.6.3"
+kotlinPoet = "1.16.0"
 gradle-buildconfig = "5.3.5"
 detekt = "1.23.3"
 gson = "2.10.1"
@@ -15,6 +16,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 [libraries]
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinPoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinPoet" }
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }

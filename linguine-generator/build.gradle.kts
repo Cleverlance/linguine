@@ -7,6 +7,7 @@ dependencies {
     implementation(libs.gson)
     implementation(kotlin("gradle-plugin"))
     implementation(kotlin("stdlib"))
+    implementation(libs.kotlinPoet)
     testImplementation(gradleTestKit())
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.kotest.assertions.core.jvm)
