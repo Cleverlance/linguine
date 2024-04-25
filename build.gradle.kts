@@ -23,7 +23,7 @@ subprojects {
     version = "$majorVersion.$minorVersion.$patchVersion"
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
         signAllPublications()
 
         pom {
