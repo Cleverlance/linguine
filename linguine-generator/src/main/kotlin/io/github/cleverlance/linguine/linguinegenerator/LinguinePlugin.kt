@@ -127,7 +127,7 @@ abstract class GenerateStringsTask : DefaultTask() {
         val root = fileParser.generateNestedMapStructure()
 
         // Generate content for the Kotlin Localization File
-        val fileContentGenerator = FileContentGenerator(fileContent)
+        val fileContentGenerator = FileContentGenerator(outputFile.asFile.get().toPath(), fileContent)
         val outputFileContent = fileContentGenerator.generateFileContent(root)
 
         // Write built kotlin class and its nested structure into Kotlin File

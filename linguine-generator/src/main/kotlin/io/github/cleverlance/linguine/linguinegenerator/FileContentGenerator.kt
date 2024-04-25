@@ -5,9 +5,14 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import java.nio.file.Path
+import kotlin.io.path.isDirectory
+import kotlin.io.path.name
+import kotlin.io.path.relativeTo
 import kotlin.reflect.KClass
 
 class FileContentGenerator(
+    private val filePath: Path,
     private val fileContent: Map<String, String>,
 ) {
 
@@ -16,8 +21,24 @@ class FileContentGenerator(
         val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
     }
 
+    private val filePackage: String by lazy {
+        fun Path.isSourceDirectory(): Boolean = isDirectory()
+            && (name == "kotlin" || name == "java")
+            && parent?.parent?.name == "src"
+
+        var sourcePath: Path? = filePath
+        while (sourcePath != null && !sourcePath.isSourceDirectory()) {
+            sourcePath = sourcePath.parent
+        }
+
+        if (sourcePath == null) return@lazy "" // no package
+
+        val relativeDirectoryPath = filePath.parent.relativeTo(sourcePath)
+        relativeDirectoryPath.joinToString(separator = ".") { path -> path.name }
+    }
+
     fun generateFileContent(root: Map<String, Any>): String {
-        return FileSpec.builder("", "")
+        return FileSpec.builder(filePackage, "")
             .indent(DEFAULT_INDENT)
             .addImport(
                 "io.github.cleverlance.linguine.linguineruntime.presentation",

@@ -1,6 +1,7 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
 import io.kotest.matchers.shouldBe
+import kotlin.io.path.Path
 import kotlin.test.Test
 
 @Suppress("StringLiteralDuplication")
@@ -8,6 +9,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with overlapping key names produces differentiated Kotlin object structures`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "settings__privacy__title" to "Title for Privacy Settings",
             "settings__privacy" to "Privacy Settings",
@@ -23,11 +25,13 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -48,6 +52,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with empty values produces valid Kotlin object structures`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "section__empty_value" to "",
         )
@@ -57,11 +62,13 @@ class FileContentGeneratorTest {
                 "emptyValue" to "section__empty_value",
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -76,6 +83,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with deeply nested structures produces expected Kotlin object structure`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "deep__level_one__level_two__level_three__final" to "Deeply Nested Value",
         )
@@ -91,11 +99,13 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -117,6 +127,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with simple values produces expected Kotlin properties`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "simple__key" to "Simple Value",
             "another__simple__key" to "Another Simple Value",
@@ -126,11 +137,13 @@ class FileContentGeneratorTest {
             "Simple" to "simple__key",
             "AnotherSimple" to "another__simple__key",
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -145,6 +158,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with complex function parameterization generates correct function signatures`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "error__message__with_parameters" to "Error %1\$s occurred at %2\$d:%3\$d on %4\$s",
         )
@@ -154,11 +168,13 @@ class FileContentGeneratorTest {
                 "messageWithParameters" to "error__message__with_parameters",
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.Int
             import kotlin.String
@@ -179,6 +195,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with special characters in keys produces expected Kotlin object structure`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "special__char@cters__key!__value" to "Special Value",
             "another__special__key__with_numbers123" to "Numbered Value",
@@ -196,11 +213,13 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -225,6 +244,7 @@ class FileContentGeneratorTest {
     @Suppress("LongMethod")
     @Test
     fun `generateFileContent with simple map produces expected Kotlin object structure`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "activation__forgotten_password__birthdate__cancel_button" to "Cancel",
             "activation__forgotten_password__email_input" to "Enter your email",
@@ -266,11 +286,13 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.String
             
@@ -320,6 +342,7 @@ class FileContentGeneratorTest {
 
     @Test
     fun `generateFileContent with function parameters generates kotlin object with function parameters`() {
+        val filePath = Path("src/main/kotlin/com/example/app/Strings.kt")
         val fileContent: Map<String, String> = mapOf(
             "activation__forgotten_password__birthdate__cancel_button" to "\"%s %d %f %${'$'}s %${'$'}d %${'$'}f\"",
         )
@@ -333,11 +356,13 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(fileContent)
+        val generator = FileContentGenerator(filePath, fileContent)
 
         val result = generator.generateFileContent(root)
 
         val expected = """
+            package com.example.app
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.Float
             import kotlin.Int

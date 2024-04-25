@@ -66,7 +66,7 @@ class LinguinePluginFunctionalTest {
                 
             linguineConfig {
                 inputFilePath = "src/main/resources/strings.json"
-                outputFilePath = "${testProjectDir.absolutePath.replace('\\', '/')}/presentation"
+                outputFilePath = "${testProjectDir.absolutePath.replace('\\', '/')}/src/main/kotlin/presentation"
                 outputFileName = "Strings.kt"
                 majorDelimiter = "__"
                 minorDelimiter = "_"
@@ -95,10 +95,12 @@ class LinguinePluginFunctionalTest {
 
         assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
-        val generatedFile = File(testProjectDir, "presentation/Strings.kt")
+        val generatedFile = File(testProjectDir, "src/main/kotlin/presentation/Strings.kt")
         assertTrue(generatedFile.exists(), "Generated file should exist")
         val actualContent = generatedFile.readText()
         val expectedContent = """
+            package presentation
+            
             import io.github.cleverlance.linguine.linguineruntime.presentation.Localiser.localise
             import kotlin.Float
             import kotlin.Int
