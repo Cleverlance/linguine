@@ -3,7 +3,9 @@ kotlin = "1.9.20"
 kotlinx-serialization = "1.6.3"
 kotlinPoet = "1.16.0"
 gradle-buildconfig = "5.3.5"
+gradle-maven-publish = "0.28.0"
 detekt = "1.23.3"
+dokka = "1.9.20"
 gson = "2.10.1"
 kotest = "5.6.2"
 mockk = "1.12.0"
@@ -12,7 +14,9 @@ kermit = "2.0.3"
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 gradle-buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "gradle-buildconfig" }
+gradle-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [libraries]
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
