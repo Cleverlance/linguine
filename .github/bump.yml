@@ -1,0 +1,8 @@
+release:
+  title-prefix: 'v'
+  tag-prefix: 'v'
+  initial-version: '0.1.0'
+  body-when-empty-changes: 'Changes not compiled before version 1.'
+branch:
+  base-branch: 'main'
+  create-major-version-branch: false

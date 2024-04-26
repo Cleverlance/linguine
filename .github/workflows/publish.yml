@@ -3,18 +3,15 @@ name: Publish
 on:
   workflow_dispatch:
     inputs:
-      major_version:
-        description: 'Major version'
+      version_bump:
+        description: 'Select version bump'
         required: true
-        type: number
-      minor_version:
-        description: 'Minor version'
-        required: true
-        type: number
-      patch_version:
-        description: 'Patch version'
-        required: true
-        type: number
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: 'minor'
 
 jobs:
   publish:
@@ -22,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -29,11 +28,16 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
-      - name: Publish to Maven
+      - name: Bump version
+        id: bump_version
+        uses: MeilCli/bump-release-action@v2
+        with:
+          config_path: '.github/bump.yml'
+          bump: ${{ github.event.inputs.version_bump }}
+
+      - name: Publish to Maven Central
         env:
-          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
-          MINOR_VERSION: ${{ github.event.inputs.minor_version }}
-          PATCH_VERSION: ${{ github.event.inputs.patch_version }}
+          NEXT_VERSION: ${{ steps.bump_version.outputs.next_version }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}

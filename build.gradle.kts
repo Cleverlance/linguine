@@ -15,12 +15,8 @@ subprojects {
     apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
 
-    val majorVersion = System.getenv("MAJOR_VERSION") ?: "0"
-    val minorVersion = System.getenv("MINOR_VERSION") ?: "1"
-    val patchVersion = System.getenv("PATCH_VERSION") ?: "0"
-
     group = "io.github.cleverlance.linguine"
-    version = "$majorVersion.$minorVersion.$patchVersion"
+    version = System.getenv("NEXT_VERSION") ?: "0.1.0"
 
     mavenPublishing {
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
