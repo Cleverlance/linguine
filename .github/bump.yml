@@ -3,5 +3,5 @@ release:
   tag-prefix: 'v'
   initial-version: '0.1.0'
 branch:
-  base-branch: 'main'
+  base-branch: 'feature/bump-releases'
   create-major-version-branch: false
