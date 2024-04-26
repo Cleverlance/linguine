@@ -2,6 +2,7 @@ release:
   title-prefix: 'v'
   tag-prefix: 'v'
   initial-version: '0.1.0'
+  body-when-empty-changes: ''
 branch:
   base-branch: 'feature/bump-releases'
   create-major-version-branch: false
