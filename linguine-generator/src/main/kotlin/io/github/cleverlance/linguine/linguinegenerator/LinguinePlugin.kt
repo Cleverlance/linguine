@@ -1,5 +1,7 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
+import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 import io.github.cleverlance.linguine.linguine_generator.BuildConfig
 import io.github.cleverlance.linguine.linguinegenerator.filereader.FileReader
 import org.gradle.api.DefaultTask
@@ -17,8 +19,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.work.Incremental
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
-import org.gradle.api.provider.Property as GradleProperty
 
 @Suppress("unused")
 class LinguinePlugin : Plugin<Project> {

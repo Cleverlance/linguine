@@ -1,11 +1,11 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Path
 import kotlin.test.BeforeTest
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class FileWriterTest {
 

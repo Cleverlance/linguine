@@ -1,9 +1,9 @@
 package io.github.cleverlance.linguine.linguineruntime.presentation
 
 import co.touchlab.kermit.Logger
+import kotlin.native.concurrent.ThreadLocal
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlin.native.concurrent.ThreadLocal
 
 @ThreadLocal
 internal object LocalisationProvider {
