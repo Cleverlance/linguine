@@ -1,23 +1,24 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class LinguinePluginFunctionalTest {
 
     @TempDir
     lateinit var testProjectDir: File
 
-    private var buildSuccessOutput: String = "BUILD SUCCESSFUL"
-    private var gradleBuildFileName = "build.gradle.kts"
+    private val generateTaskName = "generateStrings"
+    private val buildSuccessOutput: String = "BUILD SUCCESSFUL"
+    private val gradleBuildFileName = "build.gradle.kts"
 
     @Test
-    fun `plugin task executes successfully`() {
+    fun whenGenerateTaskExecutedThenCompletedSuccessfully() {
         File(testProjectDir, gradleBuildFileName).apply {
             writeText(
                 """
@@ -49,14 +50,15 @@ class LinguinePluginFunctionalTest {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("generateStrings")
+            .withArguments(generateTaskName)
             .build()
 
         assert(result.output.contains(buildSuccessOutput))
     }
 
+    @Suppress("LongMethod")
     @Test
-    fun `plugin generates expected Kotlin file from JSON configuration`() {
+    fun whenGenerateTaskExecutedThenOutputsFileContainsExpectedContent() {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
@@ -89,7 +91,7 @@ class LinguinePluginFunctionalTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
-            .withArguments("generateStrings")
+            .withArguments(generateTaskName)
             .withPluginClasspath()
             .build()
 
@@ -136,7 +138,7 @@ class LinguinePluginFunctionalTest {
     }
 
     @Test
-    fun `plugin generates file at specified location with correct content`() {
+    fun whenGenerateTaskExecutedThenOutputFilePlacedInConfiguredPath() {
         val testProjectDir = createTempDirectory().toFile()
 
         File(testProjectDir, "settings.gradle.kts").writeText("")
@@ -173,7 +175,7 @@ class LinguinePluginFunctionalTest {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments("generateStrings")
+            .withArguments(generateTaskName)
             .forwardOutput()
             .build()
 
