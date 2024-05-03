@@ -1,9 +1,9 @@
 package io.github.cleverlance.linguine.linguinegenerator.filereader
 
+import java.io.File
 import org.gradle.internal.impldep.junit.framework.TestCase.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import java.io.File
 
 class FileReaderTest {
 

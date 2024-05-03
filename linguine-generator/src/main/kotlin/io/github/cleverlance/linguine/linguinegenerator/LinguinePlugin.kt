@@ -1,5 +1,7 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
+import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 import io.github.cleverlance.linguine.linguine_generator.BuildConfig
 import io.github.cleverlance.linguine.linguinegenerator.filereader.FileReader
 import org.gradle.api.DefaultTask
@@ -17,16 +19,9 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.work.Incremental
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
-import org.gradle.api.provider.Property as GradleProperty
 
 @Suppress("unused")
 class LinguinePlugin : Plugin<Project> {
-
-    private companion object {
-        const val GENERATE_STRINGS_TASK_NAME = "generateStrings"
-        const val RUNTIME_DEPENDENCY = "${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}"
-    }
 
     override fun apply(project: Project) {
         val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
@@ -73,7 +68,6 @@ class LinguinePlugin : Plugin<Project> {
         configureGenerateStringsTask(project, extension)
     }
 
-
     private fun configureForJvm(project: Project, extension: LinguineConfig) {
         project.dependencies {
             add("implementation", RUNTIME_DEPENDENCY)
@@ -88,6 +82,11 @@ class LinguinePlugin : Plugin<Project> {
 
             buildTasks.forEach { task -> task.dependsOn(GENERATE_STRINGS_TASK_NAME) }
         }
+    }
+
+    private companion object {
+        const val GENERATE_STRINGS_TASK_NAME = "generateStrings"
+        const val RUNTIME_DEPENDENCY = "${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}"
     }
 }
 

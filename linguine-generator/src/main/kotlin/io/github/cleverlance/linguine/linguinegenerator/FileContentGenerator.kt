@@ -16,26 +16,7 @@ class FileContentGenerator(
     private val fileContent: Map<String, String>,
 ) {
 
-    private companion object {
-        const val DEFAULT_INDENT = "    "
-        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
-    }
-
-    private val filePackage: String by lazy {
-        fun Path.isSourceDirectory(): Boolean = isDirectory()
-            && (name == "kotlin" || name == "java")
-            && parent?.parent?.name == "src"
-
-        var sourcePath: Path? = filePath
-        while (sourcePath != null && !sourcePath.isSourceDirectory()) {
-            sourcePath = sourcePath.parent
-        }
-
-        if (sourcePath == null) return@lazy "" // no package
-
-        val relativeDirectoryPath = filePath.parent.relativeTo(sourcePath)
-        relativeDirectoryPath.joinToString(separator = ".") { path -> path.name }
-    }
+    private val filePackage: String by lazy { getFilePackage(filePath) }
 
     fun generateFileContent(root: Map<String, Any>): String {
         return FileSpec.builder(filePackage, "")
@@ -51,6 +32,22 @@ class FileContentGenerator(
             )
             .build()
             .toString()
+    }
+
+    private fun getFilePackage(filePath: Path): String {
+        fun Path.isSourceDirectory(): Boolean = isDirectory() &&
+            (name == "kotlin" || name == "java") &&
+            parent?.parent?.name == "src"
+
+        var sourcePath: Path? = filePath
+        while (sourcePath != null && !sourcePath.isSourceDirectory()) {
+            sourcePath = sourcePath.parent
+        }
+
+        if (sourcePath == null) return "" // no package
+
+        val relativeDirectoryPath = filePath.parent.relativeTo(sourcePath)
+        return relativeDirectoryPath.joinToString(separator = ".") { path -> path.name }
     }
 
     private fun TypeSpec.Builder.addObjectContent(root: Map<String, Any>): TypeSpec.Builder {
@@ -114,5 +111,10 @@ class FileContentGenerator(
             formatSpecifier.contains("f") -> Float::class
             else -> Any::class
         }
+    }
+
+    private companion object {
+        const val DEFAULT_INDENT = "    "
+        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
     }
 }
