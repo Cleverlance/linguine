@@ -41,16 +41,25 @@ class LinguinePlugin : Plugin<Project> {
             isJava -> configureForJvm(project, extension)
         }
 
+
+        project.subprojects.forEach { subproject ->
+            subproject.afterEvaluate {
+                if (extension.moduleNameMapping.containsKey(subproject.name)) {
+                    val keyPrefix = extension.moduleNameMapping[subproject.name]
+                    subproject.tasks.register("generateModuleStrings", GenerateStringsTask::class.java) {
+                        val moduleSpecificInputFile = "${extension.inputFilePath}/${keyPrefix}_strings.json"
+                        inputFile.set(subproject.layout.projectDirectory.file(moduleSpecificInputFile))
+                        outputFile.set(subproject.layout.buildDirectory.file("$keyPrefix.kt"))
+                    }
+                }
+            }
+        }
+
         project.tasks.register(GENERATE_STRINGS_TASK_NAME, GenerateStringsTask::class.java) {
             inputFile.set(project.layout.projectDirectory.file(extension.inputFilePath))
             fileType.set(extension.inputFileType)
             majorDelimiter.set(extension.majorDelimiter)
             minorDelimiter.set(extension.minorDelimiter)
-            outputFile.set(
-                project.layout.projectDirectory.file(
-                    "${extension.outputFilePath}/${extension.outputFileName}",
-                ),
-            )
         }
     }
 
@@ -119,26 +128,26 @@ abstract class GenerateStringsTask : DefaultTask() {
         )
 
         // Parse File into internal nested object structure
-        val fileParser = FileParser(
+        val root = FileParser(
             fileContent = fileContent,
             minorDelimiter = minorDelimiter.get(),
             majorDelimiter = majorDelimiter.get(),
-        )
-        val root = fileParser.generateNestedMapStructure()
+        ).generateNestedMapStructure()
 
-        // Generate content for the Kotlin Localization File
-        val fileContentGenerator = FileContentGenerator(outputFile.asFile.get().toPath(), fileContent)
-        val outputFileContent = fileContentGenerator.generateFileContent(root)
+        val categorizedContent = root.keys.groupBy { it.split("__").first() }
+            .mapValues { (_, keys) -> keys.associateWith { root[it] } }
 
-        // Write built kotlin class and its nested structure into Kotlin File
-        val fileWriter = FileWriter()
-        fileWriter.writeToFile(
-            outputFile = outputFile.asFile.get(),
-            outputFileContent = outputFileContent,
-        )
-        logger.lifecycle(
-            "Linguine: File ${outputFile.asFile.get().name} " +
-                "has been successfully created in the directory ${outputFile.asFile.get().path}",
-        )
+        categorizedContent.forEach { (moduleName, content) ->
+            val outputPath = project.layout.buildDirectory.file(
+                "${project.extensions.getByType<LinguineConfig>().outputFilePath}/$moduleName.kt"
+            ).get().asFile
+            val contentAsString: Map<String, String> = content.filterValues { it != null }.mapValues { it.value.toString() }
+            val contentAsAny: Map<String, Any> = content.filterValues { it != null }.mapValues { it.value!! }
+            val outputFileContent =
+                FileContentGenerator(outputPath.toPath(), contentAsString).generateFileContent(contentAsAny)
+            FileWriter().writeToFile(outputPath, outputFileContent)
+        }
+
+        logger.lifecycle("Linguine: Files have been successfully created in the directory ${project.layout.buildDirectory}")
     }
 }

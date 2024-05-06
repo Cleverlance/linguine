@@ -10,4 +10,5 @@ open class LinguineConfig {
     var majorDelimiter: String = "__"
     var minorDelimiter: String = "_"
     var buildTaskName: String? = null
+    var moduleNameMapping: Map<String, String> = emptyMap()
 }

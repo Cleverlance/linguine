@@ -19,8 +19,8 @@ subprojects {
     version = System.getenv("NEXT_VERSION") ?: "0.1.0"
 
     mavenPublishing {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-        signAllPublications()
+//        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+//        signAllPublications()
 
         pom {
             name = "Linguine"
