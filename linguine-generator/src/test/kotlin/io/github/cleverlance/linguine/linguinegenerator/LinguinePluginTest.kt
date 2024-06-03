@@ -16,7 +16,6 @@ class LinguinePluginTest {
         val extension = project.extensions.getByType(LinguineConfig::class.java)
         extension.inputFilePath = "src/commonMain/resources/string.json"
         extension.outputFilePath = "presentation"
-        extension.outputFileName = "Strings.kt"
 
         // Verify the result
         assertNotNull(project.tasks.findByName("generateStrings"))
@@ -30,10 +29,8 @@ class LinguinePluginTest {
         val extension = project.extensions.getByType(LinguineConfig::class.java)
         extension.inputFilePath = "src/commonMain/resources/string.json"
         extension.outputFilePath = "presentation"
-        extension.outputFileName = "Strings.kt"
 
         assertEquals("src/commonMain/resources/string.json", extension.inputFilePath)
         assertEquals("presentation", extension.outputFilePath)
-        assertEquals("Strings.kt", extension.outputFileName)
     }
 }

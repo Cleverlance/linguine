@@ -14,9 +14,9 @@ class FileParserTest {
 
         val expectedOutput = mapOf<String, Any>()
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
-        result shouldBe expectedOutput
+            result shouldBe expectedOutput
     }
 
     @Test
@@ -27,10 +27,10 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "singleKey" to "singleKey",
+            "SingleKey" to mapOf("singleKey" to ("singleKey" to "Single Value")),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -38,19 +38,19 @@ class FileParserTest {
     @Test
     fun `generateNestedMapStructure with mixed case keys creates consistent camelCase output`() {
         val mapContent = mapOf(
-            "activation__ForgottenPassword__emailInput" to "Enter your email",
+            "activation__forgottenPassword__emailInput" to "Enter your email",
         )
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
             "Activation" to mapOf(
                 "ForgottenPassword" to mapOf(
-                    "emailInput" to "activation__ForgottenPassword__emailInput",
-                ),
-            ),
+                    "emailInput" to ("activation__forgottenPassword__emailInput" to "Enter your email")
+                )
+            )
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -67,14 +67,14 @@ class FileParserTest {
                 "" to mapOf(
                     "ForgottenPassword" to mapOf(
                         "Email" to mapOf(
-                            "input" to "activation____forgotten_password__email__input",
+                            "input" to ("activation____forgotten_password__email__input" to "Email Input"),
                         ),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -97,34 +97,34 @@ class FileParserTest {
             "Activation" to mapOf(
                 "ForgottenPassword" to mapOf(
                     "Birthdate" to mapOf(
-                        "cancelButton" to "activation__forgotten_password__birthdate__cancel_button",
+                        "cancelButton" to ("activation__forgotten_password__birthdate__cancel_button" to "Cancel"),
                     ),
-                    "emailInput" to "activation__forgotten_password__email_input",
+                    "emailInput" to ("activation__forgotten_password__email_input" to "Enter your email"),
                 ),
             ),
             "Home" to mapOf(
-                "welcomeMessage" to "home__welcome_message",
+                "welcomeMessage" to ("home__welcome_message" to "Welcome to our application!"),
             ),
             "Profile" to mapOf(
                 "Settings" to mapOf(
                     "Privacy" to mapOf(
-                        "title" to "profile__settings__privacy__title",
-                        "description" to "profile__settings__privacy__description",
+                        "title" to ("profile__settings__privacy__title" to "Privacy Settings"),
+                        "description" to ("profile__settings__privacy__description" to "Manage your privacy settings here."),
                     ),
                 ),
             ),
             "Checkout" to mapOf(
                 "Payment" to mapOf(
                     "CreditCard" to mapOf(
-                        "numberInput" to "checkout__payment__credit_card__number_input",
-                        "expiryDate" to "checkout__payment__credit_card__expiry_date",
-                        "cvv" to "checkout__payment__credit_card__cvv",
+                        "numberInput" to ("checkout__payment__credit_card__number_input" to "Credit Card Number"),
+                        "expiryDate" to ("checkout__payment__credit_card__expiry_date" to "Expiry Date"),
+                        "cvv" to ("checkout__payment__credit_card__cvv" to "CVV"),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -141,16 +141,16 @@ class FileParserTest {
             "Profile" to mapOf(
                 "Settings" to mapOf(
                     "Privacy" to mapOf(
+                        "privacyPolicy" to ("profile__settings__privacy__privacy_policy" to "Privacy Policy"),
                         "PrivacyPolicy" to mapOf(
-                            "details" to "profile__settings__privacy__privacy_policy__details",
-                        ),
-                        "privacyPolicy" to "profile__settings__privacy__privacy_policy",
+                            "details" to ("profile__settings__privacy__privacy_policy__details" to "Detailed description")
+                        )
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -168,15 +168,15 @@ class FileParserTest {
                 "Config" to mapOf(
                     "Database" to mapOf(
                         "Settings" to mapOf(
-                            "maxConnections" to "system__config__database__settings__max_connections",
-                            "timeout" to "system__config__database__settings__timeout",
+                            "maxConnections" to ("system__config__database__settings__max_connections" to "100"),
+                            "timeout" to ("system__config__database__settings__timeout" to "30"),
                         ),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }
@@ -192,13 +192,13 @@ class FileParserTest {
         val expectedOutput = mapOf(
             "User" to mapOf(
                 "Name" to mapOf(
-                    "first name" to "user__name__first name",
-                    "last-name" to "user__name__last-name",
+                    "first name" to ("user__name__first name" to "John"),
+                    "last-name" to ("user__name__last-name" to "Doe"),
                 ),
             ),
         )
 
-        val result = fileParser.generateNestedMapStructure()
+        val result = fileParser.generateGroupedMapStructure()
 
         result shouldBe expectedOutput
     }

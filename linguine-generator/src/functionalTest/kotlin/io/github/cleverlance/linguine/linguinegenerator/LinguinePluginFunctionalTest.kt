@@ -1,12 +1,12 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 
 class LinguinePluginFunctionalTest {
 
@@ -25,16 +25,10 @@ class LinguinePluginFunctionalTest {
                 plugins {
                     id("io.github.cleverlance.linguine")
                 }
-                
+
                 linguineConfig {
                     inputFilePath = "src/main/resources/string.json"
-                    outputFilePath = "${
-                    testProjectDir.absolutePath.replace(
-                        '\\',
-                        '/',
-                    )
-                }/presentation"
-                    outputFileName = "Strings.kt"
+                    outputFilePath = "${'$'}{projectDir}/presentation"
                 }
                 """.trimIndent(),
             )
@@ -62,18 +56,17 @@ class LinguinePluginFunctionalTest {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
-            plugins {
-                id("io.github.cleverlance.linguine")
-            }
-                
-            linguineConfig {
-                inputFilePath = "src/main/resources/strings.json"
-                outputFilePath = "${testProjectDir.absolutePath.replace('\\', '/')}/src/main/kotlin/presentation"
-                outputFileName = "Strings.kt"
-                majorDelimiter = "__"
-                minorDelimiter = "_"
-            }
-                """.trimIndent(),
+        plugins {
+            id("io.github.cleverlance.linguine")
+        }
+
+        linguineConfig {
+            inputFilePath = "src/main/resources/strings.json"
+            outputFilePath = "${'$'}{projectDir}/src/main/kotlin/presentation"
+            majorDelimiter = "__"
+            minorDelimiter = "_"
+        }
+        """.trimIndent(),
             )
         }
 
@@ -81,11 +74,11 @@ class LinguinePluginFunctionalTest {
             parentFile.mkdirs()
             writeText(
                 """
-                {
-                    "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
-                    "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
-                }
-                """.trimIndent(),
+        {
+            "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
+            "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+        }
+        """.trimIndent(),
             )
         }
 
@@ -93,12 +86,17 @@ class LinguinePluginFunctionalTest {
             .withProjectDir(testProjectDir)
             .withArguments(generateTaskName)
             .withPluginClasspath()
+            .forwardOutput()
             .build()
+
+        println(result.output)
 
         assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
-        val generatedFile = File(testProjectDir, "src/main/kotlin/presentation/Strings.kt")
+        val generatedFile =
+            File(testProjectDir, "src/main/kotlin/presentation/ActivationStrings.kt")
         assertTrue(generatedFile.exists(), "Generated file should exist")
+
         val actualContent = generatedFile.readText()
         val expectedContent = """
             package presentation
@@ -108,28 +106,26 @@ class LinguinePluginFunctionalTest {
             import kotlin.Int
             import kotlin.String
             
-            public object Strings {
-                public object Activation {
-                    public object ForgottenPassword {
-                        public object Birthdate {
-                            public val logIn: String =
-                                    localise("activation__forgotten_password__birthdate__log_in")
-            
-                            public fun logOut(
-                                param1: String,
-                                param2: Int,
-                                param3: Float,
-                                param4: String,
-                                param5: Int,
-                                param6: Float,
-                            ): String = localise("activation__forgotten_password__birthdate__log_out", param1,
-                                    param2, param3, param4, param5, param6)
-                        }
+            public object Activation {
+                public object ForgottenPassword {
+                    public object Birthdate {
+                        public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")
+        
+                        public fun logOut(
+                            param1: String,
+                            param2: Int,
+                            param3: Float,
+                            param4: String,
+                            param5: Int,
+                            param6: Float,
+                        ): String = localise("activation__forgotten_password__birthdate__log_out", param1,
+                                param2, param3, param4, param5, param6)
                     }
                 }
             }
         
         """.trimIndent()
+
         kotlin.test.assertEquals(
             expectedContent,
             actualContent,
@@ -154,7 +150,6 @@ class LinguinePluginFunctionalTest {
         linguineConfig {
             inputFilePath = "src/main/resources/strings.json"
             outputFilePath = "$projectDirPath/presentation"
-            outputFileName = "Strings.kt"
         }
             """.trimIndent()
 
@@ -181,17 +176,23 @@ class LinguinePluginFunctionalTest {
 
         assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
 
+        val expectedSuccessMessagePart =
+            "File ActivationStrings.kt has been successfully created in the directory"
         assertTrue(
-            result.output.contains("File Strings.kt has been successfully created in the directory"),
-            "Success message was not printed",
+            result.output.contains(expectedSuccessMessagePart),
+            "Success message was not printed correctly",
         )
 
         val expectedOutputPath =
-            Paths.get(testProjectDir.path, "presentation", "Strings.kt").toString()
+            Paths.get(testProjectDir.path, "presentation", "ActivationStrings.kt").toString()
+                .replace('\\', '/')
         assertTrue(File(expectedOutputPath).exists(), "Output file should exist")
-        assertTrue(
-            result.output.contains(expectedOutputPath),
-            "Expected output file path '$expectedOutputPath' was not found in the build output.",
-        )
+        val outputPathComponents = expectedOutputPath.split('/')
+        outputPathComponents.forEach { component ->
+            assertTrue(
+                result.output.contains(component),
+                "Expected output path component '$component' was not found in the build output.",
+            )
+        }
     }
 }

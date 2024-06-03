@@ -5,28 +5,35 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.isDirectory
-import kotlin.io.path.name
-import kotlin.io.path.relativeTo
+import java.util.Locale
 import kotlin.reflect.KClass
 
 class FileContentGenerator(
-    private val filePath: Path,
-    private val fileContent: Map<String, String>,
+    private val outputDirectory: Path,
+    private val fileContent: Map<String, String>
 ) {
 
-    private val filePackage: String by lazy { getFilePackage(filePath) }
+    fun generateFileContents(groupedMap: Map<String, Map<String, Any>>): Map<Path, String> {
+        return groupedMap.map { (fileName, content) ->
+            val capitalizedFileName = fileName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
+            val filePath = outputDirectory.resolve("${capitalizedFileName}Strings.kt")
+            filePath to generateFileContent(filePath, capitalizedFileName, content)
+        }.toMap()
+    }
 
-    fun generateFileContent(root: Map<String, Any>): String {
-        return FileSpec.builder(filePackage, "")
+    fun generateFileContent(filePath: Path, fileName: String, root: Map<String, Any>): String {
+        return FileSpec.builder(getFilePackage(filePath), fileName)
             .indent(DEFAULT_INDENT)
             .addImport(
                 "io.github.cleverlance.linguine.linguineruntime.presentation",
                 "Localiser.localise",
             )
             .addType(
-                TypeSpec.objectBuilder("Strings")
+                TypeSpec.objectBuilder(fileName)
                     .addObjectContent(root)
                     .build(),
             )
@@ -35,67 +42,61 @@ class FileContentGenerator(
     }
 
     private fun getFilePackage(filePath: Path): String {
-        fun Path.isSourceDirectory(): Boolean = isDirectory() &&
-            (name == "kotlin" || name == "java") &&
-            parent?.parent?.name == "src"
-
-        var sourcePath: Path? = filePath
-        while (sourcePath != null && !sourcePath.isSourceDirectory()) {
-            sourcePath = sourcePath.parent
-        }
-
-        if (sourcePath == null) return "" // no package
-
-        val relativeDirectoryPath = filePath.parent.relativeTo(sourcePath)
-        return relativeDirectoryPath.joinToString(separator = ".") { path -> path.name }
+        val relativePath = outputDirectory.relativize(filePath.parent).toString().replace(File.separatorChar, '.')
+        return relativePath.ifBlank { "presentation" }
     }
 
     private fun TypeSpec.Builder.addObjectContent(root: Map<String, Any>): TypeSpec.Builder {
         @Suppress("UNCHECKED_CAST") // presuming the structure of the map
         root.forEach { (key, value) ->
             when (value) {
-                is Map<*, *> -> addObject(key, value as Map<String, Any>)
-                else -> addFunctionOrProperty(key, value.toString())
+                is Map<*, *> -> addType(
+                    TypeSpec.objectBuilder(key.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                    })
+                        .addObjectContent(value as Map<String, Any>)
+                        .build()
+                )
+                is Pair<*, *> -> {
+                    val originalKey = value.first as String
+                    value.second as String
+                    addFunctionOrProperty(key, originalKey)
+                }
             }
         }
         return this
     }
 
-    private fun TypeSpec.Builder.addObject(key: String, value: Map<String, Any>) {
-        addType(
-            TypeSpec.objectBuilder(key)
-                .addObjectContent(value)
-                .build(),
-        )
-    }
-
-    private fun TypeSpec.Builder.addFunctionOrProperty(key: String, value: String) {
-        val translation = fileContent.filter { it.key == value }.toString()
-        val dataTypes = determineDataTypes(translation)
+    private fun TypeSpec.Builder.addFunctionOrProperty(key: String, originalKey: String) {
+        val translation = fileContent[originalKey]
+        val dataTypes = determineDataTypes(translation ?: "")
 
         if (dataTypes.isNotEmpty()) {
             val parameters = dataTypes.mapIndexed { index, type ->
-                ParameterSpec.builder("param${index + 1}", type)
-                    .build()
+                ParameterSpec.builder("param${index + 1}", type).build()
             }
-            val parametersCall = parameters.joinToString { it.name }
+
             addFunction(
                 FunSpec.builder(key)
-                    .addParameters(parameters)
+                    .apply {
+                        parameters.forEach { addParameter(it) }
+                    }
                     .returns(String::class)
-                    .addStatement("""return localise("$value", $parametersCall)""")
-                    .build(),
+                    .addStatement(
+                        """return localise("%L", ${parameters.joinToString(", ") { it.name }})""",
+                        originalKey
+                    )
+                    .build()
             )
         } else {
             addProperty(
                 PropertySpec.builder(key, String::class)
-                    .initializer("""localise("$value")""")
-                    .build(),
+                    .initializer("""localise("%L")""", originalKey)
+                    .build()
             )
         }
     }
 
-    // %s - valid parameter, can be without $
     private fun determineDataTypes(formatString: String): List<KClass<*>> {
         val formatSpecifiers = FORMAT_SPECIFIER_REGEX.findAll(formatString)
         return formatSpecifiers.map { determineDataType(it.value) }.toList()
@@ -115,6 +116,6 @@ class FileContentGenerator(
 
     private companion object {
         const val DEFAULT_INDENT = "    "
-        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\\$[sdf]|%[sdf]")
+        val FORMAT_SPECIFIER_REGEX = Regex("%[0-9]*\\$?[sdf]")
     }
 }
