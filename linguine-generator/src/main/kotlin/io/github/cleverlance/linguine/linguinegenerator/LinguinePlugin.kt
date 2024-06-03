@@ -1,5 +1,7 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
+import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
+import org.gradle.api.provider.Property as GradleProperty
 import io.github.cleverlance.linguine.linguine_generator.BuildConfig
 import io.github.cleverlance.linguine.linguinegenerator.filereader.FileReader
 import org.gradle.api.DefaultTask
@@ -18,8 +20,6 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.gradle.work.Incremental
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import io.github.cleverlance.linguine.linguinegenerator.filereader.FileType as LinguineFileType
-import org.gradle.api.provider.Property as GradleProperty
 
 @Suppress("unused")
 class LinguinePlugin : Plugin<Project> {
@@ -43,9 +43,9 @@ class LinguinePlugin : Plugin<Project> {
             majorDelimiter.set(extension.majorDelimiter)
             minorDelimiter.set(extension.minorDelimiter)
             outputDirectory.set(
-                (project.layout.projectDirectory.dir(
+                project.layout.projectDirectory.dir(
                     extension.outputFilePath,
-                )),
+                ),
             )
         }
     }
@@ -123,7 +123,7 @@ abstract class GenerateStringsTask : DefaultTask() {
         val fileParser = FileParser(
             fileContent = fileContent,
             minorDelimiter = minorDelimiter.get(),
-            majorDelimiter = majorDelimiter.get()
+            majorDelimiter = majorDelimiter.get(),
         )
 
         val groupedMap = fileParser.generateGroupedMapStructure()
@@ -140,7 +140,7 @@ abstract class GenerateStringsTask : DefaultTask() {
 
             logger.lifecycle(
                 "Linguine: File ${filePath.fileName} " +
-                        "has been successfully created in the directory ${filePath.parent}",
+                    "has been successfully created in the directory ${filePath.parent}",
             )
         }
     }

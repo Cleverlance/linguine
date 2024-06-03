@@ -163,7 +163,8 @@ class FileContentGeneratorTest {
 
         val root: Map<String, Any> = mapOf(
             "Error" to mapOf(
-                "messageWithParameters" to ("error__message__with_parameters" to "Error %1\$s occurred at %2\$d:%3\$d on %4\$s"),
+                "messageWithParameters" to ("error__message__with_parameters" to
+                    "Error %1\$s occurred at %2\$d:%3\$d on %4\$s"),
             ),
         )
         val generator = FileContentGenerator(outputDirectory, fileContent)
@@ -272,7 +273,8 @@ class FileContentGeneratorTest {
                 "Settings" to mapOf(
                     "Privacy" to mapOf(
                         "title" to ("profile__settings__privacy__title" to "Privacy Settings"),
-                        "description" to ("profile__settings__privacy__description" to "Manage your privacy settings here."),
+                        "description" to ("profile__settings__privacy__description" to
+                            "Manage your privacy settings here."),
                     ),
                 ),
             ),
@@ -352,7 +354,8 @@ class FileContentGeneratorTest {
             "Activation" to mapOf(
                 "ForgottenPassword" to mapOf(
                     "Birthdate" to mapOf(
-                        "cancelButton" to ("activation__forgotten_password__birthdate__cancel_button" to "\"%s %d %f %${'$'}s %${'$'}d %${'$'}f\""),
+                        "cancelButton" to ("activation__forgotten_password__birthdate__cancel_button" to
+                            "\"%s %d %f %${'$'}s %${'$'}d %${'$'}f\""),
                     ),
                 ),
             ),

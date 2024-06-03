@@ -50,13 +50,15 @@ class FileContentGenerator(
         @Suppress("UNCHECKED_CAST") // presuming the structure of the map
         root.forEach { (key, value) ->
             when (value) {
-                is Map<*, *> -> addType(
-                    TypeSpec.objectBuilder(key.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-                    })
-                        .addObjectContent(value as Map<String, Any>)
-                        .build()
-                )
+                is Map<*, *> -> {
+                    addType(
+                        TypeSpec.objectBuilder(key.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                        })
+                            .addObjectContent(value as Map<String, Any>)
+                            .build()
+                    )
+                }
                 is Pair<*, *> -> {
                     val originalKey = value.first as String
                     value.second as String

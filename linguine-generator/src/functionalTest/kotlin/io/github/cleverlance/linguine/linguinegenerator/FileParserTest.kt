@@ -16,7 +16,7 @@ class FileParserTest {
 
         val result = fileParser.generateGroupedMapStructure()
 
-            result shouldBe expectedOutput
+        result shouldBe expectedOutput
     }
 
     @Test
@@ -109,7 +109,8 @@ class FileParserTest {
                 "Settings" to mapOf(
                     "Privacy" to mapOf(
                         "title" to ("profile__settings__privacy__title" to "Privacy Settings"),
-                        "description" to ("profile__settings__privacy__description" to "Manage your privacy settings here."),
+                        "description" to ("profile__settings__privacy__description" to
+                            "Manage your privacy settings here."),
                     ),
                 ),
             ),
@@ -143,7 +144,8 @@ class FileParserTest {
                     "Privacy" to mapOf(
                         "privacyPolicy" to ("profile__settings__privacy__privacy_policy" to "Privacy Policy"),
                         "PrivacyPolicy" to mapOf(
-                            "details" to ("profile__settings__privacy__privacy_policy__details" to "Detailed description")
+                            "details" to ("profile__settings__privacy__privacy_policy__details" to
+                                "Detailed description")
                         )
                     ),
                 ),

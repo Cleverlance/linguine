@@ -1,12 +1,12 @@
 package io.github.cleverlance.linguine.linguinegenerator
 
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import java.io.File
 import java.nio.file.Paths
 import kotlin.io.path.createTempDirectory
 import kotlin.test.assertTrue
+import org.gradle.testkit.runner.GradleRunner
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 
 class LinguinePluginFunctionalTest {
 
@@ -66,7 +66,7 @@ class LinguinePluginFunctionalTest {
             majorDelimiter = "__"
             minorDelimiter = "_"
         }
-        """.trimIndent(),
+                """.trimIndent(),
             )
         }
 
@@ -78,7 +78,7 @@ class LinguinePluginFunctionalTest {
             "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
             "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
         }
-        """.trimIndent(),
+                """.trimIndent(),
             )
         }
 
