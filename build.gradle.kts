@@ -1,4 +1,5 @@
 import com.vanniktech.maven.publish.MavenPublishPlugin
+import com.vanniktech.maven.publish.SonatypeHost
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.dokka.gradle.DokkaPlugin
 
@@ -18,8 +19,8 @@ subprojects {
     version = System.getenv("NEXT_VERSION") ?: "0.2.0"
 
     mavenPublishing {
-//        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-//        signAllPublications()
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+        signAllPublications()
 
         pom {
             name = "Linguine"
