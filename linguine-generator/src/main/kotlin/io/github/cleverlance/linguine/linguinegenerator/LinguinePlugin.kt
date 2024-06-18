@@ -7,11 +7,12 @@ import io.github.cleverlance.linguine.linguinegenerator.filereader.FileReader
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -41,9 +42,9 @@ class LinguinePlugin : Plugin<Project> {
             fileType.set(extension.inputFileType)
             majorDelimiter.set(extension.majorDelimiter)
             minorDelimiter.set(extension.minorDelimiter)
-            outputFile.set(
-                project.layout.projectDirectory.file(
-                    "${extension.outputFilePath}/${extension.outputFileName}",
+            outputDirectory.set(
+                project.layout.projectDirectory.dir(
+                    extension.outputFilePath,
                 ),
             )
         }
@@ -86,7 +87,8 @@ class LinguinePlugin : Plugin<Project> {
 
     private companion object {
         const val GENERATE_STRINGS_TASK_NAME = "generateStrings"
-        const val RUNTIME_DEPENDENCY = "${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}"
+        const val RUNTIME_DEPENDENCY =
+            "${BuildConfig.GROUP}:linguine-runtime:${BuildConfig.VERSION}"
     }
 }
 
@@ -106,8 +108,8 @@ abstract class GenerateStringsTask : DefaultTask() {
     @get:Input
     abstract val majorDelimiter: GradleProperty<String>
 
-    @get:OutputFile
-    abstract val outputFile: RegularFileProperty
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
 
     @TaskAction
     fun generate() {
@@ -123,21 +125,23 @@ abstract class GenerateStringsTask : DefaultTask() {
             minorDelimiter = minorDelimiter.get(),
             majorDelimiter = majorDelimiter.get(),
         )
-        val root = fileParser.generateNestedMapStructure()
+
+        val groupedMap = fileParser.generateGroupedMapStructure()
 
         // Generate content for the Kotlin Localization File
-        val fileContentGenerator = FileContentGenerator(outputFile.asFile.get().toPath(), fileContent)
-        val outputFileContent = fileContentGenerator.generateFileContent(root)
+        val fileContentGenerator =
+            FileContentGenerator(outputDirectory.get().asFile.toPath(), fileContent)
+        val outputFileContent = fileContentGenerator.generateFileContents(groupedMap)
 
         // Write built kotlin class and its nested structure into Kotlin File
         val fileWriter = FileWriter()
-        fileWriter.writeToFile(
-            outputFile = outputFile.asFile.get(),
-            outputFileContent = outputFileContent,
-        )
-        logger.lifecycle(
-            "Linguine: File ${outputFile.asFile.get().name} " +
-                "has been successfully created in the directory ${outputFile.asFile.get().path}",
-        )
+        outputFileContent.forEach { (filePath, content) ->
+            fileWriter.writeToFile(filePath.toFile(), content)
+
+            logger.lifecycle(
+                "Linguine: File ${filePath.fileName} " +
+                    "has been successfully created in the directory ${filePath.parent}",
+            )
+        }
     }
 }
