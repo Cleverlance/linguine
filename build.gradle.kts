@@ -9,58 +9,70 @@ plugins {
     alias(libs.plugins.gradle.maven.publish) apply true
     alias(libs.plugins.detekt) apply true
     alias(libs.plugins.dokka) apply false
+    signing
 }
 
 subprojects {
     apply<DokkaPlugin>()
     apply<MavenPublishPlugin>()
 
-    group = "io.github.cleverlance.linguine"
-    version = System.getenv("NEXT_VERSION") ?: "0.2.0"
+    group = "com.qinshift.linguine"
+    version = System.getenv("NEXT_VERSION") ?: "0.3.0"
 
-    mavenPublishing {
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-        signAllPublications()
+    val isLocalPublish = project.gradle.startParameter.taskNames.any { it.contains("publishToMavenLocal") }
 
-        pom {
-            name = "Linguine"
-            description = "Simplifies the localization process in Kotlin projects."
-            inceptionYear = "2024"
-            url = "https://github.com/cleverlance/linguine/"
-            licenses {
-                license {
-                    name = "The MIT License"
-                    url = "https://github.com/cleverlance/linguine/blob/main/license.md"
-                    distribution = "https://github.com/cleverlance/linguine/blob/main/license.md"
+    if (!isLocalPublish) {
+        apply<SigningPlugin>()
+
+
+        extensions.configure<com.vanniktech.maven.publish.MavenPublishBaseExtension>("mavenPublishing") {
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+            signAllPublications()
+
+            pom {
+                name.set("Linguine")
+                description.set("Simplifies the localization process in Kotlin projects.")
+                inceptionYear.set("2024")
+                url.set("https://github.com/cleverlance/linguine/")
+                licenses {
+                    license {
+                        name.set("The MIT License")
+                        url.set("https://github.com/cleverlance/linguine/blob/main/license.md")
+                        distribution.set("https://github.com/cleverlance/linguine/blob/main/license.md")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("RealDanie1")
+                        name.set("Daniel Pecuch")
+                        url.set("https://github.com/RealDanie1")
+                    }
+                    developer {
+                        id.set("RadekKuzel")
+                        name.set("Radek Kůžel")
+                        url.set("https://github.com/RadekKuzel")
+                    }
+                    developer {
+                        id.set("JiriHromek")
+                        name.set("Jiří Hromek")
+                        url.set("https://github.com/JiriHromek")
+                    }
+                    developer {
+                        id.set("gerak-cz")
+                        name.set("Bořek Leikep")
+                        url.set("https://github.com/gerak-cz")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/cleverlance/linguine/")
+                    connection.set("scm:git:git://github.com/cleverlance/linguine.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:cleverlance/linguine.git")
                 }
             }
-            developers {
-                developer {
-                    id = "RealDanie1"
-                    name = "Daniel Pecuch"
-                    url = "https://github.com/RealDanie1"
-                }
-                developer {
-                    id = "RadekKuzel"
-                    name = "Radek Kůžel"
-                    url = "https://github.com/RadekKuzel"
-                }
-                developer {
-                    id = "JiriHromek"
-                    name = "Jiří Hromek"
-                    url = "https://github.com/JiriHromek"
-                }
-                developer {
-                    id = "gerak-cz"
-                    name = "Bořek Leikep"
-                    url = "https://github.com/gerak-cz"
-                }
-            }
-            scm {
-                url = "https://github.com/cleverlance/linguine/"
-                connection = "scm:git:git://github.com/cleverlance/linguine.git"
-                developerConnection = "scm:git:ssh://git@github.com:cleverlance/linguine.git"
-            }
+        }
+    } else {
+        tasks.withType<Sign>().configureEach {
+            enabled = false
         }
     }
 }
@@ -84,7 +96,3 @@ tasks.withType<Detekt> {
 }
 
 // endregion
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.layout.buildDirectory)
-}
