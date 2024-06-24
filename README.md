@@ -33,10 +33,8 @@ plugins {
 linguineConfig {
     inputFilePath = "src/main/resources/strings.json"
     outputFilePath = "src/main/resources/"
-    outputFileName = "Strings.kt"
-    inputFileType = LinguineFileType.JSON
-    minorDelimiter = '_'
     majorDelimiter = '__'
+    minorDelimiter = '_'
 }
 ```
 
