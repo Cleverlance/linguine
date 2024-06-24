@@ -27,7 +27,7 @@ To use the Linguine plugin, add the following to your `build.gradle.kts` file:
 
 ```
 plugins {
-    id("io.github.cleverlance.linguine") version "1.0"
+    id("com.qinshift.linguine") version "0.3.0"
 }
 
 linguineConfig {
