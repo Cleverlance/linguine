@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.gradle.maven.publish) apply true
     alias(libs.plugins.detekt) apply true
     alias(libs.plugins.dokka) apply false
-    signing
 }
 
 subprojects {
@@ -19,60 +18,49 @@ subprojects {
     group = "com.qinshift.linguine"
     version = System.getenv("NEXT_VERSION") ?: "0.3.0"
 
-    val isLocalPublish = project.gradle.startParameter.taskNames.any { it.contains("publishToMavenLocal") }
+    mavenPublishing {
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+        signAllPublications()
 
-    if (!isLocalPublish) {
-        apply<SigningPlugin>()
-
-
-        extensions.configure<com.vanniktech.maven.publish.MavenPublishBaseExtension>("mavenPublishing") {
-            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
-            signAllPublications()
-
-            pom {
-                name.set("Linguine")
-                description.set("Simplifies the localization process in Kotlin projects.")
-                inceptionYear.set("2024")
-                url.set("https://github.com/cleverlance/linguine/")
-                licenses {
-                    license {
-                        name.set("The MIT License")
-                        url.set("https://github.com/cleverlance/linguine/blob/main/license.md")
-                        distribution.set("https://github.com/cleverlance/linguine/blob/main/license.md")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("RealDanie1")
-                        name.set("Daniel Pecuch")
-                        url.set("https://github.com/RealDanie1")
-                    }
-                    developer {
-                        id.set("RadekKuzel")
-                        name.set("Radek Kůžel")
-                        url.set("https://github.com/RadekKuzel")
-                    }
-                    developer {
-                        id.set("JiriHromek")
-                        name.set("Jiří Hromek")
-                        url.set("https://github.com/JiriHromek")
-                    }
-                    developer {
-                        id.set("gerak-cz")
-                        name.set("Bořek Leikep")
-                        url.set("https://github.com/gerak-cz")
-                    }
-                }
-                scm {
-                    url.set("https://github.com/cleverlance/linguine/")
-                    connection.set("scm:git:git://github.com/cleverlance/linguine.git")
-                    developerConnection.set("scm:git:ssh://git@github.com:cleverlance/linguine.git")
+        pom {
+            name.set("Linguine")
+            description.set("Simplifies the localization process in Kotlin projects.")
+            inceptionYear.set("2024")
+            url.set("https://github.com/cleverlance/linguine/")
+            licenses {
+                license {
+                    name.set("The MIT License")
+                    url.set("https://github.com/cleverlance/linguine/blob/main/license.md")
+                    distribution.set("https://github.com/cleverlance/linguine/blob/main/license.md")
                 }
             }
-        }
-    } else {
-        tasks.withType<Sign>().configureEach {
-            enabled = false
+            developers {
+                developer {
+                    id.set("RealDanie1")
+                    name.set("Daniel Pecuch")
+                    url.set("https://github.com/RealDanie1")
+                }
+                developer {
+                    id.set("RadekKuzel")
+                    name.set("Radek Kůžel")
+                    url.set("https://github.com/RadekKuzel")
+                }
+                developer {
+                    id.set("JiriHromek")
+                    name.set("Jiří Hromek")
+                    url.set("https://github.com/JiriHromek")
+                }
+                developer {
+                    id.set("gerak-cz")
+                    name.set("Bořek Leikep")
+                    url.set("https://github.com/gerak-cz")
+                }
+            }
+            scm {
+                url.set("https://github.com/cleverlance/linguine/")
+                connection.set("scm:git:git://github.com/cleverlance/linguine.git")
+                developerConnection.set("scm:git:ssh://git@github.com:cleverlance/linguine.git")
+            }
         }
     }
 }
@@ -96,3 +84,7 @@ tasks.withType<Detekt> {
 }
 
 // endregion
+
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
+}
