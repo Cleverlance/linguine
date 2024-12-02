@@ -1,5 +1,5 @@
 {
     "demo__button_label": "Click me!",
-    "demo__hello": "Hello, %s!",
+    "demo__hello": "%1$s - Hello, %2$s!",
     "credits__info": "Made in Qinshift"
 }

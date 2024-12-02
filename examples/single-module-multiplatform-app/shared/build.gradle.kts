@@ -41,7 +41,7 @@ android {
 }
 
 linguineConfig {
-    inputFilePath = "src/main/resources/strings-en.json"
+    inputFilePath = "../composeApp/src/androidMain/assets/strings-en.json"
     outputFilePath = "src/commonMain/kotlin/com/qinshift/project"
     majorDelimiter = "__"
     minorDelimiter = "_"

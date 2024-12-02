@@ -26,10 +26,14 @@ fun App() {
                 Text("Click me!")
             }
             AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
+                val firstGreeting = remember { Greeting().greet(1) }
+                val secondGreeting = remember { Greeting().greet(2) }
+                val thirdGreeting = remember { Greeting().alternativeGreet(3) }
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+                    Text("Compose: $firstGreeting")
+                    Text("Compose: $secondGreeting")
+                    Text("Compose: $thirdGreeting")
                 }
             }
         }
