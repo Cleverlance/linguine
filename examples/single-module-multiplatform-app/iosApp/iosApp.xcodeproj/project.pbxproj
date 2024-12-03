@@ -100,7 +100,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7555FFA5242A565B00829871 /* Build configuration list for PBXNativeTarget "iosApp" */;
 			buildPhases = (
-				3D904DA12CFDD4A0002B975A /* Copy localization files */,
 				F36B1CEA2AD836FC00CB74D5 /* Compile Kotlin Framework */,
 				7555FF77242A565900829871 /* Sources */,
 				B92378962B6B1156000C7307 /* Frameworks */,
@@ -168,24 +167,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3D904DA12CFDD4A0002B975A /* Copy localization files */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy localization files";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/iosApp\n\n./copyLocalizationFiles.sh\n";
-		};
 		F36B1CEA2AD836FC00CB74D5 /* Compile Kotlin Framework */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
