@@ -1,3 +1,4 @@
+@file:Suppress("WildcardImport", "NoWildcardImports", "ImportOrdering")
 package com.qinshift.project
 
 import androidx.compose.animation.AnimatedVisibility
