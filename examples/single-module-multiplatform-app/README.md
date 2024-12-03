@@ -1,17 +1,42 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# KMP Localization Example with Linguine Plugin
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+This is an example of a simple Kotlin Multiplatform (KMP) project demonstrating the integration and usage of the Linguine localization strings plugin. This project targets two platforms: Android and iOS.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Project Structure
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+- **Android Localization**:
+  JSON localization files for the Android app are located in:
+  `/composeApp/src/androidMain/assets`
 
+- **iOS Localization**:
+  JSON localization files for the iOS app are located in:
+  `/iosApp/iosApp`
+  These files are also linked in the Xcode project.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Linguine Plugin Configuration
+
+The Linguine plugin is configured in `shared/build.gradle.kts`. In this example, the Android English localization file is used as the input for the Linguine generator. Here's the configuration:
+
+```kotlin
+linguineConfig {
+    inputFilePath = "../composeApp/src/androidMain/assets/strings-en.json"
+    outputFilePath = "src/commonMain/kotlin/com/qinshift/project"
+    majorDelimiter = "__"
+    minorDelimiter = "_"
+}
+```
+
+## Key Details
+- **`inputFilePath`**: Specifies the path to the input localization file (Android English JSON in this case).
+- **`outputFilePath`**: Defines the output directory for the generated code.
+- **Delimiters**: `majorDelimiter` and `minorDelimiter` control how keys in the localization file are split and organized.
+
+## Plugin Installation
+
+The Linguine plugin is added to the project in `shared/build.gradle.kts`. The plugin version is managed in the `gradle/libs.versions.toml` file. Here's an example of how the plugin is configured:
+
+```kotlin
+plugins {
+    ...
+    alias(libs.plugins.linguine)
+}
