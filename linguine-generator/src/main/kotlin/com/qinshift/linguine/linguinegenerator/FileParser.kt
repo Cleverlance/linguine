@@ -24,7 +24,7 @@ class FileParser(
 
         return groupedMap.mapValues { (_, map) -> generateNestedMapStructure(map) }
     }
-    
+
     private fun generateNestedMapStructure(map: Map<String, Pair<String, String>>): Map<String, Any> {
         val root = mutableMapOf<String, Any>()
         map.forEach { (key, value) ->
