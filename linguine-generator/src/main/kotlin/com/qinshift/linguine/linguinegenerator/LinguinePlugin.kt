@@ -113,13 +113,13 @@ abstract class GenerateStringsTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        // Read Input File
+        // Read input file
         val fileContent = FileReader().read(
             file = inputFile.asFile.get(),
             fileType = fileType.get(),
         )
 
-        // Parse File into internal nested object structure
+        // Parse into nested object structure
         val fileParser = FileParser(
             fileContent = fileContent,
             minorDelimiter = minorDelimiter.get(),
@@ -128,12 +128,33 @@ abstract class GenerateStringsTask : DefaultTask() {
 
         val groupedMap = fileParser.generateGroupedMapStructure()
 
-        // Generate content for the Kotlin Localization File
-        val fileContentGenerator =
-            FileContentGenerator(outputDirectory.get().asFile.toPath(), fileContent)
+        // Get config and resolve paths
+        val config = project.extensions.getByType(LinguineConfig::class.java)
+        val resolvedOutputPath = outputDirectory.get().asFile.toPath()
+
+        val sourceRootPath = config.sourceRootPath
+            .takeIf { it.isNotBlank() }
+            ?: config.outputFilePath
+
+        if (config.sourceRootPath.isBlank()) {
+            logger.warn("Linguine: sourceRootPath not set. Falling back to outputFilePath: $sourceRootPath")
+        }
+
+        val resolvedSourceRoot = project.layout.projectDirectory
+            .dir(sourceRootPath)
+            .asFile
+            .toPath()
+
+        // Generate file content
+        val fileContentGenerator = FileContentGenerator(
+            sourceRoot = resolvedSourceRoot,
+            outputDirectory = resolvedOutputPath,
+            fileContent = fileContent,
+        )
+
         val outputFileContent = fileContentGenerator.generateFileContents(groupedMap)
 
-        // Write built kotlin class and its nested structure into Kotlin File
+        // Write generated Kotlin files
         val fileWriter = FileWriter()
         outputFileContent.forEach { (filePath, content) ->
             fileWriter.writeToFile(filePath.toFile(), content)
