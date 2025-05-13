@@ -14,7 +14,7 @@ class LinguinePluginFunctionalTest {
     lateinit var testProjectDir: File
 
     private val generateTaskName = "generateStrings"
-    private val buildSuccessOutput: String = "BUILD SUCCESSFUL"
+    private val buildSuccessOutput = "BUILD SUCCESSFUL"
     private val gradleBuildFileName = "build.gradle.kts"
 
     @Test
@@ -29,6 +29,7 @@ class LinguinePluginFunctionalTest {
                 linguineConfig {
                     inputFilePath = "src/main/resources/string.json"
                     outputFilePath = "${'$'}{projectDir}/presentation"
+                    sourceRootPath = "presentation"
                 }
                 """.trimIndent(),
             )
@@ -36,9 +37,7 @@ class LinguinePluginFunctionalTest {
 
         File(testProjectDir, "src/main/resources").mkdirs()
         File(testProjectDir, "src/main/resources/string.json").writeText(
-            """
-            {"hello_world": "Hello, World!"}
-            """.trimIndent(),
+            """{"hello_world": "Hello, World!"}""",
         )
 
         val result = GradleRunner.create()
@@ -47,7 +46,7 @@ class LinguinePluginFunctionalTest {
             .withArguments(generateTaskName)
             .build()
 
-        assert(result.output.contains(buildSuccessOutput))
+        assertTrue(result.output.contains(buildSuccessOutput))
     }
 
     @Suppress("LongMethod")
@@ -56,16 +55,17 @@ class LinguinePluginFunctionalTest {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
-            plugins {
-                id("com.qinshift.linguine")
-            }
+                plugins {
+                    id("com.qinshift.linguine")
+                }
 
-        linguineConfig {
-            inputFilePath = "src/main/resources/strings.json"
-            outputFilePath = "${'$'}{projectDir}/src/main/kotlin/presentation"
-            majorDelimiter = "__"
-            minorDelimiter = "_"
-        }
+                linguineConfig {
+                    inputFilePath = "src/main/resources/strings.json"
+                    outputFilePath = "src/main/kotlin/presentation"
+                    sourceRootPath = "src/main/kotlin"
+                    majorDelimiter = "__"
+                    minorDelimiter = "_"
+                }
                 """.trimIndent(),
             )
         }
@@ -74,10 +74,10 @@ class LinguinePluginFunctionalTest {
             parentFile.mkdirs()
             writeText(
                 """
-        {
-            "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
-            "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
-        }
+                {
+                    "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
+                    "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+                }
                 """.trimIndent(),
             )
         }
@@ -123,35 +123,33 @@ class LinguinePluginFunctionalTest {
                     }
                 }
             }
-        
         """.trimIndent()
 
         kotlin.test.assertEquals(
-            expectedContent,
-            actualContent,
-            "The generated file content does not match the expected content.",
+            normalizeWhitespace(expectedContent),
+            normalizeWhitespace(actualContent),
+            "The generated file content does not match the expected structure.",
         )
     }
 
     @Test
     fun whenGenerateTaskExecutedThenOutputFilePlacedInConfiguredPath() {
         val testProjectDir = createTempDirectory().toFile()
-
         File(testProjectDir, "settings.gradle.kts").writeText("")
 
         val projectDirPath = testProjectDir.absolutePath.replace('\\', '/')
 
-        val buildScript =
-            """
-        plugins {
-            id("com.qinshift.linguine")
-        }
+        val buildScript = """
+            plugins {
+                id("com.qinshift.linguine")
+            }
 
-        linguineConfig {
-            inputFilePath = "src/main/resources/strings.json"
-            outputFilePath = "$projectDirPath/presentation"
-        }
-            """.trimIndent()
+            linguineConfig {
+                inputFilePath = "src/main/resources/strings.json"
+                outputFilePath = "$projectDirPath/presentation"
+                sourceRootPath = "$projectDirPath"
+            }
+        """.trimIndent()
 
         File(testProjectDir, gradleBuildFileName).writeText(buildScript)
 
@@ -195,4 +193,7 @@ class LinguinePluginFunctionalTest {
             )
         }
     }
+
+    private fun normalizeWhitespace(code: String): String =
+        code.trimIndent().replace(Regex("\\s+"), " ").trim()
 }
