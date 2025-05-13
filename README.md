@@ -47,7 +47,7 @@ directory. You can then reference these strings throughout your project as neede
 For a simple example, if your JSON file contains:
 
 ```json
-    {
+{
   "hello_world": "Hello, World!"
 }
 ```
@@ -55,7 +55,7 @@ For a simple example, if your JSON file contains:
 After the build, Strings.kt will contain:
 
 ```
-    object Strings {
-        val helloWorld: String = localise("hello_world")
-    }
+object Strings {
+  val helloWorld: String = localise("hello_world")
+}
 ```
