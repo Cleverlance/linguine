@@ -11,8 +11,9 @@ import java.util.Locale
 import kotlin.reflect.KClass
 
 class FileContentGenerator(
+    private val sourceRoot: Path,
     private val outputDirectory: Path,
-    private val fileContent: Map<String, String>
+    private val fileContent: Map<String, String>,
 ) {
 
     fun generateFileContents(groupedMap: Map<String, Map<String, Any>>): Map<Path, String> {
@@ -42,23 +43,29 @@ class FileContentGenerator(
     }
 
     private fun getFilePackage(filePath: Path): String {
-        val relativePath = outputDirectory.relativize(filePath.parent).toString().replace(File.separatorChar, '.')
+        val relativePath = sourceRoot.relativize(filePath.parent)
+            .toString()
+            .replace(File.separatorChar, '.')
+
         return relativePath.ifBlank { "presentation" }
     }
 
     private fun TypeSpec.Builder.addObjectContent(root: Map<String, Any>): TypeSpec.Builder {
-        @Suppress("UNCHECKED_CAST") // presuming the structure of the map
+        @Suppress("UNCHECKED_CAST")
         root.forEach { (key, value) ->
             when (value) {
                 is Map<*, *> -> {
                     addType(
-                        TypeSpec.objectBuilder(key.replaceFirstChar {
-                            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-                        })
+                        TypeSpec.objectBuilder(
+                            key.replaceFirstChar {
+                                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+                            },
+                        )
                             .addObjectContent(value as Map<String, Any>)
-                            .build()
+                            .build(),
                     )
                 }
+
                 is Pair<*, *> -> {
                     val originalKey = value.first as String
                     value.second as String
@@ -86,15 +93,15 @@ class FileContentGenerator(
                     .returns(String::class)
                     .addStatement(
                         """return localise("%L", ${parameters.joinToString(", ") { it.name }})""",
-                        originalKey
+                        originalKey,
                     )
-                    .build()
+                    .build(),
             )
         } else {
             addProperty(
                 PropertySpec.builder(key, String::class)
                     .initializer("""localise("%L")""", originalKey)
-                    .build()
+                    .build(),
             )
         }
     }

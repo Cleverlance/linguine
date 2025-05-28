@@ -8,11 +8,20 @@ class FileParser(
     fun generateGroupedMapStructure(): Map<String, Map<String, Any>> {
         val groupedMap = mutableMapOf<String, MutableMap<String, Pair<String, String>>>()
         fileContent.forEach { (key, value) ->
-            val firstSegment =
-                key.substringBefore(majorDelimiter).replaceFirstChar { it.uppercaseChar() }
-            val restOfKey = key.substringAfter(majorDelimiter)
-            groupedMap.computeIfAbsent(firstSegment) { mutableMapOf() }[restOfKey] = key to value
+            val groupName: String
+            val nestedKey: String
+
+            if (key.contains(majorDelimiter)) {
+                groupName = key.substringBefore(majorDelimiter).toPascalCase(minorDelimiter)
+                nestedKey = key.substringAfter(majorDelimiter)
+            } else {
+                groupName = key.toPascalCase(minorDelimiter)
+                nestedKey = key
+            }
+
+            groupedMap.computeIfAbsent(groupName) { mutableMapOf() }[nestedKey] = key to value
         }
+
         return groupedMap.mapValues { (_, map) -> generateNestedMapStructure(map) }
     }
 
@@ -51,11 +60,15 @@ class FileParser(
         }
     }
 
-    private fun formatPart(part: String, isLast: Boolean): String {
-        return if (isLast) {
+    private fun formatPart(part: String, isIntermediate: Boolean): String {
+        return if (isIntermediate) {
             part.replaceFirstChar { it.uppercaseChar() }
         } else {
             part.replaceFirstChar { it.lowercase() }
         }
+    }
+
+    private fun String.toPascalCase(delimiter: String): String {
+        return split(delimiter).joinToString("") { word -> word.replaceFirstChar(Char::uppercaseChar) }
     }
 }

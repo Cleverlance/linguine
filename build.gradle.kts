@@ -16,7 +16,7 @@ subprojects {
     apply<MavenPublishPlugin>()
 
     group = "com.qinshift.linguine"
-    version = System.getenv("NEXT_VERSION") ?: "0.3.0"
+    version = System.getenv("NEXT_VERSION") ?: "0.3.1"
 
     mavenPublishing {
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
