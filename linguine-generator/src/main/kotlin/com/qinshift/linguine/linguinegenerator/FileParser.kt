@@ -68,6 +68,7 @@ class FileParser(
         }
     }
 
-    private fun String.toPascalCase(splitBy: String): String =
-        this.split(splitBy).joinToString("") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+    private fun String.toPascalCase(delimiter: String): String {
+        return split(delimiter).joinToString("") { word -> word.replaceFirstChar(Char::uppercaseChar) }
+    }
 }
