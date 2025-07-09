@@ -54,12 +54,12 @@ linguineConfig {
 | Property          | Description                                                                                 |
 |-------------------|---------------------------------------------------------------------------------------------|
 | `inputFilePath`   | Path to the input JSON file with localizations. Independent from the output structure.     |
-| `inputFileType`   | Type of the input file (default: `FileType.JSON`).                                          |
+| `inputFileType`   | (Optional) Type of the input file (default: `FileType.JSON`).                                          |
 | `outputFilePath`  | Where to place the generated Kotlin file(s). Defines the target folder in your source tree. |
-| `sourceRootPath`  | **Base folder for generating package names. The package is computed as the path from `sourceRootPath` to `outputFilePath`.** |
-| `majorDelimiter`  | Splits keys into nested Kotlin `object`s. Default: `__`.                                    |
-| `minorDelimiter`  | Formats individual string names. Default: `_`.                                               |
-| `buildTaskName`   | (Optional) Custom name for the Gradle task.                                                 |
+| `sourceRootPath`  | (Optional) **Base folder for generating package names. The package is computed as the path from `sourceRootPath` to `outputFilePath`.** |
+| `majorDelimiter`  | (Optional) Splits keys into nested Kotlin `object`s. (default: `__`)                                    |
+| `minorDelimiter`  | (Optional) Formats individual string names. (default: `_`)                                               |
+| `buildTaskName`   | (Optional) Custom name for the Gradle task. (default: `generateStrings`)                                                 |
 
 ---
 
