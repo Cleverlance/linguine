@@ -1,61 +1,129 @@
 # Linguine Gradle Plugin
 
-Linguine is a Gradle plugin written in Kotlin designed to simplify the localization process in your applications. It
-automates the conversion of localization files to string resource files, supporting incremental builds and integration
-with the Gradle build process.
+**Linguine** is a Kotlin-based Gradle plugin that simplifies localization in multiplatform, Android, or JVM projects by **automatically converting JSON localization files into Kotlin code**. It keeps localized strings type-safe and integrated into your build process, reducing boilerplate.
 
-## Key Features
+---
 
-- **Support for JSON File Types:** Automates the conversion of JSON files, commonly used for localization, into Kotlin
-  string resource files.
-- **Build Process Integration:** Seamlessly integrates with the Gradle build process, enabling the automatic generation
-  of localization string files during builds.
-- **Incremental Build Support:** Utilizes Gradle's incremental build features to avoid unnecessary work by only
-  processing changed input files.
-- **Configurable:** Offers customization options for specifying input and output file paths, file names, and delimiter
-  settings.
+## ✨ Features
 
-## Requirements
+- **JSON Localization Support:**  
+  Converts nested JSON localization files into Kotlin `object` structures with type-safe string accessors.
 
-- Gradle 6.1 or higher
-- Kotlin 1.5.21 or a compatible version
-- Compatible with Java, Android, and Kotlin Multiplatform projects
+- **Automatic Package Naming:**  
+  Builds the Kotlin package name from your file structure relative to `sourceRootPath`.
 
-## Installation and Configuration
+- **Incremental Build Support:**  
+  Processes only changed files, speeding up builds.
 
-To use the Linguine plugin, add the following to your `build.gradle.kts` file:
+- **Multiplatform Compatible:**  
+  Works with Kotlin Multiplatform, Android, and JVM projects.
 
-```
+- **Highly Configurable:**  
+  Customize input/output paths, delimiters, and task names.
+
+---
+
+## 🔧 Installation
+
+Add this to your module-level `build.gradle.kts`:
+
+```kotlin
 plugins {
     id("com.qinshift.linguine") version "0.3.0"
 }
+```
 
+---
+
+## ⚙️ Configuration
+
+### Example:
+
+```kotlin
 linguineConfig {
-    inputFilePath = "src/main/resources/strings.json"
-    outputFilePath = "src/main/resources/"
-    majorDelimiter = '__'
-    minorDelimiter = '_'
+    inputFilePath = "src/localization/english/strings.json"
+    outputFilePath = "build/generated/linguine"
+    sourceRootPath = "src/localization"
+    majorDelimiter = "__"
+    minorDelimiter = "_"
 }
 ```
 
-## Usage
+### 🔑 Key Configuration Options
 
-After configuring the plugin, Linguine will process the specified JSON file during the build process and generate a
-Kotlin file with all localized strings. This Kotlin file (Strings.kt) will be placed in the specified outputFilePath
-directory. You can then reference these strings throughout your project as needed.
+| Property          | Description                                                                                 |
+|-------------------|---------------------------------------------------------------------------------------------|
+| `inputFilePath`   | Path to the input JSON file with localizations.                                             |
+| `inputFileType`   | Type of the input file (default: `FileType.JSON`).                                          |
+| `outputFilePath`  | Where to place the generated Kotlin file(s). Typically a build or generated directory.      |
+| `sourceRootPath`  | **Defines the root folder used to compute package names. Must be a parent of `inputFilePath`.** |
+| `majorDelimiter`  | Splits keys into nested Kotlin `object`s. Default: `__`.                                    |
+| `minorDelimiter`  | Formats individual string names. Default: `_`.                                               |
+| `buildTaskName`   | (Optional) Custom name for the Gradle task.                                                 |
 
-For a simple example, if your JSON file contains:
+---
 
+## 📦 Package Name Generation
+
+Linguine derives the package name based on how your input file's location relates to `sourceRootPath`.
+
+Example:
+- `sourceRootPath = "src/localization"`
+- `inputFilePath = "src/localization/english/strings.json"`
+
+➡️ Resulting Kotlin package:
+```kotlin
+package english
+```
+
+If the relative path is empty or invalid, it falls back to:
+```kotlin
+package presentation
+```
+
+---
+
+## 🧪 Usage Example
+
+### Input JSON (`src/localization/english/strings.json`)
 ```json
 {
-  "hello_world": "Hello, World!"
+  "welcome_message": "Welcome to our app!"
 }
 ```
 
-After the build, Strings.kt will contain:
+### Generated Kotlin (`build/generated/linguine/english/Strings.kt`)
+```kotlin
+package english
 
-```
 object Strings {
-  val helloWorld: String = localise("hello_world")
+    val welcomeMessage: String = localise("welcome_message")
 }
 ```
+
+### Usage in Code
+```kotlin
+val msg = Strings.welcomeMessage
+```
+
+---
+
+
+## 🚀 Build Integration
+
+The plugin runs during the Gradle build:
+
+```bash
+./gradlew build
+```
+
+Or, run the task directly (if configured):
+```bash
+./gradlew generateLocalization
+```
+
+---
+
+## 📝 License
+
+See [license.md](license.md)
