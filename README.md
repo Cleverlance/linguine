@@ -10,7 +10,7 @@
   Converts nested JSON localization files into Kotlin `object` structures with type-safe string accessors.
 
 - **Automatic Package Naming:**  
-  Builds the Kotlin package name from your file structure relative to `sourceRootPath`.
+  Builds the Kotlin package name from the **generated file’s location relative to `sourceRootPath`**, keeping your codebase organized.
 
 - **Incremental Build Support:**  
   Processes only changed files, speeding up builds.
@@ -29,7 +29,7 @@ Add this to your module-level `build.gradle.kts`:
 
 ```kotlin
 plugins {
-    id("com.qinshift.linguine") version "0.3.0"
+    id("com.qinshift.linguine") version "x.y.z"
 }
 ```
 
@@ -41,9 +41,9 @@ plugins {
 
 ```kotlin
 linguineConfig {
-    inputFilePath = "src/localization/english/strings.json"
-    outputFilePath = "build/generated/linguine"
-    sourceRootPath = "src/localization"
+    inputFilePath = "localization-data/en/strings.json"
+    outputFilePath = "src/commonMain/kotlin/com/example/app/localisation/en"
+    sourceRootPath = "src/commonMain/kotlin"
     majorDelimiter = "__"
     minorDelimiter = "_"
 }
@@ -53,10 +53,10 @@ linguineConfig {
 
 | Property          | Description                                                                                 |
 |-------------------|---------------------------------------------------------------------------------------------|
-| `inputFilePath`   | Path to the input JSON file with localizations.                                             |
+| `inputFilePath`   | Path to the input JSON file with localizations. Independent from the output structure.     |
 | `inputFileType`   | Type of the input file (default: `FileType.JSON`).                                          |
-| `outputFilePath`  | Where to place the generated Kotlin file(s). Typically a build or generated directory.      |
-| `sourceRootPath`  | **Defines the root folder used to compute package names. Must be a parent of `inputFilePath`.** |
+| `outputFilePath`  | Where to place the generated Kotlin file(s). Defines the target folder in your source tree. |
+| `sourceRootPath`  | **Base folder for generating package names. The package is computed as the path from `sourceRootPath` to `outputFilePath`.** |
 | `majorDelimiter`  | Splits keys into nested Kotlin `object`s. Default: `__`.                                    |
 | `minorDelimiter`  | Formats individual string names. Default: `_`.                                               |
 | `buildTaskName`   | (Optional) Custom name for the Gradle task.                                                 |
@@ -65,15 +65,21 @@ linguineConfig {
 
 ## 📦 Package Name Generation
 
-Linguine derives the package name based on how your input file's location relates to `sourceRootPath`.
+The package name is computed from the **relative path between `sourceRootPath` and `outputFilePath`**.
 
 Example:
-- `sourceRootPath = "src/localization"`
-- `inputFilePath = "src/localization/english/strings.json"`
 
-➡️ Resulting Kotlin package:
 ```kotlin
-package english
+linguineConfig {
+    inputFilePath = "localization-data/en/strings.json"
+    outputFilePath = "src/commonMain/kotlin/com/example/app/localisation/en"
+    sourceRootPath = "src/commonMain/kotlin"
+}
+```
+
+➡️ Package name:
+```kotlin
+package com.example.app.localisation.en
 ```
 
 If the relative path is empty or invalid, it falls back to:
@@ -85,29 +91,28 @@ package presentation
 
 ## 🧪 Usage Example
 
-### Input JSON (`src/localization/english/strings.json`)
+### Input JSON (`localization-data/en/strings.json`)
 ```json
 {
-  "welcome_message": "Welcome to our app!"
+  "home__welcome_message": "Welcome Home!"
 }
 ```
 
-### Generated Kotlin (`build/generated/linguine/english/Strings.kt`)
+### Generated Kotlin (`src/commonMain/kotlin/com/example/app/localisation/en/Strings.kt`)
 ```kotlin
-package english
+package com.example.app.localisation.en
 
-object Strings {
-    val welcomeMessage: String = localise("welcome_message")
+object Home {
+    val welcomeMessage: String = localise("home__welcome_message")
 }
 ```
 
 ### Usage in Code
 ```kotlin
-val msg = Strings.welcomeMessage
+val msg = Home.welcomeMessage
 ```
 
 ---
-
 
 ## 🚀 Build Integration
 
