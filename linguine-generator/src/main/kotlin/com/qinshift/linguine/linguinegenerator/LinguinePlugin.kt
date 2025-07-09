@@ -4,10 +4,12 @@ import com.qinshift.linguine.linguinegenerator.filereader.FileType as LinguineFi
 import org.gradle.api.provider.Property as GradleProperty
 import com.qinshift.linguine.linguine_generator.BuildConfig
 import com.qinshift.linguine.linguinegenerator.filereader.FileReader
+import javax.inject.Inject
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.ProjectLayout
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
@@ -32,9 +34,9 @@ class LinguinePlugin : Plugin<Project> {
         val isJava = project.hasAnyPlugin("org.jetbrains.kotlin.jvm", "java")
 
         when {
-            isKmp -> configureForKmp(project, extension)
-            isAndroid -> configureForAndroid(project, extension)
-            isJava -> configureForJvm(project, extension)
+            isKmp -> configureForKmp(project)
+            isAndroid -> configureForAndroid(project)
+            isJava -> configureForJvm(project)
         }
 
         project.tasks.register(GENERATE_STRINGS_TASK_NAME, GenerateStringsTask::class.java) {
@@ -42,46 +44,39 @@ class LinguinePlugin : Plugin<Project> {
             fileType.set(extension.inputFileType)
             majorDelimiter.set(extension.majorDelimiter)
             minorDelimiter.set(extension.minorDelimiter)
-            outputDirectory.set(
-                project.layout.projectDirectory.dir(
-                    extension.outputFilePath,
-                ),
-            )
+            outputDirectory.set(project.layout.projectDirectory.dir(extension.outputFilePath))
+            sourceRootPath.set(extension.sourceRootPath)
+            outputFilePath.set(extension.outputFilePath)
+        }
+
+        project.afterEvaluate {
+            val buildTasks = extension.buildTaskName?.let { name -> listOf(task(name)) }
+                ?: tasks.filter { task -> task.name.startsWith("compile") }
+
+            buildTasks.forEach { task -> task.dependsOn(GENERATE_STRINGS_TASK_NAME) }
         }
     }
 
     private fun Project.hasAnyPlugin(vararg plugins: String): Boolean =
         plugins.any(this.plugins::hasPlugin)
 
-    private fun configureForKmp(project: Project, extension: LinguineConfig) {
+    private fun configureForKmp(project: Project) {
         with(project.extensions.getByType<KotlinMultiplatformExtension>()) {
             sourceSets.commonMain.dependencies {
                 implementation(RUNTIME_DEPENDENCY)
             }
         }
-        configureGenerateStringsTask(project, extension)
     }
 
-    private fun configureForAndroid(project: Project, extension: LinguineConfig) {
+    private fun configureForAndroid(project: Project) {
         project.dependencies {
             add("implementation", RUNTIME_DEPENDENCY)
         }
-        configureGenerateStringsTask(project, extension)
     }
 
-    private fun configureForJvm(project: Project, extension: LinguineConfig) {
+    private fun configureForJvm(project: Project) {
         project.dependencies {
             add("implementation", RUNTIME_DEPENDENCY)
-        }
-        configureGenerateStringsTask(project, extension)
-    }
-
-    private fun configureGenerateStringsTask(project: Project, extension: LinguineConfig) {
-        project.afterEvaluate {
-            val buildTasks = extension.buildTaskName?.let { name -> listOf(task(name)) }
-                ?: tasks.filter { task -> task.name.startsWith("compile") }
-
-            buildTasks.forEach { task -> task.dependsOn(GENERATE_STRINGS_TASK_NAME) }
         }
     }
 
@@ -93,7 +88,10 @@ class LinguinePlugin : Plugin<Project> {
 }
 
 @CacheableTask
-abstract class GenerateStringsTask : DefaultTask() {
+abstract class GenerateStringsTask @Inject constructor(
+    private val layout: ProjectLayout,
+) : DefaultTask() {
+
     @get:Incremental
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -110,6 +108,12 @@ abstract class GenerateStringsTask : DefaultTask() {
 
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
+
+    @get:Input
+    abstract val sourceRootPath: GradleProperty<String>
+
+    @get:Input
+    abstract val outputFilePath: GradleProperty<String>
 
     @TaskAction
     fun generate() {
@@ -128,20 +132,17 @@ abstract class GenerateStringsTask : DefaultTask() {
 
         val groupedMap = fileParser.generateGroupedMapStructure()
 
-        // Get config and resolve paths
-        val config = project.extensions.getByType(LinguineConfig::class.java)
         val resolvedOutputPath = outputDirectory.get().asFile.toPath()
 
-        val sourceRootPath = config.sourceRootPath
-            .takeIf { it.isNotBlank() }
-            ?: config.outputFilePath
+        val sourceRoot = sourceRootPath.get().takeIf { it.isNotBlank() }
+            ?: outputFilePath.get()
 
-        if (config.sourceRootPath.isBlank()) {
-            logger.warn("Linguine: sourceRootPath not set. Falling back to outputFilePath: $sourceRootPath")
+        if (sourceRootPath.get().isBlank()) {
+            logger.warn("Linguine: sourceRootPath not set. Falling back to outputFilePath: $sourceRoot")
         }
 
-        val resolvedSourceRoot = project.layout.projectDirectory
-            .dir(sourceRootPath)
+        val resolvedSourceRoot = layout.projectDirectory
+            .dir(sourceRoot)
             .asFile
             .toPath()
 
