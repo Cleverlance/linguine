@@ -13,7 +13,7 @@ class LinguinePluginTest {
         // Create a test project and apply the plugin
         val project: Project = ProjectBuilder.builder().build()
         project.plugins.apply("com.qinshift.linguine")
-        val extension = project.extensions.getByType(LinguineConfig::class.java)
+        val extension = project.extensions.getByType(Linguine::class.java)
         extension.inputFilePath = "src/commonMain/resources/string.json"
         extension.outputFilePath = "presentation"
 
@@ -26,7 +26,7 @@ class LinguinePluginTest {
         val project: Project = ProjectBuilder.builder().build()
 
         project.pluginManager.apply("com.qinshift.linguine")
-        val extension = project.extensions.getByType(LinguineConfig::class.java)
+        val extension = project.extensions.getByType(Linguine::class.java)
         extension.inputFilePath = "src/commonMain/resources/string.json"
         extension.outputFilePath = "presentation"
 

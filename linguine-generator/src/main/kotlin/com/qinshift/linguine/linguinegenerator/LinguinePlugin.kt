@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 class LinguinePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        val extension = project.extensions.create("linguineConfig", LinguineConfig::class.java)
+        val extension = project.extensions.create("linguineConfig", Linguine::class.java)
 
         val isKmp = project.hasAnyPlugin("org.jetbrains.kotlin.multiplatform")
         val isAndroid = project.hasAnyPlugin("com.android.application", "com.android.library")
@@ -160,7 +160,7 @@ abstract class GenerateStringsTask @Inject constructor(
         outputFileContent.forEach { (filePath, content) ->
             fileWriter.writeToFile(filePath.toFile(), content)
 
-            logger.lifecycle(
+            logger.info(
                 "Linguine: File ${filePath.fileName} " +
                     "has been successfully created in the directory ${filePath.parent}",
             )
