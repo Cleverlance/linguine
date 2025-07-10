@@ -26,7 +26,7 @@ class LinguinePluginFunctionalTest {
                     id("com.qinshift.linguine")
                 }
 
-                linguineConfig {
+                linguine {
                     inputFilePath = "src/main/resources/string.json"
                     outputFilePath = "${'$'}{projectDir}/presentation"
                     sourceRootPath = "presentation"
@@ -59,7 +59,7 @@ class LinguinePluginFunctionalTest {
                     id("com.qinshift.linguine")
                 }
 
-                linguineConfig {
+                linguine {
                     inputFilePath = "src/main/resources/strings.json"
                     outputFilePath = "src/main/kotlin/presentation"
                     sourceRootPath = "src/main/kotlin"
@@ -144,7 +144,7 @@ class LinguinePluginFunctionalTest {
                 id("com.qinshift.linguine")
             }
 
-            linguineConfig {
+            linguine {
                 inputFilePath = "src/main/resources/strings.json"
                 outputFilePath = "$projectDirPath/presentation"
                 sourceRootPath = "$projectDirPath"
@@ -168,7 +168,7 @@ class LinguinePluginFunctionalTest {
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir)
             .withPluginClasspath()
-            .withArguments(generateTaskName)
+            .withArguments(generateTaskName, "--info")
             .forwardOutput()
             .build()
 

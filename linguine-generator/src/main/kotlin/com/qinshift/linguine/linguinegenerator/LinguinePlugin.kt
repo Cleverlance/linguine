@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 class LinguinePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        val extension = project.extensions.create("linguineConfig", Linguine::class.java)
+        val extension = project.extensions.create("linguine", Linguine::class.java)
 
         val isKmp = project.hasAnyPlugin("org.jetbrains.kotlin.multiplatform")
         val isAndroid = project.hasAnyPlugin("com.android.application", "com.android.library")
