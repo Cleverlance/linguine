@@ -40,7 +40,7 @@ plugins {
 ### Example:
 
 ```kotlin
-linguineConfig {
+linguine {
     inputFilePath = "localization-data/en/strings.json"
     outputFilePath = "src/commonMain/kotlin/com/example/app/localisation/en"
     sourceRootPath = "src/commonMain/kotlin"
@@ -70,7 +70,7 @@ The package name is computed from the **relative path between `sourceRootPath` a
 Example:
 
 ```kotlin
-linguineConfig {
+linguine {
     inputFilePath = "localization-data/en/strings.json"
     outputFilePath = "src/commonMain/kotlin/com/example/app/localisation/en"
     sourceRootPath = "src/commonMain/kotlin"
