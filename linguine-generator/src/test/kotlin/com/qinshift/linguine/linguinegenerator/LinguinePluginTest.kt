@@ -10,14 +10,12 @@ class LinguinePluginTest {
 
     @Test
     fun `plugin registers a task`() {
-        // Create a test project and apply the plugin
         val project: Project = ProjectBuilder.builder().build()
         project.plugins.apply("com.qinshift.linguine")
         val extension = project.extensions.getByType(Linguine::class.java)
         extension.inputFilePath = "src/commonMain/resources/string.json"
         extension.outputFilePath = "presentation"
 
-        // Verify the result
         assertNotNull(project.tasks.findByName("generateStrings"))
     }
 

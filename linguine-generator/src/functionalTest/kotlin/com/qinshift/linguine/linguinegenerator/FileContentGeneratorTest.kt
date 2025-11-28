@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import kotlin.io.path.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @Suppress("StringLiteralDuplication")
 class FileContentGeneratorTest {
@@ -25,7 +26,12 @@ class FileContentGeneratorTest {
             "privacy" to ("settings__privacy" to "Privacy Settings"),
             "title" to ("settings__title" to "Title for Settings"),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result = generator.generateFileContent(
             outputDirectory.resolve("SettingsStrings.kt"),
@@ -63,7 +69,12 @@ class FileContentGeneratorTest {
         val root: Map<String, Any> = mapOf(
             "emptyValue" to ("section__empty_value" to ""),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result = generator.generateFileContent(
             outputDirectory.resolve("SectionStrings.kt"),
@@ -101,7 +112,12 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("DeepStrings.kt"), "Deep", root)
@@ -139,7 +155,12 @@ class FileContentGeneratorTest {
             "Simple" to ("simple__key" to "Simple Value"),
             "AnotherSimple" to ("another__simple__key" to "Another Simple Value"),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
@@ -173,7 +194,12 @@ class FileContentGeneratorTest {
                     "Error %1\$s occurred at %2\$d:%3\$d on %4\$s"),
             ),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
@@ -220,7 +246,12 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
@@ -296,7 +327,12 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
@@ -369,7 +405,12 @@ class FileContentGeneratorTest {
                 ),
             ),
         )
-        val generator = FileContentGenerator(sourceRoot, outputDirectory, fileContent)
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
 
         val result =
             generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
@@ -401,5 +442,142 @@ class FileContentGeneratorTest {
             }
         """
         result.trimIndent() shouldBe expected.trimIndent()
+    }
+
+    @Test
+    fun `generateFileContents uses outputSuffix in file name and root object name`() {
+        val sourceRoot = Path("src/main/kotlin")
+        val outputDirectory = Path("src/main/kotlin/com/example/app/")
+        val fileContent: Map<String, String> = mapOf(
+            "home__title" to "Home Title",
+        )
+
+        val groupedMap: Map<String, Map<String, Any>> = mapOf(
+            "Home" to mapOf(
+                "title" to ("home__title" to "Home Title"),
+            ),
+        )
+
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "L10n",
+        )
+
+        val result = generator.generateFileContents(groupedMap)
+
+        result.size shouldBe 1
+
+        val (path, content) = result.entries.single()
+
+        path shouldBe outputDirectory.resolve("HomeL10n.kt")
+
+        assertTrue(
+            content.contains("public object HomeL10n"),
+            "Expected root object 'HomeL10n' in generated content, but was:\n$content",
+        )
+
+        assertTrue(
+            content.contains("""public val title: String = localise("home__title")"""),
+            "Expected property for 'home__title' in generated content, but was:\n$content",
+        )
+    }
+
+    @Test
+    fun `generateFileContents capitalizes lowercase group name and applies suffix`() {
+        val sourceRoot = Path("src/main/kotlin")
+        val outputDirectory = Path("src/main/kotlin/com/example/app/")
+        val fileContent: Map<String, String> = mapOf(
+            "home__title" to "Home Title",
+        )
+
+        val groupedMap: Map<String, Map<String, Any>> = mapOf(
+            "home" to mapOf(
+                "title" to ("home__title" to "Home Title"),
+            ),
+        )
+
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "L10n",
+        )
+
+        val result = generator.generateFileContents(groupedMap)
+
+        result.size shouldBe 1
+
+        val (path, content) = result.entries.single()
+
+        path shouldBe outputDirectory.resolve("HomeL10n.kt")
+
+        assertTrue(
+            content.contains("public object HomeL10n"),
+            "Expected root object 'HomeL10n' in generated content, but was:\n$content",
+        )
+
+        assertTrue(
+            content.contains("""public val title: String = localise("home__title")"""),
+            "Expected property for 'home__title' in generated content, but was:\n$content",
+        )
+    }
+
+    @Test
+    fun `generateFileContent falls back to presentation package when relative path is blank`() {
+        val sourceRoot = Path("src/main/kotlin/com/example/app")
+        val outputDirectory = Path("src/main/kotlin/com/example/app")
+        val fileContent: Map<String, String> = mapOf(
+            "key" to "Value",
+        )
+
+        val root: Map<String, Any> = mapOf(
+            "key" to ("key" to "Value"),
+        )
+
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
+
+        val result = generator.generateFileContent(
+            outputDirectory.resolve("Strings.kt"),
+            "Strings",
+            root,
+        )
+
+        assertTrue(
+            result.trimStart().startsWith("package presentation"),
+            "Expected fallback package 'presentation' but was:\n$result",
+        )
+    }
+
+    @Test
+    fun `generateFileContent falls back to property when translation key is missing`() {
+        val sourceRoot = Path("src/main/kotlin")
+        val outputDirectory = Path("src/main/kotlin/com/example/app/")
+        val fileContent: Map<String, String> = emptyMap()
+
+        val root: Map<String, Any> = mapOf(
+            "title" to ("missing_key" to "This value is ignored by generator"),
+        )
+
+        val generator = FileContentGenerator(
+            sourceRoot = sourceRoot,
+            outputDirectory = outputDirectory,
+            fileContent = fileContent,
+            outputSuffix = "Strings",
+        )
+
+        val result =
+            generator.generateFileContent(outputDirectory.resolve("Strings.kt"), "Strings", root)
+
+        assertTrue(
+            result.contains("""public val title: String = localise("missing_key")"""),
+            "Expected fallback property for missing key in generated content, but was:\n$result",
+        )
     }
 }
