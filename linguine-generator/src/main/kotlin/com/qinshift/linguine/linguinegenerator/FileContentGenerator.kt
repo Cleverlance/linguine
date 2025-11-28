@@ -14,6 +14,7 @@ class FileContentGenerator(
     private val sourceRoot: Path,
     private val outputDirectory: Path,
     private val fileContent: Map<String, String>,
+    private val outputSuffix: String,
 ) {
 
     fun generateFileContents(groupedMap: Map<String, Map<String, Any>>): Map<Path, String> {
@@ -21,8 +22,11 @@ class FileContentGenerator(
             val capitalizedFileName = fileName.replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
             }
-            val filePath = outputDirectory.resolve("${capitalizedFileName}Strings.kt")
-            filePath to generateFileContent(filePath, capitalizedFileName, content)
+
+            val rootObjectName = "$capitalizedFileName$outputSuffix"
+            val filePath = outputDirectory.resolve("$rootObjectName.kt")
+
+            filePath to generateFileContent(filePath, rootObjectName, content)
         }.toMap()
     }
 

@@ -47,6 +47,7 @@ class LinguinePlugin : Plugin<Project> {
             outputDirectory.set(project.layout.projectDirectory.dir(extension.outputFilePath))
             sourceRootPath.set(extension.sourceRootPath)
             outputFilePath.set(extension.outputFilePath)
+            outputSuffix.set(extension.outputSuffix)
         }
 
         project.afterEvaluate {
@@ -115,6 +116,9 @@ abstract class GenerateStringsTask @Inject constructor(
     @get:Input
     abstract val outputFilePath: GradleProperty<String>
 
+    @get:Input
+    abstract val outputSuffix: GradleProperty<String>
+
     @TaskAction
     fun generate() {
         // Read input file
@@ -151,6 +155,7 @@ abstract class GenerateStringsTask @Inject constructor(
             sourceRoot = resolvedSourceRoot,
             outputDirectory = resolvedOutputPath,
             fileContent = fileContent,
+            outputSuffix = outputSuffix.get()
         )
 
         val outputFileContent = fileContentGenerator.generateFileContents(groupedMap)

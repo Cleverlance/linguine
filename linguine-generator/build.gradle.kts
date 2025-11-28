@@ -20,7 +20,6 @@ buildConfig {
 }
 
 gradlePlugin {
-    // Define the plugin
     val linguine by plugins.creating {
         id = "com.qinshift.linguine"
         implementationClass = "com.qinshift.linguine.linguinegenerator.LinguinePlugin"

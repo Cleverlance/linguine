@@ -6,20 +6,20 @@
 
 ## ✨ Features
 
-- **JSON Localization Support:**  
-  Converts nested JSON localization files into Kotlin `object` structures with type-safe string accessors.
+- **JSON Localization Support**  
+  Converts JSON localization files into Kotlin `object` structures with type-safe string accessors using configurable delimiters.
 
-- **Automatic Package Naming:**  
+- **Automatic Package Naming**  
   Builds the Kotlin package name from the **generated file’s location relative to `sourceRootPath`**, keeping your codebase organized.
 
-- **Incremental Build Support:**  
+- **Configurable Naming**  
+  Customize key delimiters and the suffix used for generated file and object names via `outputSuffix` (e.g. `Strings`, `L10n`).
+
+- **Incremental Build Support**  
   Processes only changed files, speeding up builds.
 
-- **Multiplatform Compatible:**  
+- **Multiplatform Compatible**  
   Works with Kotlin Multiplatform, Android, and JVM projects.
-
-- **Highly Configurable:**  
-  Customize input/output paths, delimiters, and task names.
 
 ---
 
@@ -37,13 +37,14 @@ plugins {
 
 ## ⚙️ Configuration
 
-### Example:
+### Example
 
 ```kotlin
 linguine {
     inputFilePath = "localization-data/en/strings.json"
     outputFilePath = "src/commonMain/kotlin/com/example/app/localisation/en"
     sourceRootPath = "src/commonMain/kotlin"
+    outputSuffix = "Strings"
     majorDelimiter = "__"
     minorDelimiter = "_"
 }
@@ -51,15 +52,16 @@ linguine {
 
 ### 🔑 Key Configuration Options
 
-| Property          | Description                                                                                 |
-|-------------------|---------------------------------------------------------------------------------------------|
-| `inputFilePath`   | Path to the input JSON file with localizations. Independent from the output structure.     |
-| `inputFileType`   | (Optional) Type of the input file (default: `FileType.JSON`).                                          |
-| `outputFilePath`  | Where to place the generated Kotlin file(s). Defines the target folder in your source tree. |
-| `sourceRootPath`  | (Optional) **Base folder for generating package names. The package is computed as the path from `sourceRootPath` to `outputFilePath`.** |
-| `majorDelimiter`  | (Optional) Splits keys into nested Kotlin `object`s. (default: `__`)                                    |
-| `minorDelimiter`  | (Optional) Formats individual string names. (default: `_`)                                               |
-| `buildTaskName`   | (Optional) Custom name for the Gradle task. (default: `generateStrings`)                                                 |
+| Property          | Type / Default         | Required | Description |
+|-------------------|------------------------|----------|-------------|
+| `inputFilePath`   | `String` (no default)  | Yes      | Path to the input JSON file with localizations. Independent from the output structure. |
+| `inputFileType`   | `FileType` = `JSON`    | No       | Type of the input file. Currently only JSON is supported. |
+| `outputFilePath`  | `String` (no default)  | Yes      | Directory where generated Kotlin file(s) are written. Defines the target folder in your source tree. |
+| `sourceRootPath`  | `String` (no default)  | No       | Base folder for generating package names. The package is computed as the path from `sourceRootPath` to `outputFilePath`. If omitted or resulting path is blank, `presentation` is used. |
+| `outputSuffix`    | `String` = `"Strings"` | No       | Suffix appended to the generated file and root-level object. For example, group `Home` with `outputSuffix = "Strings"` generates `HomeStrings.kt` and `object HomeStrings`. |
+| `majorDelimiter`  | `String` = `"__"`      | No       | Splits keys into nested Kotlin `object`s. For example, `home__welcome_message` creates a `Home*` group and a `welcomeMessage` member. |
+| `minorDelimiter`  | `String` = `"_"`       | No       | Splits individual key segments into words for camelCase members (e.g. `welcome_message` → `welcomeMessage`). |
+| `buildTaskName`   | `String?` = `null`     | No       | Custom name for a build task that should depend on string generation. If not set, all `compile*` tasks will depend on `generateStrings`. |
 
 ---
 
@@ -78,11 +80,13 @@ linguine {
 ```
 
 ➡️ Package name:
+
 ```kotlin
 package com.example.app.localisation.en
 ```
 
 If the relative path is empty or invalid, it falls back to:
+
 ```kotlin
 package presentation
 ```
@@ -92,43 +96,61 @@ package presentation
 ## 🧪 Usage Example
 
 ### Input JSON (`localization-data/en/strings.json`)
+
 ```json
 {
   "home__welcome_message": "Welcome Home!"
 }
 ```
 
-### Generated Kotlin (`src/commonMain/kotlin/com/example/app/localisation/en/Strings.kt`)
+### Generated Kotlin (`src/commonMain/kotlin/com/example/app/localisation/en/HomeStrings.kt`)
+
+Assuming:
+
+```kotlin
+outputSuffix = "Strings"
+```
+
+Generated file:
+
 ```kotlin
 package com.example.app.localisation.en
 
-object Home {
+import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise
+
+object HomeStrings {
     val welcomeMessage: String = localise("home__welcome_message")
 }
 ```
 
 ### Usage in Code
+
 ```kotlin
-val msg = Home.welcomeMessage
+val msg = HomeStrings.welcomeMessage
 ```
 
 ---
 
 ## 🚀 Build Integration
 
-The plugin runs during the Gradle build:
+The plugin registers a `generateStrings` task and wires it into the build.
+
+Run the full build:
 
 ```bash
 ./gradlew build
 ```
 
-Or, run the task directly (if configured):
+Or, run string generation directly:
+
 ```bash
-./gradlew generateLocalization
+./gradlew generateStrings
 ```
+
+If you set `buildTaskName`, that task will depend on `generateStrings`; otherwise all `compile*` tasks will.
 
 ---
 
 ## 📝 License
 
-See [license.md](license.md)
+See [license.md](license.md).

@@ -8,6 +8,7 @@ import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
+@Suppress("StringLiteralDuplication")
 class LinguinePluginFunctionalTest {
 
     @TempDir
@@ -106,10 +107,11 @@ class LinguinePluginFunctionalTest {
             import kotlin.Int
             import kotlin.String
             
-            public object Activation {
+            public object ActivationStrings {
                 public object ForgottenPassword {
                     public object Birthdate {
-                        public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")
+                        public val logIn: String =
+                                localise("activation__forgotten_password__birthdate__log_in")
         
                         public fun logOut(
                             param1: String,
@@ -118,8 +120,8 @@ class LinguinePluginFunctionalTest {
                             param4: String,
                             param5: Int,
                             param6: Float,
-                        ): String = localise("activation__forgotten_password__birthdate__log_out", param1,
-                                param2, param3, param4, param5, param6)
+                        ): String = localise("activation__forgotten_password__birthdate__log_out",
+                                param1, param2, param3, param4, param5, param6)
                     }
                 }
             }
@@ -192,6 +194,64 @@ class LinguinePluginFunctionalTest {
                 "Expected output path component '$component' was not found in the build output.",
             )
         }
+    }
+
+    @Test
+    fun whenCustomOutputSuffixConfiguredThenFileAndRootObjectUseSuffix() {
+        testProjectDir.resolve(gradleBuildFileName).apply {
+            writeText(
+                """
+                plugins {
+                    id("com.qinshift.linguine")
+                }
+
+                linguine {
+                    inputFilePath = "src/main/resources/strings.json"
+                    outputFilePath = "src/main/kotlin/presentation"
+                    sourceRootPath = "src/main/kotlin"
+                    outputSuffix = "L10n"
+                }
+                """.trimIndent(),
+            )
+        }
+
+        testProjectDir.resolve("src/main/resources/strings.json").apply {
+            parentFile.mkdirs()
+            writeText(
+                """
+                {
+                    "activation__forgotten_password__birthdate__log_in": "Přihlásit se"
+                }
+                """.trimIndent(),
+            )
+        }
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir)
+            .withArguments(generateTaskName)
+            .withPluginClasspath()
+            .forwardOutput()
+            .build()
+
+        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
+
+        val generatedFile =
+            File(testProjectDir, "src/main/kotlin/presentation/ActivationL10n.kt")
+        assertTrue(generatedFile.exists(), "Generated file with custom suffix should exist")
+
+        val actualContent = generatedFile.readText()
+
+        assertTrue(
+            actualContent.contains("public object ActivationL10n"),
+            "Expected root object 'ActivationL10n' in generated content, but was:\n$actualContent",
+        )
+        assertTrue(
+            actualContent.contains(
+                """public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")"""
+                    .trimIndent(),
+            ),
+            "Expected property 'logIn' in generated content, but was:\n$actualContent",
+        )
     }
 
     private fun normalizeWhitespace(code: String): String =
