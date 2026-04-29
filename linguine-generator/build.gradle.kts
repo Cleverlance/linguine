@@ -14,6 +14,10 @@ dependencies {
     testImplementation(libs.mockk)
 }
 
+kotlin {
+    explicitApi()
+}
+
 buildConfig {
     buildConfigField("GROUP", project.group as String)
     buildConfigField("VERSION", project.version as String)

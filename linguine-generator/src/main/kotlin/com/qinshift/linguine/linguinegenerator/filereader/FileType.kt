@@ -1,5 +1,5 @@
 package com.qinshift.linguine.linguinegenerator.filereader
 
-enum class FileType {
+public enum class FileType {
     JSON
 }

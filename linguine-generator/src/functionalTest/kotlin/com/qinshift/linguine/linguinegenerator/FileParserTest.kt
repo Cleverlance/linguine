@@ -12,9 +12,9 @@ class FileParserTest {
         val mapContent: Map<String, String> = emptyMap()
         val fileParser = fileParser(fileContent = mapContent)
 
-        val expectedOutput = mapOf<String, Any>()
+        val expectedOutput = emptyMap<String, Node.Group>()
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -27,10 +27,12 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "SingleKey" to mapOf("singleKey" to ("singleKey" to "Single Value")),
+            "SingleKey" to nodeGroup(
+                "singleKey" to nodeItem("singleKey", "Single Value"),
+            ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -43,14 +45,17 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "Activation" to mapOf(
-                "ForgottenPassword" to mapOf(
-                    "emailInput" to ("activation__forgottenPassword__emailInput" to "Enter your email")
-                )
-            )
+            "Activation" to nodeGroup(
+                "ForgottenPassword" to nodeGroup(
+                    "emailInput" to nodeItem(
+                        "activation__forgottenPassword__emailInput",
+                        "Enter your email",
+                    ),
+                ),
+            ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -63,22 +68,26 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "Activation" to mapOf(
-                "" to mapOf(
-                    "ForgottenPassword" to mapOf(
-                        "Email" to mapOf(
-                            "input" to ("activation____forgotten_password__email__input" to "Email Input"),
+            "Activation" to nodeGroup(
+                "" to nodeGroup(
+                    "ForgottenPassword" to nodeGroup(
+                        "Email" to nodeGroup(
+                            "input" to nodeItem(
+                                "activation____forgotten_password__email__input",
+                                "Email Input",
+                            ),
                         ),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
 
+    @Suppress("LongMethod")
     @Test
     fun `generateNestedMapStructure with valid input creates correct nested structure`() {
         val mapContent: Map<String, String> = mapOf(
@@ -94,38 +103,58 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "Activation" to mapOf(
-                "ForgottenPassword" to mapOf(
-                    "Birthdate" to mapOf(
-                        "cancelButton" to ("activation__forgotten_password__birthdate__cancel_button" to "Cancel"),
+            "Activation" to nodeGroup(
+                "ForgottenPassword" to nodeGroup(
+                    "Birthdate" to nodeGroup(
+                        "cancelButton" to nodeItem(
+                            "activation__forgotten_password__birthdate__cancel_button",
+                            "Cancel",
+                        ),
                     ),
-                    "emailInput" to ("activation__forgotten_password__email_input" to "Enter your email"),
-                ),
-            ),
-            "Home" to mapOf(
-                "welcomeMessage" to ("home__welcome_message" to "Welcome to our application!"),
-            ),
-            "Profile" to mapOf(
-                "Settings" to mapOf(
-                    "Privacy" to mapOf(
-                        "title" to ("profile__settings__privacy__title" to "Privacy Settings"),
-                        "description" to ("profile__settings__privacy__description" to
-                            "Manage your privacy settings here."),
+                    "emailInput" to nodeItem(
+                        "activation__forgotten_password__email_input",
+                        "Enter your email",
                     ),
                 ),
             ),
-            "Checkout" to mapOf(
-                "Payment" to mapOf(
-                    "CreditCard" to mapOf(
-                        "numberInput" to ("checkout__payment__credit_card__number_input" to "Credit Card Number"),
-                        "expiryDate" to ("checkout__payment__credit_card__expiry_date" to "Expiry Date"),
-                        "cvv" to ("checkout__payment__credit_card__cvv" to "CVV"),
+            "Home" to nodeGroup(
+                "welcomeMessage" to nodeItem(
+                    "home__welcome_message",
+                    "Welcome to our application!",
+                ),
+            ),
+            "Profile" to nodeGroup(
+                "Settings" to nodeGroup(
+                    "Privacy" to nodeGroup(
+                        "title" to nodeItem(
+                            "profile__settings__privacy__title",
+                            "Privacy Settings",
+                        ),
+                        "description" to nodeItem(
+                            "profile__settings__privacy__description",
+                            "Manage your privacy settings here.",
+                        ),
+                    ),
+                ),
+            ),
+            "Checkout" to nodeGroup(
+                "Payment" to nodeGroup(
+                    "CreditCard" to nodeGroup(
+                        "numberInput" to nodeItem(
+                            "checkout__payment__credit_card__number_input",
+                            "Credit Card Number",
+                        ),
+                        "expiryDate" to nodeItem(
+                            "checkout__payment__credit_card__expiry_date",
+                            "Expiry Date",
+                        ),
+                        "cvv" to nodeItem("checkout__payment__credit_card__cvv", "CVV"),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -139,20 +168,25 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "Profile" to mapOf(
-                "Settings" to mapOf(
-                    "Privacy" to mapOf(
-                        "privacyPolicy" to ("profile__settings__privacy__privacy_policy" to "Privacy Policy"),
-                        "PrivacyPolicy" to mapOf(
-                            "details" to ("profile__settings__privacy__privacy_policy__details" to
-                                "Detailed description")
-                        )
+            "Profile" to nodeGroup(
+                "Settings" to nodeGroup(
+                    "Privacy" to nodeGroup(
+                        "privacyPolicy" to nodeItem(
+                            "profile__settings__privacy__privacy_policy",
+                            "Privacy Policy",
+                        ),
+                        "PrivacyPolicy" to nodeGroup(
+                            "details" to nodeItem(
+                                "profile__settings__privacy__privacy_policy__details",
+                                "Detailed description",
+                            ),
+                        ),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -166,19 +200,25 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "System" to mapOf(
-                "Config" to mapOf(
-                    "Database" to mapOf(
-                        "Settings" to mapOf(
-                            "maxConnections" to ("system__config__database__settings__max_connections" to "100"),
-                            "timeout" to ("system__config__database__settings__timeout" to "30"),
+            "System" to nodeGroup(
+                "Config" to nodeGroup(
+                    "Database" to nodeGroup(
+                        "Settings" to nodeGroup(
+                            "maxConnections" to nodeItem(
+                                "system__config__database__settings__max_connections",
+                                "100",
+                            ),
+                            "timeout" to nodeItem(
+                                "system__config__database__settings__timeout",
+                                "30",
+                            ),
                         ),
                     ),
                 ),
             ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -192,15 +232,15 @@ class FileParserTest {
         val fileParser = fileParser(fileContent = mapContent)
 
         val expectedOutput = mapOf(
-            "User" to mapOf(
-                "Name" to mapOf(
-                    "first name" to ("user__name__first name" to "John"),
-                    "last-name" to ("user__name__last-name" to "Doe"),
+            "User" to nodeGroup(
+                "Name" to nodeGroup(
+                    "first name" to nodeItem("user__name__first name", "John"),
+                    "last-name" to nodeItem("user__name__last-name", "Doe"),
                 ),
             ),
         )
 
-        val result = fileParser.generateGroupedMapStructure()
+        val result = fileParser.generateGroupedNodeStructure()
 
         result shouldBe expectedOutput
     }
@@ -214,4 +254,13 @@ class FileParserTest {
         minorDelimiter = minorDelimiter,
         majorDelimiter = majorDelimiter,
     )
+
+    private fun nodeGroup(vararg children: Pair<String, Node>): Node.Group =
+        Node.Group(children.toMap())
+
+    private fun nodeItem(originalKey: String, value: String): Node.Item =
+        Node.Item(
+            key = originalKey,
+            translation = Translation.Text(value),
+        )
 }

@@ -55,6 +55,11 @@ subprojects {
                     name.set("Bořek Leikep")
                     url.set("https://github.com/gerak-cz")
                 }
+                developer {
+                    id.set("savrov")
+                    name.set("Pavel Savrov")
+                    url.set("https://github.com/savrov")
+                }
             }
             scm {
                 url.set("https://github.com/cleverlance/linguine/")

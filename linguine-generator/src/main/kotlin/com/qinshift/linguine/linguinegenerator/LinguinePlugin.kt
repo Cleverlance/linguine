@@ -24,7 +24,7 @@ import org.gradle.work.Incremental
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 @Suppress("unused")
-class LinguinePlugin : Plugin<Project> {
+public class LinguinePlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
         val extension = project.extensions.create("linguine", Linguine::class.java)
@@ -48,6 +48,7 @@ class LinguinePlugin : Plugin<Project> {
             sourceRootPath.set(extension.sourceRootPath)
             outputFilePath.set(extension.outputFilePath)
             outputSuffix.set(extension.outputSuffix)
+            pluralFormPolicy.set(extension.pluralFormPolicy)
         }
 
         project.afterEvaluate {
@@ -89,40 +90,43 @@ class LinguinePlugin : Plugin<Project> {
 }
 
 @CacheableTask
-abstract class GenerateStringsTask @Inject constructor(
+public abstract class GenerateStringsTask @Inject constructor(
     private val layout: ProjectLayout,
 ) : DefaultTask() {
 
     @get:Incremental
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val inputFile: RegularFileProperty
+    public abstract val inputFile: RegularFileProperty
 
     @get:Input
-    abstract val fileType: GradleProperty<LinguineFileType>
+    public abstract val fileType: GradleProperty<LinguineFileType>
 
     @get:Input
-    abstract val minorDelimiter: GradleProperty<String>
+    public abstract val minorDelimiter: GradleProperty<String>
 
     @get:Input
-    abstract val majorDelimiter: GradleProperty<String>
+    public abstract val majorDelimiter: GradleProperty<String>
 
     @get:OutputDirectory
-    abstract val outputDirectory: DirectoryProperty
+    public abstract val outputDirectory: DirectoryProperty
 
     @get:Input
-    abstract val sourceRootPath: GradleProperty<String>
+    public abstract val sourceRootPath: GradleProperty<String>
 
     @get:Input
-    abstract val outputFilePath: GradleProperty<String>
+    public abstract val outputFilePath: GradleProperty<String>
 
     @get:Input
-    abstract val outputSuffix: GradleProperty<String>
+    public abstract val outputSuffix: GradleProperty<String>
+
+    @get:Input
+    public abstract val pluralFormPolicy: GradleProperty<PluralFormPolicy>
 
     @TaskAction
-    fun generate() {
+    public fun generate() {
         // Read input file
-        val fileContent = FileReader().read(
+        val fileContent = FileReader(pluralFormPolicy.get()).read(
             file = inputFile.asFile.get(),
             fileType = fileType.get(),
         )
@@ -134,7 +138,7 @@ abstract class GenerateStringsTask @Inject constructor(
             majorDelimiter = majorDelimiter.get(),
         )
 
-        val groupedMap = fileParser.generateGroupedMapStructure()
+        val groupedMap = fileParser.generateGroupedNodeStructure()
 
         val resolvedOutputPath = outputDirectory.get().asFile.toPath()
 
@@ -154,7 +158,6 @@ abstract class GenerateStringsTask @Inject constructor(
         val fileContentGenerator = FileContentGenerator(
             sourceRoot = resolvedSourceRoot,
             outputDirectory = resolvedOutputPath,
-            fileContent = fileContent,
             outputSuffix = outputSuffix.get()
         )
 
@@ -166,8 +169,7 @@ abstract class GenerateStringsTask @Inject constructor(
             fileWriter.writeToFile(filePath.toFile(), content)
 
             logger.info(
-                "Linguine: File ${filePath.fileName} " +
-                    "has been successfully created in the directory ${filePath.parent}",
+                "Linguine: File ${filePath.fileName} has been successfully created in the directory ${filePath.parent}"
             )
         }
     }
