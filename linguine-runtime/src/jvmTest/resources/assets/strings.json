@@ -1,0 +1,13 @@
+{
+  "sample__section__item_count": {
+    "zero": "%1$d items-zero",
+    "one": "%1$d item-one",
+    "two": "%1$d items-two",
+    "few": "%1$d items-few",
+    "many": "%1$d items-many",
+    "other": "%1$d items-other"
+  },
+  "sample__section__fallback_count": {
+    "other": "%1$d items-other"
+  }
+}

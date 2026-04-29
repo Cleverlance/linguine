@@ -1,3 +1,6 @@
 package com.qinshift.linguine.linguineruntime.presentation
 
-internal data class Language(val code: String)
+import kotlin.jvm.JvmInline
+
+@JvmInline
+internal value class Language(val code: String)

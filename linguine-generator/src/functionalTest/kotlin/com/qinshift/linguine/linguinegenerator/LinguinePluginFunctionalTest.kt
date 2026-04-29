@@ -19,7 +19,7 @@ class LinguinePluginFunctionalTest {
     private val gradleBuildFileName = "build.gradle.kts"
 
     @Test
-    fun whenGenerateTaskExecutedThenCompletedSuccessfully() {
+    fun `generate task completes successfully`() {
         File(testProjectDir, gradleBuildFileName).apply {
             writeText(
                 """
@@ -52,7 +52,7 @@ class LinguinePluginFunctionalTest {
 
     @Suppress("LongMethod")
     @Test
-    fun whenGenerateTaskExecutedThenOutputsFileContainsExpectedContent() {
+    fun `generate task outputs file with expected content`() {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
@@ -77,7 +77,7 @@ class LinguinePluginFunctionalTest {
                 """
                 {
                     "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
-                    "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+                    "activation__forgotten_password__birthdate__log_out": "%1${'$'}s %2${'$'}d %3${'$'}f %4${'$'}s %5${'$'}d %6${'$'}f"
                 }
                 """.trimIndent(),
             )
@@ -92,19 +92,17 @@ class LinguinePluginFunctionalTest {
 
         println(result.output)
 
-        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
+        assertTrue(result.output.contains(buildSuccessOutput))
 
         val generatedFile =
             File(testProjectDir, "src/main/kotlin/presentation/ActivationStrings.kt")
-        assertTrue(generatedFile.exists(), "Generated file should exist")
+        assertTrue(generatedFile.exists())
 
         val actualContent = generatedFile.readText()
         val expectedContent = """
             package presentation
             
             import com.qinshift.linguine.linguineruntime.presentation.Localiser.localise
-            import kotlin.Float
-            import kotlin.Int
             import kotlin.String
             
             public object ActivationStrings {
@@ -114,14 +112,13 @@ class LinguinePluginFunctionalTest {
                                 localise("activation__forgotten_password__birthdate__log_in")
         
                         public fun logOut(
-                            param1: String,
-                            param2: Int,
-                            param3: Float,
-                            param4: String,
-                            param5: Int,
-                            param6: Float,
-                        ): String = localise("activation__forgotten_password__birthdate__log_out",
-                                param1, param2, param3, param4, param5, param6)
+                                param1: String,
+                                param2: String,
+                                param3: String,
+                                param4: String,
+                                param5: String,
+                                param6: String,
+                            ): String = localise("activation__forgotten_password__birthdate__log_out", param1, param2, param3, param4, param5, param6)
                     }
                 }
             }
@@ -135,7 +132,7 @@ class LinguinePluginFunctionalTest {
     }
 
     @Test
-    fun whenGenerateTaskExecutedThenOutputFilePlacedInConfiguredPath() {
+    fun `generate task places output file in configured path`() {
         val testProjectDir = createTempDirectory().toFile()
         File(testProjectDir, "settings.gradle.kts").writeText("")
 
@@ -161,7 +158,7 @@ class LinguinePluginFunctionalTest {
                 """
                 {
                     "activation__forgotten_password__birthdate__log_in": "Přihlásit se",
-                    "activation__forgotten_password__birthdate__log_out": "%s %d %f %${'$'}s %${'$'}d %${'$'}f"
+                    "activation__forgotten_password__birthdate__log_out": "%1${'$'}s %2${'$'}d %3${'$'}f %4${'$'}s %5${'$'}d %6${'$'}f"
                 }
                 """.trimIndent(),
             )
@@ -174,30 +171,22 @@ class LinguinePluginFunctionalTest {
             .forwardOutput()
             .build()
 
-        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
+        assertTrue(result.output.contains(buildSuccessOutput))
 
-        val expectedSuccessMessagePart =
-            "File ActivationStrings.kt has been successfully created in the directory"
-        assertTrue(
-            result.output.contains(expectedSuccessMessagePart),
-            "Success message was not printed correctly",
-        )
+        val expectedSuccessMessagePart = "File ActivationStrings.kt has been successfully created in the directory"
+        assertTrue(result.output.contains(expectedSuccessMessagePart))
 
-        val expectedOutputPath =
-            Paths.get(testProjectDir.path, "presentation", "ActivationStrings.kt").toString()
-                .replace('\\', '/')
-        assertTrue(File(expectedOutputPath).exists(), "Output file should exist")
+        val expectedOutputPath = Paths.get(testProjectDir.path, "presentation", "ActivationStrings.kt").toString()
+            .replace('\\', '/')
+        assertTrue(File(expectedOutputPath).exists())
         val outputPathComponents = expectedOutputPath.split('/')
         outputPathComponents.forEach { component ->
-            assertTrue(
-                result.output.contains(component),
-                "Expected output path component '$component' was not found in the build output.",
-            )
+            assertTrue(result.output.contains(component))
         }
     }
 
     @Test
-    fun whenCustomOutputSuffixConfiguredThenFileAndRootObjectUseSuffix() {
+    fun `custom output suffix configures file and root object suffix`() {
         testProjectDir.resolve(gradleBuildFileName).apply {
             writeText(
                 """
@@ -233,25 +222,71 @@ class LinguinePluginFunctionalTest {
             .forwardOutput()
             .build()
 
-        assertTrue(result.output.contains(buildSuccessOutput), "Build should be successful")
+        assertTrue(result.output.contains(buildSuccessOutput))
 
         val generatedFile =
             File(testProjectDir, "src/main/kotlin/presentation/ActivationL10n.kt")
-        assertTrue(generatedFile.exists(), "Generated file with custom suffix should exist")
+        assertTrue(generatedFile.exists())
 
         val actualContent = generatedFile.readText()
 
-        assertTrue(
-            actualContent.contains("public object ActivationL10n"),
-            "Expected root object 'ActivationL10n' in generated content, but was:\n$actualContent",
-        )
+        assertTrue(actualContent.contains("public object ActivationL10n"))
         assertTrue(
             actualContent.contains(
                 """public val logIn: String = localise("activation__forgotten_password__birthdate__log_in")"""
                     .trimIndent(),
             ),
-            "Expected property 'logIn' in generated content, but was:\n$actualContent",
         )
+    }
+
+    @Test
+    fun `require other only policy accepts plural with other only`() {
+        testProjectDir.resolve(gradleBuildFileName).apply {
+            writeText(
+                """
+                import com.qinshift.linguine.linguinegenerator.PluralFormPolicy
+
+                plugins {
+                    id("com.qinshift.linguine")
+                }
+
+                linguine {
+                    inputFilePath = "src/main/resources/strings.json"
+                    outputFilePath = "src/main/kotlin/presentation"
+                    sourceRootPath = "src/main/kotlin"
+                    pluralFormPolicy = PluralFormPolicy.REQUIRE_OTHER_ONLY
+                }
+                """.trimIndent(),
+            )
+        }
+
+        testProjectDir.resolve("src/main/resources/strings.json").apply {
+            parentFile.mkdirs()
+            writeText(
+                """
+                {
+                    "sample__section__item_count": {
+                        "other": "%1${'$'}s items"
+                    }
+                }
+                """.trimIndent(),
+            )
+        }
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir)
+            .withArguments(generateTaskName)
+            .withPluginClasspath()
+            .forwardOutput()
+            .build()
+
+        assertTrue(result.output.contains(buildSuccessOutput))
+
+        val generatedFile = File(testProjectDir, "src/main/kotlin/presentation/SampleStrings.kt")
+        assertTrue(generatedFile.exists())
+
+        val actualContent = generatedFile.readText()
+        assertTrue(actualContent.contains("public fun itemCount(count: Number, param1: String): String"))
     }
 
     private fun normalizeWhitespace(code: String): String =

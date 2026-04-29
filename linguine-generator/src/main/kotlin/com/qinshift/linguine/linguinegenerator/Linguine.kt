@@ -2,13 +2,14 @@ package com.qinshift.linguine.linguinegenerator
 
 import com.qinshift.linguine.linguinegenerator.filereader.FileType
 
-open class Linguine {
-    var inputFilePath: String = ""
-    var inputFileType: FileType = FileType.JSON
-    var outputFilePath: String = ""
-    var sourceRootPath: String = ""
-    var outputSuffix: String = "Strings"
-    var majorDelimiter: String = "__"
-    var minorDelimiter: String = "_"
-    var buildTaskName: String? = null
+public open class Linguine {
+    public var inputFilePath: String = ""
+    public var inputFileType: FileType = FileType.JSON
+    public var outputFilePath: String = ""
+    public var sourceRootPath: String = ""
+    public var outputSuffix: String = "Strings"
+    public var majorDelimiter: String = "__"
+    public var minorDelimiter: String = "_"
+    public var buildTaskName: String? = null
+    public var pluralFormPolicy: PluralFormPolicy = PluralFormPolicy.REQUIRE_ALL_FORMS
 }

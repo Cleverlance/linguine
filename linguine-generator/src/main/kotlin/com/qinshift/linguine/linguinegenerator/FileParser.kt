@@ -1,12 +1,20 @@
 package com.qinshift.linguine.linguinegenerator
 
-class FileParser(
-    private val fileContent: Map<String, String>,
+public class FileParser(
+    fileContent: Map<String, *>,
     private val minorDelimiter: String,
     private val majorDelimiter: String,
 ) {
-    fun generateGroupedMapStructure(): Map<String, Map<String, Any>> {
-        val groupedMap = mutableMapOf<String, MutableMap<String, Pair<String, String>>>()
+    private val fileContent: Map<String, Translation> = fileContent.mapValues { (key, value) ->
+        when (value) {
+            is Translation -> value
+            is String -> Translation.Text(value)
+            else -> error("Unsupported translation value for key '$key': $value")
+        }
+    }
+
+    public fun generateGroupedNodeStructure(): Map<String, Node.Group> {
+        val groupedMap = mutableMapOf<String, MutableMap<String, Node.Item>>()
         fileContent.forEach { (key, value) ->
             val groupName: String
             val nestedKey: String
@@ -19,19 +27,20 @@ class FileParser(
                 nestedKey = key
             }
 
-            groupedMap.computeIfAbsent(groupName) { mutableMapOf() }[nestedKey] = key to value
+            groupedMap.computeIfAbsent(groupName) { mutableMapOf() }[nestedKey] = Node.Item(
+                key = key,
+                translation = value,
+            )
         }
 
-        return groupedMap.mapValues { (_, map) -> generateNestedMapStructure(map) }
+        return groupedMap.mapValues { (_, map) -> generateNestedNodeStructure(map) }
     }
 
-    private fun generateNestedMapStructure(map: Map<String, Pair<String, String>>): Map<String, Any> {
-        val root = mutableMapOf<String, Any>()
-        map.forEach { (key, value) ->
+    private fun generateNestedNodeStructure(map: Map<String, Node.Item>): Node.Group {
+        return map.entries.fold(Node.Group(emptyMap())) { root, (key, value) ->
             val parts = transformKeyToCamelCaseSegments(key)
-            updateNestedMapStructure(root, parts, value)
+            insertLeaf(root, parts, value)
         }
-        return root
     }
 
     private fun transformKeyToCamelCaseSegments(key: String): List<String> {
@@ -42,22 +51,35 @@ class FileParser(
         }
     }
 
-    private fun updateNestedMapStructure(
-        root: MutableMap<String, Any>,
+    private fun insertLeaf(
+        root: Node.Group,
         parts: List<String>,
-        value: Pair<String, String>,
-    ) {
-        var current = root
-        @Suppress("UNCHECKED_CAST")
-        parts.forEachIndexed { index, part ->
-            val formattedPart = formatPart(part, index < parts.lastIndex)
-            if (index == parts.lastIndex) {
-                current[formattedPart] = value
-            } else {
-                current =
-                    current.computeIfAbsent(formattedPart) { mutableMapOf<String, Any>() } as MutableMap<String, Any>
-            }
+        value: Node.Item,
+        index: Int = 0,
+    ): Node.Group {
+        val formattedPart = formatPart(parts[index], index < parts.lastIndex)
+
+        if (index == parts.lastIndex) {
+            return root.copy(
+                children = root.children + (formattedPart to value),
+            )
         }
+
+        val nestedGroup = when (val existingNode = root.children[formattedPart]) {
+            null -> Node.Group(emptyMap())
+            is Node.Group -> existingNode
+            is Node.Item -> error("Expected group node but found leaf ${existingNode.key}.")
+        }
+
+        val entry = formattedPart to insertLeaf(
+            root = nestedGroup,
+            parts = parts,
+            value = value,
+            index = index + 1,
+        )
+        return root.copy(
+            children = root.children + entry,
+        )
     }
 
     private fun formatPart(part: String, isIntermediate: Boolean): String {

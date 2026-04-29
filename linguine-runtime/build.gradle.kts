@@ -3,6 +3,7 @@ plugins {
 }
 
 kotlin {
+    explicitApi()
     iosX64 {
         binaries {
             framework {
@@ -34,6 +35,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kermit)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
     }
 }
