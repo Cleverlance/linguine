@@ -86,6 +86,7 @@ tasks.withType<Detekt> {
     exclude("**/*gradle.kts")
     exclude("**/build/**")
     exclude("**/buildSrc/**")
+//    exclude("**/examples/**")
 }
 
 // endregion
