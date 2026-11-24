@@ -36,6 +36,7 @@ val includeSample = providers.gradleProperty(sampleProperty).orNull
     }
 
 if (includeSample.toBoolean()) {
+    include(":sample:composeApp")
     include(":sample:localization-plain")
     include(":sample:localization-require-all-forms")
     include(":sample:localization-require-other-only")
