@@ -5,6 +5,8 @@ import org.jetbrains.dokka.gradle.DokkaPlugin
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
     alias(libs.plugins.gradle.buildconfig) apply false
     alias(libs.plugins.gradle.maven.publish) apply true
     alias(libs.plugins.detekt) apply true
@@ -12,11 +14,13 @@ plugins {
 }
 
 subprojects {
-    apply<DokkaPlugin>()
-    apply<MavenPublishPlugin>()
+    if (path == ":sample" || path.startsWith(":sample:")) return@subprojects
 
     group = "com.qinshift.linguine"
     version = System.getenv("NEXT_VERSION") ?: "0.6.0"
+
+    apply<DokkaPlugin>()
+    apply<MavenPublishPlugin>()
 
     mavenPublishing {
         publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
@@ -86,6 +90,7 @@ tasks.withType<Detekt> {
     exclude("**/*gradle.kts")
     exclude("**/build/**")
     exclude("**/buildSrc/**")
+    exclude("**/sample/**")
 }
 
 // endregion

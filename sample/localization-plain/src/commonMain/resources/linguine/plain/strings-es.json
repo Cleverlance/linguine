@@ -1,0 +1,6 @@
+{
+  "sample_all_forms__plain__sentence": "Abuelo lleva manzanas, peras y plátanos.",
+  "sample_all_forms__plain__item_sentence": "Abuelo lleva %s, peras y plátanos.",
+  "sample_all_forms__plain__ordered_sentence": "Abuelo lleva %1$s, %2$s y %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Abuelo lleva %2$s, %1$s y %3$s."
+}

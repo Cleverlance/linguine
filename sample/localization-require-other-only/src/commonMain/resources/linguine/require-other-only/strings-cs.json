@@ -1,0 +1,26 @@
+{
+  "sample_other_only__plural__item_count": {
+    "zero": "Žádní dědové nenesou %1$s.",
+    "one": "Děda nese %1$s.",
+    "two": "Dědové nesou %1$s.",
+    "few": "Dědové nesou %1$s.",
+    "many": "Dědové nesou %1$s.",
+    "other": "Dědové nesou %1$s."
+  },
+  "sample_other_only__plural__reversed_placeholders": {
+    "zero": "Žádní dědové nenesou %2$s, %1$s a %3$s.",
+    "one": "Děda nese %2$s, %1$s a %3$s.",
+    "two": "Dědové nesou %2$s, %1$s a %3$s.",
+    "few": "Dědové nesou %2$s, %1$s a %3$s.",
+    "many": "Dědové nesou %2$s, %1$s a %3$s.",
+    "other": "Dědové nesou %2$s, %1$s a %3$s."
+  },
+  "sample_other_only__plural__category_name": {
+    "zero": "%1$s dědů nenese žádné %2$s, %3$s ani %4$s.",
+    "one": "%1$s děda nese %2$s, %3$s a %4$s.",
+    "two": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+    "few": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+    "many": "%1$s dědy nese %2$s, %3$s a %4$s.",
+    "other": "%1$s dědů nese %2$s, %3$s a %4$s."
+  }
+}

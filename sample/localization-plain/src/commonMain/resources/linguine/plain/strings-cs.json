@@ -1,0 +1,6 @@
+{
+  "sample_all_forms__plain__sentence": "Děda nese jablka, hrušky a banány.",
+  "sample_all_forms__plain__item_sentence": "Děda nese %s, hrušky a banány.",
+  "sample_all_forms__plain__ordered_sentence": "Děda nese %1$s, %2$s a %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Děda nese %2$s, %1$s a %3$s."
+}

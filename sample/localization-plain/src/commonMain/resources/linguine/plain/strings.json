@@ -1,0 +1,8 @@
+{
+  "sample_all_forms__plain__sentence": "Grandpa carries apples, pears and bananas.",
+  "sample_all_forms__plain__item_sentence": "Grandpa carries %s, pears and bananas.",
+  "sample_all_forms__plain__ordered_sentence": "Grandpa carries %1$s, %2$s and %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Grandpa carries %2$s, %1$s and %3$s.",
+  "sample_all_forms__plain__fallback_sentence": "Grandpa carries apples, pears and bananas.",
+  "sample_all_forms__plain__fallback_placeholders": "Grandpa carries %1$s, %2$s and %3$s."
+}

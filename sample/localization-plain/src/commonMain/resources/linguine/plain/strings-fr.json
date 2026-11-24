@@ -1,0 +1,6 @@
+{
+  "sample_all_forms__plain__sentence": "Papi porte des pommes, des poires et des bananes.",
+  "sample_all_forms__plain__item_sentence": "Papi porte des %s, des poires et des bananes.",
+  "sample_all_forms__plain__ordered_sentence": "Papi porte des %1$s, des %2$s et des %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Papi porte des %2$s, des %1$s et des %3$s."
+}
