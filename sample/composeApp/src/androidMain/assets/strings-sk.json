@@ -1,0 +1,54 @@
+{
+  "sample_all_forms__plain__sentence": "Dedko nesie jablká, hrušky a banány.",
+  "sample_all_forms__plain__item_sentence": "Dedko nesie %s, hrušky a banány.",
+  "sample_all_forms__plain__ordered_sentence": "Dedko nesie %1$s, %2$s a %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Dedko nesie %2$s, %1$s a %3$s.",
+  "sample_all_forms__plural__item_count": {
+    "zero": "Žiadni dedkovia nenesú %1$s, %2$s a %3$s.",
+    "one": "Dedko nesie %1$s, %2$s a %3$s.",
+    "two": "Dedkovia nesú %1$s, %2$s a %3$s.",
+    "few": "Dedkovia nesú %1$s, %2$s a %3$s.",
+    "many": "Dedkovia nesú %1$s, %2$s a %3$s.",
+    "other": "Dedkovia nesú %1$s, %2$s a %3$s."
+  },
+  "sample_all_forms__plural__sparse_placeholders": {
+    "zero": "Žiadni dedkovia nenesú %3$s.",
+    "one": "Dedko nesie %1$s.",
+    "two": "Dedkovia nesú %1$s a %2$s.",
+    "few": "Dedkovia nesú %1$s a %2$s.",
+    "many": "Dedkovia nesú %3$s.",
+    "other": "Dedkovia nesú %1$s, %2$s a %3$s."
+  },
+  "sample_all_forms__plural__category_name": {
+    "zero": "%1$s dedkov nenesie žiadne %2$s, %3$s ani %4$s.",
+    "one": "%1$s dedko nesie %2$s, %3$s a %4$s.",
+    "two": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+    "few": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+    "many": "%1$s deda nesie %2$s, %3$s a %4$s.",
+    "other": "%1$s dedkov nesie %2$s, %3$s a %4$s."
+  },
+  "sample_other_only__plural__item_count": {
+    "zero": "Žiadni dedkovia nenesú %1$s.",
+    "one": "Dedko nesie %1$s.",
+    "two": "Dedkovia nesú %1$s.",
+    "few": "Dedkovia nesú %1$s.",
+    "many": "Dedkovia nesú %1$s.",
+    "other": "Dedkovia nesú %1$s."
+  },
+  "sample_other_only__plural__reversed_placeholders": {
+    "zero": "Žiadni dedkovia nenesú %2$s, %1$s a %3$s.",
+    "one": "Dedko nesie %2$s, %1$s a %3$s.",
+    "two": "Dedkovia nesú %2$s, %1$s a %3$s.",
+    "few": "Dedkovia nesú %2$s, %1$s a %3$s.",
+    "many": "Dedkovia nesú %2$s, %1$s a %3$s.",
+    "other": "Dedkovia nesú %2$s, %1$s a %3$s."
+  },
+  "sample_other_only__plural__category_name": {
+    "zero": "%1$s dedkov nenesie žiadne %2$s, %3$s ani %4$s.",
+    "one": "%1$s dedko nesie %2$s, %3$s a %4$s.",
+    "two": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+    "few": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+    "many": "%1$s deda nesie %2$s, %3$s a %4$s.",
+    "other": "%1$s dedkov nesie %2$s, %3$s a %4$s."
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "plain": {
+    "sentence": {
+      "cs": "Děda nese jablka, hrušky a banány.",
+      "en": "Grandpa carries apples, pears and bananas.",
+      "fr": "Papi porte des pommes, des poires et des bananes.",
+      "sk": "Dedko nesie jablká, hrušky a banány.",
+      "uk": "Дід несе яблука, груші й банани.",
+      "es": "Abuelo lleva manzanas, peras y plátanos."
+    },
+    "itemSentence": {
+      "cs": "Děda nese %s, hrušky a banány.",
+      "en": "Grandpa carries %s, pears and bananas.",
+      "fr": "Papi porte des %s, des poires et des bananes.",
+      "sk": "Dedko nesie %s, hrušky a banány.",
+      "uk": "Дід несе %s, груші й банани.",
+      "es": "Abuelo lleva %s, peras y plátanos."
+    },
+    "orderedSentence": {
+      "cs": "Děda nese %1$s, %2$s a %3$s.",
+      "en": "Grandpa carries %1$s, %2$s and %3$s.",
+      "fr": "Papi porte des %1$s, des %2$s et des %3$s.",
+      "sk": "Dedko nesie %1$s, %2$s a %3$s.",
+      "uk": "Дід несе %1$s, %2$s і %3$s.",
+      "es": "Abuelo lleva %1$s, %2$s y %3$s."
+    },
+    "reversedSentence": {
+      "cs": "Děda nese %2$s, %1$s a %3$s.",
+      "en": "Grandpa carries %2$s, %1$s and %3$s.",
+      "fr": "Papi porte des %2$s, des %1$s et des %3$s.",
+      "sk": "Dedko nesie %2$s, %1$s a %3$s.",
+      "uk": "Дід несе %2$s, %1$s і %3$s.",
+      "es": "Abuelo lleva %2$s, %1$s y %3$s."
+    },
+    "fallbackSentence": {
+      "en": "Grandpa carries apples, pears and bananas."
+    },
+    "fallbackPlaceholders": {
+      "en": "Grandpa carries %1$s, %2$s and %3$s."
+    }
+  },
+  "plural": {
+    "allForms": {
+      "itemCount": {
+        "cs": {
+          "zero": "Žádní dědové nenesou %1$s, %2$s a %3$s.",
+          "one": "Děda nese %1$s, %2$s a %3$s.",
+          "two": "Dědové nesou %1$s, %2$s a %3$s.",
+          "few": "Dědové nesou %1$s, %2$s a %3$s.",
+          "many": "Dědové nesou %1$s, %2$s a %3$s.",
+          "other": "Dědové nesou %1$s, %2$s a %3$s."
+        },
+        "en": {
+          "zero": "No grandpas carry %1$s, %2$s and %3$s.",
+          "one": "Grandpa carries %1$s, %2$s and %3$s.",
+          "two": "Grandpas carry %1$s, %2$s and %3$s.",
+          "few": "Grandpas carry %1$s, %2$s and %3$s.",
+          "many": "Grandpas carry %1$s, %2$s and %3$s.",
+          "other": "Grandpas carry %1$s, %2$s and %3$s."
+        },
+        "fr": {
+          "zero": "Aucun papi ne porte des %1$s, des %2$s et des %3$s.",
+          "one": "Papi porte des %1$s, des %2$s et des %3$s.",
+          "two": "Les papis portent des %1$s, des %2$s et des %3$s.",
+          "few": "Les papis portent des %1$s, des %2$s et des %3$s.",
+          "many": "Les papis portent des %1$s, des %2$s et des %3$s.",
+          "other": "Les papis portent des %1$s, des %2$s et des %3$s."
+        },
+        "sk": {
+          "zero": "Žiadni dedkovia nenesú %1$s, %2$s a %3$s.",
+          "one": "Dedko nesie %1$s, %2$s a %3$s.",
+          "two": "Dedkovia nesú %1$s, %2$s a %3$s.",
+          "few": "Dedkovia nesú %1$s, %2$s a %3$s.",
+          "many": "Dedkovia nesú %1$s, %2$s a %3$s.",
+          "other": "Dedkovia nesú %1$s, %2$s a %3$s."
+        },
+        "uk": {
+          "zero": "Діди не несуть %1$s, %2$s і %3$s.",
+          "one": "Дід несе %1$s, %2$s і %3$s.",
+          "two": "Діди несуть %1$s, %2$s і %3$s.",
+          "few": "Діди несуть %1$s, %2$s і %3$s.",
+          "many": "Діди несуть %1$s, %2$s і %3$s.",
+          "other": "Діди несуть %1$s, %2$s і %3$s."
+        },
+        "es": {
+          "zero": "Ningún abuelo lleva %1$s, %2$s y %3$s.",
+          "one": "Abuelo lleva %1$s, %2$s y %3$s.",
+          "two": "Abuelos llevan %1$s, %2$s y %3$s.",
+          "few": "Abuelos llevan %1$s, %2$s y %3$s.",
+          "many": "Abuelos llevan %1$s, %2$s y %3$s.",
+          "other": "Abuelos llevan %1$s, %2$s y %3$s."
+        }
+      },
+      "sparsePlaceholders": {
+        "cs": {
+          "zero": "Žádní dědové nenesou %3$s.",
+          "one": "Děda nese %1$s.",
+          "two": "Dědové nesou %1$s a %2$s.",
+          "few": "Dědové nesou %1$s a %2$s.",
+          "many": "Dědové nesou %3$s.",
+          "other": "Dědové nesou %1$s, %2$s a %3$s."
+        },
+        "en": {
+          "zero": "No grandpas carry %3$s.",
+          "one": "Grandpa carries %1$s.",
+          "two": "Grandpas carry %1$s and %2$s.",
+          "few": "Grandpas carry %1$s and %2$s.",
+          "many": "Grandpas carry %3$s.",
+          "other": "Grandpas carry %1$s, %2$s and %3$s."
+        },
+        "fr": {
+          "zero": "Aucun papi ne porte des %3$s.",
+          "one": "Papi porte des %1$s.",
+          "two": "Les papis portent des %1$s et des %2$s.",
+          "few": "Les papis portent des %1$s et des %2$s.",
+          "many": "Les papis portent des %3$s.",
+          "other": "Les papis portent des %1$s, des %2$s et des %3$s."
+        },
+        "sk": {
+          "zero": "Žiadni dedkovia nenesú %3$s.",
+          "one": "Dedko nesie %1$s.",
+          "two": "Dedkovia nesú %1$s a %2$s.",
+          "few": "Dedkovia nesú %1$s a %2$s.",
+          "many": "Dedkovia nesú %3$s.",
+          "other": "Dedkovia nesú %1$s, %2$s a %3$s."
+        },
+        "uk": {
+          "zero": "Діди не несуть %3$s.",
+          "one": "Дід несе %1$s.",
+          "two": "Діди несуть %1$s і %2$s.",
+          "few": "Діди несуть %1$s і %2$s.",
+          "many": "Діди несуть %3$s.",
+          "other": "Діди несуть %1$s, %2$s і %3$s."
+        },
+        "es": {
+          "zero": "Ningún abuelo lleva %3$s.",
+          "one": "Abuelo lleva %1$s.",
+          "two": "Abuelos llevan %1$s y %2$s.",
+          "few": "Abuelos llevan %1$s y %2$s.",
+          "many": "Abuelos llevan %3$s.",
+          "other": "Abuelos llevan %1$s, %2$s y %3$s."
+        }
+      },
+      "categoryName": {
+        "cs": {
+          "zero": "%1$s dědů nenese žádné %2$s, %3$s ani %4$s.",
+          "one": "%1$s děda nese %2$s, %3$s a %4$s.",
+          "two": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+          "few": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+          "many": "%1$s dědy nese %2$s, %3$s a %4$s.",
+          "other": "%1$s dědů nese %2$s, %3$s a %4$s."
+        },
+        "en": {
+          "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+          "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+          "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+        },
+        "fr": {
+          "zero": "%1$s papis ne portent aucun %2$s, %3$s ni %4$s.",
+          "one": "%1$s papi porte des %2$s, des %3$s et des %4$s.",
+          "two": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "few": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "many": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "other": "%1$s papis portent des %2$s, des %3$s et des %4$s."
+        },
+        "sk": {
+          "zero": "%1$s dedkov nenesie žiadne %2$s, %3$s ani %4$s.",
+          "one": "%1$s dedko nesie %2$s, %3$s a %4$s.",
+          "two": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+          "few": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+          "many": "%1$s deda nesie %2$s, %3$s a %4$s.",
+          "other": "%1$s dedkov nesie %2$s, %3$s a %4$s."
+        },
+        "uk": {
+          "zero": "%1$s дідів не несуть %2$s, %3$s і %4$s.",
+          "one": "%1$s дід несе %2$s, %3$s і %4$s.",
+          "two": "%1$s діди несуть %2$s, %3$s і %4$s.",
+          "few": "%1$s діди несуть %2$s, %3$s і %4$s.",
+          "many": "%1$s дідів несуть %2$s, %3$s і %4$s.",
+          "other": "%1$s дідів несуть %2$s, %3$s і %4$s."
+        },
+        "es": {
+          "zero": "%1$s abuelos no llevan %2$s, %3$s ni %4$s.",
+          "one": "%1$s abuelo lleva %2$s, %3$s y %4$s.",
+          "two": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "few": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "many": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "other": "%1$s abuelos llevan %2$s, %3$s y %4$s."
+        }
+      },
+      "fallbackCount": {
+        "en": {
+          "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+          "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+          "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+        }
+      }
+    },
+    "otherOnly": {
+      "itemCount": {
+        "cs": {
+          "zero": "Žádní dědové nenesou %1$s.",
+          "one": "Děda nese %1$s.",
+          "two": "Dědové nesou %1$s.",
+          "few": "Dědové nesou %1$s.",
+          "many": "Dědové nesou %1$s.",
+          "other": "Dědové nesou %1$s."
+        },
+        "en": {
+          "zero": "No grandpas carry %1$s.",
+          "one": "Grandpa carries %1$s.",
+          "two": "Grandpas carry %1$s.",
+          "few": "Grandpas carry %1$s.",
+          "many": "Grandpas carry %1$s.",
+          "other": "Grandpas carry %1$s."
+        },
+        "fr": {
+          "zero": "Aucun papi ne porte des %1$s.",
+          "one": "Papi porte des %1$s.",
+          "two": "Les papis portent des %1$s.",
+          "few": "Les papis portent des %1$s.",
+          "many": "Les papis portent des %1$s.",
+          "other": "Les papis portent des %1$s."
+        },
+        "sk": {
+          "zero": "Žiadni dedkovia nenesú %1$s.",
+          "one": "Dedko nesie %1$s.",
+          "two": "Dedkovia nesú %1$s.",
+          "few": "Dedkovia nesú %1$s.",
+          "many": "Dedkovia nesú %1$s.",
+          "other": "Dedkovia nesú %1$s."
+        },
+        "uk": {
+          "zero": "Діди не несуть %1$s.",
+          "one": "Дід несе %1$s.",
+          "two": "Діди несуть %1$s.",
+          "few": "Діди несуть %1$s.",
+          "many": "Діди несуть %1$s.",
+          "other": "Діди несуть %1$s."
+        },
+        "es": {
+          "zero": "Ningún abuelo lleva %1$s.",
+          "one": "Abuelo lleva %1$s.",
+          "two": "Abuelos llevan %1$s.",
+          "few": "Abuelos llevan %1$s.",
+          "many": "Abuelos llevan %1$s.",
+          "other": "Abuelos llevan %1$s."
+        }
+      },
+      "reversedPlaceholders": {
+        "cs": {
+          "zero": "Žádní dědové nenesou %2$s, %1$s a %3$s.",
+          "one": "Děda nese %2$s, %1$s a %3$s.",
+          "two": "Dědové nesou %2$s, %1$s a %3$s.",
+          "few": "Dědové nesou %2$s, %1$s a %3$s.",
+          "many": "Dědové nesou %2$s, %1$s a %3$s.",
+          "other": "Dědové nesou %2$s, %1$s a %3$s."
+        },
+        "en": {
+          "zero": "No grandpas carry %2$s, %1$s and %3$s.",
+          "one": "Grandpa carries %2$s, %1$s and %3$s.",
+          "two": "Grandpas carry %2$s, %1$s and %3$s.",
+          "few": "Grandpas carry %2$s, %1$s and %3$s.",
+          "many": "Grandpas carry %2$s, %1$s and %3$s.",
+          "other": "Grandpas carry %2$s, %1$s and %3$s."
+        },
+        "fr": {
+          "zero": "Aucun papi ne porte des %2$s, des %1$s et des %3$s.",
+          "one": "Papi porte des %2$s, des %1$s et des %3$s.",
+          "two": "Les papis portent des %2$s, des %1$s et des %3$s.",
+          "few": "Les papis portent des %2$s, des %1$s et des %3$s.",
+          "many": "Les papis portent des %2$s, des %1$s et des %3$s.",
+          "other": "Les papis portent des %2$s, des %1$s et des %3$s."
+        },
+        "sk": {
+          "zero": "Žiadni dedkovia nenesú %2$s, %1$s a %3$s.",
+          "one": "Dedko nesie %2$s, %1$s a %3$s.",
+          "two": "Dedkovia nesú %2$s, %1$s a %3$s.",
+          "few": "Dedkovia nesú %2$s, %1$s a %3$s.",
+          "many": "Dedkovia nesú %2$s, %1$s a %3$s.",
+          "other": "Dedkovia nesú %2$s, %1$s a %3$s."
+        },
+        "uk": {
+          "zero": "Діди не несуть %2$s, %1$s і %3$s.",
+          "one": "Дід несе %2$s, %1$s і %3$s.",
+          "two": "Діди несуть %2$s, %1$s і %3$s.",
+          "few": "Діди несуть %2$s, %1$s і %3$s.",
+          "many": "Діди несуть %2$s, %1$s і %3$s.",
+          "other": "Діди несуть %2$s, %1$s і %3$s."
+        },
+        "es": {
+          "zero": "Ningún abuelo lleva %2$s, %1$s y %3$s.",
+          "one": "Abuelo lleva %2$s, %1$s y %3$s.",
+          "two": "Abuelos llevan %2$s, %1$s y %3$s.",
+          "few": "Abuelos llevan %2$s, %1$s y %3$s.",
+          "many": "Abuelos llevan %2$s, %1$s y %3$s.",
+          "other": "Abuelos llevan %2$s, %1$s y %3$s."
+        }
+      },
+      "categoryName": {
+        "cs": {
+          "zero": "%1$s dědů nenese žádné %2$s, %3$s ani %4$s.",
+          "one": "%1$s děda nese %2$s, %3$s a %4$s.",
+          "two": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+          "few": "%1$s dědové nesou %2$s, %3$s a %4$s.",
+          "many": "%1$s dědy nese %2$s, %3$s a %4$s.",
+          "other": "%1$s dědů nese %2$s, %3$s a %4$s."
+        },
+        "en": {
+          "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+          "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+          "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+        },
+        "fr": {
+          "zero": "%1$s papis ne portent aucun %2$s, %3$s ni %4$s.",
+          "one": "%1$s papi porte des %2$s, des %3$s et des %4$s.",
+          "two": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "few": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "many": "%1$s papis portent des %2$s, des %3$s et des %4$s.",
+          "other": "%1$s papis portent des %2$s, des %3$s et des %4$s."
+        },
+        "sk": {
+          "zero": "%1$s dedkov nenesie žiadne %2$s, %3$s ani %4$s.",
+          "one": "%1$s dedko nesie %2$s, %3$s a %4$s.",
+          "two": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+          "few": "%1$s dedkovia nesú %2$s, %3$s a %4$s.",
+          "many": "%1$s deda nesie %2$s, %3$s a %4$s.",
+          "other": "%1$s dedkov nesie %2$s, %3$s a %4$s."
+        },
+        "uk": {
+          "zero": "%1$s дідів не несуть %2$s, %3$s і %4$s.",
+          "one": "%1$s дід несе %2$s, %3$s і %4$s.",
+          "two": "%1$s діди несуть %2$s, %3$s і %4$s.",
+          "few": "%1$s діди несуть %2$s, %3$s і %4$s.",
+          "many": "%1$s дідів несуть %2$s, %3$s і %4$s.",
+          "other": "%1$s дідів несуть %2$s, %3$s і %4$s."
+        },
+        "es": {
+          "zero": "%1$s abuelos no llevan %2$s, %3$s ni %4$s.",
+          "one": "%1$s abuelo lleva %2$s, %3$s y %4$s.",
+          "two": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "few": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "many": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+          "other": "%1$s abuelos llevan %2$s, %3$s y %4$s."
+        }
+      },
+      "fallbackCount": {
+        "en": {
+          "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+          "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+          "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+          "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+        }
+      }
+    }
+  }
+}

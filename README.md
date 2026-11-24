@@ -369,6 +369,22 @@ If you set `buildTaskName`, that task will depend on `generateStrings`; otherwis
 
 ---
 
+## Sample app
+
+The root Gradle build includes the sample when `linguine.includeSample` is enabled. By default, `./gradlew build` builds the library without an Android SDK.
+
+For Android Studio, install SDK Platform 35 and use JDK 17 for Gradle. Add `linguine.includeSample=true` to `gradle-local.properties` in the repository root. Open or sync the root `linguine` project, then run the `sample.composeApp` Android app configuration.
+
+To build a debug APK from the command line, configure `ANDROID_HOME` or set `sdk.dir` in the root `local.properties` and run:
+
+```bash
+./gradlew -Plinguine.includeSample=true :sample:composeApp:assembleDebug
+```
+
+For iOS, open `sample/iosApp/iosApp.xcodeproj` and run the `iosApp` scheme. The Xcode build enables the sample when invoking Gradle to create the Kotlin framework.
+
+---
+
 ## 📝 License
 
 See [license.md](license.md).

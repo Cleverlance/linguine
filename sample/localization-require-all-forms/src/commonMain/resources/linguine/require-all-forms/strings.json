@@ -1,0 +1,34 @@
+{
+  "sample_all_forms__plural__item_count": {
+    "zero": "No grandpas carry %1$s, %2$s and %3$s.",
+    "one": "Grandpa carries %1$s, %2$s and %3$s.",
+    "two": "Grandpas carry %1$s, %2$s and %3$s.",
+    "few": "Grandpas carry %1$s, %2$s and %3$s.",
+    "many": "Grandpas carry %1$s, %2$s and %3$s.",
+    "other": "Grandpas carry %1$s, %2$s and %3$s."
+  },
+  "sample_all_forms__plural__sparse_placeholders": {
+    "zero": "No grandpas carry %3$s.",
+    "one": "Grandpa carries %1$s.",
+    "two": "Grandpas carry %1$s and %2$s.",
+    "few": "Grandpas carry %1$s and %2$s.",
+    "many": "Grandpas carry %3$s.",
+    "other": "Grandpas carry %1$s, %2$s and %3$s."
+  },
+  "sample_all_forms__plural__category_name": {
+    "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+    "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+    "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+  },
+  "sample_all_forms__plural__fallback_count": {
+    "zero": "%1$s grandpas carry no %2$s, %3$s or %4$s.",
+    "one": "%1$s grandpa carries %2$s, %3$s and %4$s.",
+    "two": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "few": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "many": "%1$s grandpas carry %2$s, %3$s and %4$s.",
+    "other": "%1$s grandpas carry %2$s, %3$s and %4$s."
+  }
+}
