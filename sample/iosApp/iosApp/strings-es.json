@@ -1,0 +1,54 @@
+{
+  "sample_all_forms__plain__sentence": "Abuelo lleva manzanas, peras y plátanos.",
+  "sample_all_forms__plain__item_sentence": "Abuelo lleva %s, peras y plátanos.",
+  "sample_all_forms__plain__ordered_sentence": "Abuelo lleva %1$s, %2$s y %3$s.",
+  "sample_all_forms__plain__reversed_sentence": "Abuelo lleva %2$s, %1$s y %3$s.",
+  "sample_all_forms__plural__item_count": {
+    "zero": "Ningún abuelo lleva %1$s, %2$s y %3$s.",
+    "one": "Abuelo lleva %1$s, %2$s y %3$s.",
+    "two": "Abuelos llevan %1$s, %2$s y %3$s.",
+    "few": "Abuelos llevan %1$s, %2$s y %3$s.",
+    "many": "Abuelos llevan %1$s, %2$s y %3$s.",
+    "other": "Abuelos llevan %1$s, %2$s y %3$s."
+  },
+  "sample_all_forms__plural__sparse_placeholders": {
+    "zero": "Ningún abuelo lleva %3$s.",
+    "one": "Abuelo lleva %1$s.",
+    "two": "Abuelos llevan %1$s y %2$s.",
+    "few": "Abuelos llevan %1$s y %2$s.",
+    "many": "Abuelos llevan %3$s.",
+    "other": "Abuelos llevan %1$s, %2$s y %3$s."
+  },
+  "sample_all_forms__plural__category_name": {
+    "zero": "%1$s abuelos no llevan %2$s, %3$s ni %4$s.",
+    "one": "%1$s abuelo lleva %2$s, %3$s y %4$s.",
+    "two": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "few": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "many": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "other": "%1$s abuelos llevan %2$s, %3$s y %4$s."
+  },
+  "sample_other_only__plural__item_count": {
+    "zero": "Ningún abuelo lleva %1$s.",
+    "one": "Abuelo lleva %1$s.",
+    "two": "Abuelos llevan %1$s.",
+    "few": "Abuelos llevan %1$s.",
+    "many": "Abuelos llevan %1$s.",
+    "other": "Abuelos llevan %1$s."
+  },
+  "sample_other_only__plural__reversed_placeholders": {
+    "zero": "Ningún abuelo lleva %2$s, %1$s y %3$s.",
+    "one": "Abuelo lleva %2$s, %1$s y %3$s.",
+    "two": "Abuelos llevan %2$s, %1$s y %3$s.",
+    "few": "Abuelos llevan %2$s, %1$s y %3$s.",
+    "many": "Abuelos llevan %2$s, %1$s y %3$s.",
+    "other": "Abuelos llevan %2$s, %1$s y %3$s."
+  },
+  "sample_other_only__plural__category_name": {
+    "zero": "%1$s abuelos no llevan %2$s, %3$s ni %4$s.",
+    "one": "%1$s abuelo lleva %2$s, %3$s y %4$s.",
+    "two": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "few": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "many": "%1$s abuelos llevan %2$s, %3$s y %4$s.",
+    "other": "%1$s abuelos llevan %2$s, %3$s y %4$s."
+  }
+}
